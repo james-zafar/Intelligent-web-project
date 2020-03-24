@@ -2,10 +2,58 @@
 <html>
   <head>
     <title><%= title %></title>
+    <script src="/scripts/scripts.js"></script>
+    <script src="/scripts/bootstrap.bundle.min.js"></script>
     <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel='stylesheet' href='/stylesheets/bootstrap.min.css' />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   </head>
   <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+    <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
+      <a class="navbar-brand" href="#">[Insert Title]</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">View Posts<span class="sr-only">(current)</span></a>
+          </li>
+          <!--TODO: Have this hide and show correctly based on user log-in status-->
+          <li class="nav-item">
+            <a class="nav-link" href="#">View Your Posts</a>
+          </li>
+        </ul>
+        <span>
+          <!--TODO: Have these hide and show correctly based on user log-in status-->
+          <button class="btn btn-outline-secondary" type="button">Login</button>
+          <button class="btn btn-outline-secondary" type="button">Submit Post</button>
+        </span>
+      </div>
+    </nav>
+    <div class="container">
+      <div class="card">
+        <div class="card-header">
+          <h3>Example post</h3>
+        </div>
+        <div class="card-body">
+          <p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur</p>
+        </div>
+        <div class="row">
+          <div class="col-md-4 ml-10">
+            <img src="https://images.unsplash.com/reserve/bOvf94dPRxWu0u3QsPjF_tree.jpg?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60" alt="inn_logo" class="img-fluid">
+          </div>
+          <div class="col-md-4">
+            <img src="https://images.unsplash.com/reserve/bOvf94dPRxWu0u3QsPjF_tree.jpg?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60" alt="inn_logo" class="img-fluid">
+          </div>
+          <div class="col-md-4">
+            <img src="https://images.unsplash.com/reserve/bOvf94dPRxWu0u3QsPjF_tree.jpg?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60" alt="inn_logo" class="img-fluid">
+          </div>
+        </div>
+        <div class="card-footer">
+          <p>Other info goes here eg. author and date published</p>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
