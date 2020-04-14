@@ -1,101 +1,101 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title><%= title %></title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <!--<script src="/scripts/scripts.js"></script>-->
-    <link rel="stylesheet" href="/stylesheets/createPost.css" />
-    <script src="/scripts/createPost.js" defer></script>
-    <script src="/scripts/bootstrap.bundle.min.js"></script>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-    <link rel='stylesheet' href='/stylesheets/bootstrap.min.css' />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-</head>
-<body>
-<nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="/#">[Insert Title]</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarCollapse">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="/#">View Posts<span class="sr-only">(current)</span></a>
-            </li>
-            <!--TODO: Have this hide and show correctly based on user log-in status-->
-            <li class="nav-item">
-                <a class="nav-link" href="/#">View Your Posts</a>
-            </li>
-        </ul>
-        <span>
-          <!--TODO: Have these hide and show correctly based on user log-in status-->
-          <button class="btn btn-outline-secondary" type="button">Login</button>
-          <button class="btn btn-outline-secondary" type="button" onclick="window.location.href='/createPost'">Submit Post</button>
-        </span>
-    </div>c
-</nav>
-<div class="container">
-    <div class="card">
-        <div class="card-header">
-            <h3>Create New Post</h3>
-        </div>
-
-        <div class="form-group">
-            <textarea class="form-control" id="storyContent" rows="10" placeholder="Add a story..."></textarea>
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">Upload Images</span>
+    <head>
+        <title><%= title %></title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <!--<script src="/scripts/scripts.js"></script>-->
+        <link rel="stylesheet" href="/stylesheets/createPost.css" />
+        <script src="/scripts/createPost.js" defer></script>
+        <script src="/scripts/bootstrap.bundle.min.js"></script>
+        <link rel='stylesheet' href='/stylesheets/style.css' />
+        <link rel='stylesheet' href='/stylesheets/bootstrap.min.css' />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    </head>
+    <body>
+        <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" href="/#">[Insert Title]</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/#">View Posts</a>
+                    </li>
+                    <!--TODO: Have this hide and show correctly based on user log-in status-->
+                    <li class="nav-item">
+                        <a class="nav-link" href="/#">View Your Posts</a>
+                    </li>
+                </ul>
+                <span>
+                  <!--TODO: Have these hide and show correctly based on user log-in status-->
+                  <button class="btn btn-outline-secondary" type="button" onclick="window.location.href='login'">Login</button>
+                  <button class="btn btn-outline-secondary active" type="button" onclick="window.location.href='createPost'">Submit Post<span class="sr-only">(current)</span></button>
+                </span>
+            </div>
+        </nav>
+        <div class="container">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Create New Post</h3>
                 </div>
-                <div class="custom-file">
-                    <input type="file" class="custom-file-input" multiple id="addFile" accept="image/*">
-                    <label class="custom-file-label" for="addFile" id="labelText">(Some help text here?)</label>
+
+                <div class="form-group">
+                    <textarea class="form-control" id="storyContent" rows="10" placeholder="Add a story..."></textarea>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Upload Images</span>
+                        </div>
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" multiple id="addFile" accept="image/*">
+                            <label class="custom-file-label" for="addFile" id="labelText">(Some help text here?)</label>
+                        </div>
+                    </div>
+                    <div class="alert alert-danger alert-dismissible hide" role="alert" id="tooManyImage" style="display: none">
+                        Sorry, you can not attach more than 3 images to each post.
+                        <button type="button" class="close" onclick="$('#tooManyImage').hide();">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div id="previewArea"></div>
+                </div>
+                <div class="card-footer">
+                    <button type="button" class="btn btn-secondary" id="submitPost">Submit Post</button>
                 </div>
             </div>
-            <div class="alert alert-danger alert-dismissible hide" role="alert" id="tooManyImage" style="display: none">
-                Sorry, you can not attach more than 3 images to each post.
-                <button type="button" class="close" onclick="$('#tooManyImage').hide();">
+
+            <div class="alert alert-danger alert-dismissible hide" role="alert" id="postError" style="display: none">
+                Error. Can not create a story with no content and no attachments.
+                <button type="button" class="close" onclick="$('#postError').hide();">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div id="previewArea"></div>
-        </div>
-        <div class="card-footer">
-            <button type="button" class="btn btn-primary" id="submitPost">Submit Post</button>
-        </div>
-    </div>
+            <div class="alert alert-warning alert-dismissible hide" role="alert" id="postWarning" style="display: none">
+                Warning. You are about to create a story with no text.
+                <button type="button" class="close" onclick="$('#postWarning').hide();">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
 
-    <div class="alert alert-danger alert-dismissible hide" role="alert" id="postError" style="display: none">
-        Error. Can not create a story with no content and no attachments.
-        <button type="button" class="close" onclick="$('#postError').hide();">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="alert alert-warning alert-dismissible hide" role="alert" id="postWarning" style="display: none">
-        Warning. You are about to create a story with no text.
-        <button type="button" class="close" onclick="$('#postWarning').hide();">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
+            <div class="modal fade" id="imagePreview" role="dialog" aria-labelledby="previewTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="previewTitle">Attachment Preview</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body" id="previewBody">
 
-    <div class="modal fade" id="imagePreview" role="dialog" aria-labelledby="previewTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="previewTitle">Attachment Preview</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body" id="previewBody">
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-info" onclick="$('#imagePreview').modal('hide');">Close</button>
-                    <button type="button" class="btn btn-danger" onclick="removePicture()">Remove Attachment</button>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-info" onclick="$('#imagePreview').modal('hide');">Close</button>
+                            <button type="button" class="btn btn-danger" onclick="removePicture()">Remove Attachment</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
-</body>
+    </body>
 </html>
