@@ -20,7 +20,7 @@ exports.insert = function (req, res) {
                 res.status(500).send('Invalid data!');
 
             res.setHeader('Content-Type', 'application/json');
-            res.send(JSON.stringify(character));
+            res.send(JSON.stringify(user));
         });
     } catch (e) {
         res.status(500).send('error ' + e);

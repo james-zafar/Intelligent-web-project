@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const User = require('../models/users');
 
 
-exports.init= function() {
+exports.init = function() {
     // uncomment if you need to drop the database
 
     // Character.remove({}, function(err) {
