@@ -22,17 +22,17 @@ app.set('port', port);
  */
 
 //TODO: I think we want to implement this before handin but not sure how to do it locally properly yet but not something we need to look at now
-var options = {
-  key: fs.readFileSync('./private_access/ca.key'),
-  cert: fs.readFileSync('/private_access/ca.crt')
-};
+// var options = {
+//   key: fs.readFileSync('./private_access/ca.key'),
+//   cert: fs.readFileSync('/private_access/ca.crt')
+// };
 
 /**
  * Create HTTPs server.
  */
 
-var server = https.createServer(options, app);
-// var server=http.createServer(app);
+// var server = https.createServer(options, app);
+var server=http.createServer(app);
 
 /**
  * Listen on provided port, on all network interfaces.

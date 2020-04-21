@@ -1,0 +1,1 @@
+//This file should store the data received into local storage
