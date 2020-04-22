@@ -12,7 +12,7 @@ const userSchema = new Schema(
         family_name: {type: String, required: true, max: 100},
         email: {type: String, required: true, max: 100},
         password: {type: String},
-        voted_stories: [{vote: Boolean, story_id: mongoose.Schema.Types.ObjectId}]
+        voted_stories: [{vote: Number, story_id: mongoose.Schema.Types.ObjectId}]
     }
 );
 
