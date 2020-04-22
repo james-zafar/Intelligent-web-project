@@ -14,7 +14,7 @@ try {
         useUnifiedTopology: true,
         checkServerIdentity: false,
     });
-    console.log('connection to users mongodb worked!');
+    console.log('connection to myStory mongodb worked!');
 
 // db.dropDatabase();
 

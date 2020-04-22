@@ -19,13 +19,13 @@ function sendAjaxQuery(url, data) {
     });
 }
 
-function onSubmit(url) {
-    const formArray= $("form").serializeArray();
-    const data={};
+function send(url) {
+    const formArray = $("form").serializeArray();
+    let data={};
     for (let index in formArray) {
         data[formArray[index].name] = formArray[index].value;
     }
-    // const data = JSON.stringify($(this).serializeArray());
+    data = JSON.stringify($(this).serializeArray());
     sendAjaxQuery(url, data);
     event.preventDefault();
 }

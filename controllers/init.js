@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
+const fs = require('fs');
 const User = require('../models/users');
-
+const Story = require('../models/stories');
 
 exports.init = function() {
     // uncomment if you need to drop the database
@@ -13,10 +14,22 @@ exports.init = function() {
     const user = new User({
         first_name: 'Mickey',
         family_name: 'Mouse',
-        email: 'mickymouse@disney.com'
+        email: 'mickymouse@disney.com',
+        // password: this.generateHash('minnie')
+    });
+    user.password = user.generateHash('minnie');
+    user.save(function (err, results) {
+        console.log(err);
+        console.log(results._id);
     });
 
-    user.save(function (err, results) {
+    const img = fs.readFileSync('public/resources/dummy_img.png').toString('base64');
+    const story = new Story({
+        text: 'Test',
+        image: Buffer.from(img, 'base64'),
+        data: Date.now,
+    });
+    story.save(function (err, results) {
         console.log(err);
         console.log(results._id);
     });
