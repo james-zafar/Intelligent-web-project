@@ -54,7 +54,7 @@ $('#addFile').change(function() {
  * @param imageID the id of the image to be previewed
  */
 function addImgPreview(imageID) {
-    // Remove any previous images from content area
+    //Remove any previous images from content area
     $('#previewBody').empty();
     var source =  $('#' + imageID).attr('src');
     $('<img />', {
