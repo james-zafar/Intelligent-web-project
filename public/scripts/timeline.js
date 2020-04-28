@@ -21,6 +21,7 @@ function addTextToEdit(source) {
     //Remove any residual content from the display area
     $('#editTextArea').empty();
     var source =  $('#' + source).text();
+    //Create editable text area for the user to edit
     $('<textarea />', {
         text: source,
         id: 'editArea',
@@ -35,6 +36,7 @@ function addTextToEdit(source) {
 function saveChanges() {
     var newText = $('#editArea').val();
     $('#' + window.textID).text(newText);
+    //Select the correct success message to show
     var successID =  window.textID.replace( /^\D+/g, '');
     $('#changeSuccess' + successID).show();
 }
@@ -64,6 +66,7 @@ $('.sharePost').click(function () {
  */
 function deletePost(source) {
     showModal('deleteModal');
+    //Get the id of the story being deleted
     var storyID = source.replace('delete', '');
     window.storyID = "story" + storyID;
 }
@@ -73,6 +76,5 @@ function deletePost(source) {
  */
 $('#confirmDelete').click(function () {
     /*** This will need to be altered to find the ID of the story to be deleted ***/
-    //Get the ID of the story to be deleted
     $('#' + window.storyID).remove();
 });
