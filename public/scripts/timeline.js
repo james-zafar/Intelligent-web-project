@@ -27,7 +27,6 @@ function addTextToEdit(source) {
         width: '100%',
         rows: '10'
     }).appendTo($('#editTextArea'));
-    $('#editArea').height( $(this)[0].scrollHeight );
 }
 
 /**
@@ -35,8 +34,9 @@ function addTextToEdit(source) {
  */
 function saveChanges() {
     var newText = $('#editArea').val();
-    $('#textID1').text(newText);
-    $('#changeSuccess').show();
+    $('#' + window.textID).text(newText);
+    var successID =  window.textID.replace( /^\D+/g, '');
+    $('#changeSuccess' + successID).show();
 }
 
 /**
@@ -47,8 +47,8 @@ $('.editPost').click(function() {
     //Extract ID of the text of the clicked story
     var clickID = this.id;
     var textID = clickID.replace('edit', '');
-    textID = "text" + textID;
-    addTextToEdit(textID);
+    window.textID = "text" + textID;
+    addTextToEdit(window.textID);
 
 });
 
@@ -64,22 +64,15 @@ $('.sharePost').click(function () {
  */
 function deletePost(source) {
     showModal('deleteModal');
-        console.log(source);
     var storyID = source.replace('delete', '');
-    storyID = "story" + storyID;
-    if(!confirmed) {
-        window.setTimeout(deletePost.bind(null), 100); /* this checks the flag every 100 milliseconds*/
-    }else {
-        console.log("Can continue");
-    }
+    window.storyID = "story" + storyID;
 }
 
 /**
  * Executes when the user confirms they wish to delete a post
  */
-var confirmed = false;
 $('#confirmDelete').click(function () {
-    confirmed = true;
     /*** This will need to be altered to find the ID of the story to be deleted ***/
     //Get the ID of the story to be deleted
+    $('#' + window.storyID).remove();
 });
