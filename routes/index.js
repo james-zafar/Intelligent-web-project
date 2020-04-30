@@ -19,12 +19,15 @@ router.get('/login', function (req, res, next) {
     res.render('login', { title: 'Login'});
 });
 
-router.post('/login', function(req, res) {
-    users.getByEmail(function(req2, res2) {
-        if (!JSON.parse(res2.user).validPassword(req.body.password)) {
-            //password did not match
+router.post('/login', function(req, res, next) {
+    users.authenticate(req, res, function (error, user) {
+        if (error || !user) {
+            const err = new Error('Wrong email or password.');
+            return next(err);
         } else {
-            // password matched. proceed forward
+            // req.session.userId = user._id;
+            // res.render('index')
+            res.redirect('/');
         }
     });
 });
