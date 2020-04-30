@@ -1,5 +1,4 @@
 function sendAjaxQuery(url, data) {
-
     $.ajax({
         url: url ,
         data: data,
@@ -22,11 +21,11 @@ function sendAjaxQuery(url, data) {
 
 function send(url) {
     const formArray = $("form").serializeArray();
-    let data={};
+    let data = {};
     for (let index in formArray) {
         data[formArray[index].name] = formArray[index].value;
     }
-    data = JSON.stringify($(this).serializeArray());
+    // data = JSON.stringify($(this).serializeArray());
     sendAjaxQuery(url, data);
     event.preventDefault();
 }

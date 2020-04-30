@@ -10,7 +10,7 @@ const userSchema = new Schema(
         // Hence why I have mongoose.Schema.Types.ObjectId, which is the type if '_id'
         first_name: {type: String, required: true, max: 100},
         family_name: {type: String, required: true, max: 100},
-        email: {type: String, required: true, max: 100},
+        email: {type: String, required: true},
         password: {type: String},
         voted_stories: [{vote: Number, story_id: mongoose.Schema.Types.ObjectId}]
     }
@@ -18,7 +18,7 @@ const userSchema = new Schema(
 
 // hash the password
 userSchema.methods.generateHash = function(password) {
-    return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+    return bcrypt.hashSync(password, bcrypt.genSaltSync(5), null);
 };
 
 // check if password is valid

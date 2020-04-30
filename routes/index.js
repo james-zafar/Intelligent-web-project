@@ -20,14 +20,16 @@ router.get('/login', function (req, res, next) {
 });
 
 router.post('/login', function(req, res, next) {
-    users.getByEmail(req, res);
-    // users.getByEmail(function(req2, res2) {
-    //     if (JSON.parse(res2.user).validPassword(req.body.password)) {
-    //         res.redirect('/')
-    //     } else {
-    //         res.render('login', { message: 'Incorrect password.'})
-    //     }
-    // });
+    users.authenticate(req, res, function (error, user) {
+        if (error || !user) {
+            const err = new Error('Wrong email or password.');
+            return next(err);
+        } else {
+            // req.session.userId = user._id;
+            // res.render('index')
+            res.redirect('/');
+        }
+    });
 });
 
 module.exports = router;
