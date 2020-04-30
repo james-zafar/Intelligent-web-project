@@ -28,5 +28,5 @@ userSchema.methods.validPassword = function(password) {
 
 userSchema.set('toObject', {getters: true, virtuals: true});
 
-const userModel = mongoose.model('User', userSchema);
-module.exports = userModel;
+const User = mongoose.model('User', userSchema);
+module.exports = User;
