@@ -7,6 +7,8 @@
 const app = require('../app');
 const debug = require('debug')('pro:server');
 const http = require('http');
+const https = require('https');
+const fs = require('fs');
 
 // Loading in database
 require('../databases/my_story');
@@ -19,10 +21,21 @@ const port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 /**
- * Create HTTP server.
+ * Set HTTPs server options
  */
 
-const server = http.createServer(app);
+//TODO: I think we want to implement this before handin but not sure how to do it locally properly yet but not something we need to look at now
+// var options = {
+//   key: fs.readFileSync('./private_access/ca.key'),
+//   cert: fs.readFileSync('/private_access/ca.crt')
+// };
+
+/**
+ * Create HTTPs server.
+ */
+
+// var server = https.createServer(options, app);
+const server=http.createServer(app);
 
 /**
  * Listen on provided port, on all network interfaces.
