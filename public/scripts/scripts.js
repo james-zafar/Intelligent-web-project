@@ -3,7 +3,13 @@ function initPostsApp() {
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker
       .register('./service-worker.js')
-      .then(function() { console.log('Service Worker Registered'); });
+      .then(function(registration) {
+        //success
+        console.log('Service Worker Registered with scope: ' + registration.scope);
+      }, function(err) {
+        // registration failed :(
+        console.log('ServiceWorker registration failed: ', err);
+      });
   }
 }
 
