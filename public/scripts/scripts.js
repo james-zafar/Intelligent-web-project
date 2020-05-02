@@ -1,31 +1,25 @@
-function sendAjaxQuery(url, data) {
+function sendAjaxQuery(url, data, redirect) {
     $.ajax({
         url: url ,
         data: data,
         dataType: 'json',
         type: 'POST',
-        // success: function (dataR) {
-        //     // no need to JSON parse the result, as we are using
-        //     // dataType:json, so JQuery knows it and unpacks the
-        //     // object for us before returning it
-        //     // const ret = dataR;
-        //     // in order to have the object printed by alert
-        //     // we need to JSON stringify the object
-        //     document.getElementById('results').innerHTML= JSON.stringify(dataR);
-        // },
+        success: function () {
+            window.location.href = redirect;
+        },
         error: function (xhr, status, error) {
             alert('Error: ' + error.message);
         }
     });
 }
 
-function send(url) {
+function send(url, redirect) {
     const formArray = $("form").serializeArray();
     let data = {};
     for (let index in formArray) {
         data[formArray[index].name] = formArray[index].value;
     }
     // data = JSON.stringify($(this).serializeArray());
-    sendAjaxQuery(url, data);
+    sendAjaxQuery(url, data, redirect);
     event.preventDefault();
 }

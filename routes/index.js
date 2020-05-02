@@ -26,8 +26,8 @@ router.post('/login', function(req, res, next) {
             return next(err);
         } else {
             // req.session.userId = user._id;
-            // res.render('index')
-            res.redirect('/');
+            res.setHeader('Content-Type', 'application/json');
+            res.send(JSON.stringify(user));
         }
     });
 });
