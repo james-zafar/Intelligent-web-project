@@ -6,7 +6,7 @@
 
 const app = require('../app');
 const debug = require('debug')('pro:server');
-const http = require('http');
+// const http = require('http');
 const https = require('https');
 const fs = require('fs');
 
@@ -16,31 +16,26 @@ require('../databases/my_story');
 /**
  * Get port from environment and store in Express.
  */
-
 const port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 /**
  * Set HTTPs server options
  */
-
-//TODO: I think we want to implement this before handin but not sure how to do it locally properly yet but not something we need to look at now
-// var options = {
-//   key: fs.readFileSync('./private_access/ca.key'),
-//   cert: fs.readFileSync('/private_access/ca.crt')
-// };
+const options = {
+  key: fs.readFileSync('./private_access/key.pem'),
+  cert: fs.readFileSync('./private_access/server.crt')
+};
 
 /**
  * Create HTTPs server.
  */
-
-// var server = https.createServer(options, app);
-const server=http.createServer(app);
+const server = https.createServer(options, app);
+// const server = http.createServer(app);
 
 /**
  * Listen on provided port, on all network interfaces.
  */
-
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
@@ -48,7 +43,6 @@ server.on('listening', onListening);
 /**
  * Normalize a port into a number, string, or false.
  */
-
 function normalizePort(val) {
   const port = parseInt(val, 10);
 
@@ -68,7 +62,6 @@ function normalizePort(val) {
 /**
  * Event listener for HTTP server "error" event.
  */
-
 function onError(error) {
   if (error.syscall !== 'listen') {
     throw error;
@@ -96,7 +89,6 @@ function onError(error) {
 /**
  * Event listener for HTTP server "listening" event.
  */
-
 function onListening() {
   const addr = server.address();
   const bind = typeof addr === 'string'
