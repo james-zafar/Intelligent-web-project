@@ -86,9 +86,16 @@ function send(url) {
     event.preventDefault();
 }
 
-function loadData() {
-    //Believe this should get stuff from database.js when we have stuff to store
-    return null;
+///////////////////////// INTERFACE MANAGEMENT ////////////
+
+/**
+ * Given the story data returned by the server,
+ * it adds a story to the timeline
+ * @param dataR the data returned by the server:
+ *
+ */
+function addToTimeline(dataR) {
+    // TODO: Implement this to add stories to the timeline div
 }
 
 /**

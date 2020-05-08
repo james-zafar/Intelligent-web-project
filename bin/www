@@ -6,8 +6,8 @@
 
 const app = require('../app');
 const debug = require('debug')('pro:server');
-// const http = require('http');
 const https = require('https');
+const socket = require('socket.io')
 const fs = require('fs');
 
 // Loading in database
@@ -28,10 +28,10 @@ const options = {
 };
 
 /**
- * Create HTTPs server.
+ * Create HTTPs server and socket.io
  */
 const server = https.createServer(options, app);
-// const server = http.createServer(app);
+socket(server);
 
 /**
  * Listen on provided port, on all network interfaces.
