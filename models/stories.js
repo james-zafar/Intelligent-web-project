@@ -5,8 +5,9 @@ const Schema = mongoose.Schema;
 const story = new Schema(
     {
         text: {type: String, required: true},
-        image: {type: String, data: Buffer},
+        image: [{type: String, data: Buffer}],
         date: {type: Date, default: Date.now},
+        keywords: [{type: String}],
         user_id: {type: mongoose.Schema.Types.ObjectId}
     }
 );
