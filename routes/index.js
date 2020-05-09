@@ -2,9 +2,11 @@ const express = require('express');
 const router = express.Router();
 
 const users = require('../controllers/users');
-const stories = require('../controllers/stories');
 const initDB = require('../controllers/init');
 initDB.init();
+
+var Story = require('../models/stories');
+
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -12,7 +14,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/createPost', function(req, res, next) {
-    res.render('createPost', { title: 'Create New Post'});
+    res.render('createPost', {title: 'Create New Post', displayParam: 'display:none;'})
 });
 
 router.get('/login', function (req, res, next) {
@@ -31,6 +33,40 @@ router.post('/login', function(req, res, next) {
         }
     });
 });
+
+router.post('/createStory', function (req, res) {
+    //Get all possible content of the story
+    var storyText = req.body.storyContent;
+    var image0 = req.body.image0;
+    var image1 = req.body.image1;
+    var image2 = req.body.image2;
+    var images;
+    //Check if images actually exist
+    if(image0 === undefined) {
+        images = [];
+    }else if(image1 === undefined) {
+        images = [image0];
+    }else if(image2 === undefined) {
+        images = [image0, image1];
+    }
+    if(bodyText === null) {
+        res.status(403).send('No data submitted')
+    }else {
+        var theStory = new Story({
+            text: storyText,
+            images: images
+        });
+        theStory.save(function (error, response) {
+            if (error) {
+                console.log("Error ", error);
+                response.status(500).send('Internal Server Error')
+            } else {
+                res.render('createPost', {title: 'Create New Post', displayParam: ''})
+            }
+        });
+    }
+});
+
 
 router.get('/timeline', function(req, res, next) {
   res.render('timeline', {

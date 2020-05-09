@@ -1,3 +1,4 @@
+
 //Remove the default text display on input field
 if ($('#addFile').val() === "") {
     $('#addFile').css('color', 'transparent');
@@ -123,5 +124,8 @@ $('#submitPost').click(function() {
         $('#postError').show();
     }else if(text === '') {
         $('#postWarning').show();
+    }else {
+        //Trigger form submission
+        $('#submitStory').trigger('click');
     }
 });
