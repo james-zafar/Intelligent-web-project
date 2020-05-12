@@ -35,98 +35,78 @@
     </div>
 </nav>
 <div class="container">
+    <% allStories%>
+        <!----------------
+            To allow stories to be liked/edited we need to be able to retrieve the IDs associated with each story
+            These will then be used to amend the "id" attribute of the card tags
+            timeline.js is already set up to identify stories based on the ID of the card
+        ------------------>
+    <%for(let i = 0; i < allStories.length; i++) {%>
+        <div class="card body-card" id="storyID1">
+            <div class="card-header">
+                <div class="" id="profileImage">
+                    <img src="<%= profileSource %>" alt="Profile Image" width="10%" height="100%" class="img-fluid rounded float-left" id="profileImage">
+                    <div id="userName">
+                        <%if((allStories[i].user_id)  === undefined) { %>
+                            Unknown User
+                        <%} else { %>
+                            <%= allStories.user_id[i]; %>
+                        <% } %>
 
-    <div class="card body-card" id="storyID1">
-        <div class="card-header">
-            <div class="" id="profileImage">
-                <img src="<%= profileSource %>" alt="Profile Image" width="10%" height="100%" class="img-fluid rounded float-left" id="profileImage">
-                <div id="userName">
-                    <%= userName %>
-                </div>
-                <div id="timePosted" style="padding-top: 10px;">
-                    <%= timePosted %>
+                    </div>
+                    <div id="timePosted" style="padding-top: 10px;">
+                        <%= allStories[i].date %>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="card-body">
-            <p class="storyText" id="textID1">"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur</p>
+            <div class="card-body">
+                <p class="storyText" id="textID1"><%= allStories[i].text %></p>
+                <div id="results"></div>
+                <div class="row">
+                    <!----------------
+                        The src of these img tags needs to be fixed to display images properly
+                        The arg parsed from JS is the buffer from the DB,
+                        I am unsure how this is encoded/how to use it to create an image
+                    ------------------>
+                    <% if(typeof(allStories[i].image) === 'string' || allStories[i].image instanceof String) { %>
+                        <div class="col-md-4">
+                            <img src="data:image/jpeg;base64,  <%= allStories[i].image.toString('base64');%>" alt="inn_logo" class="img-fluid">
+                        </div>
+                    <% } else { %>
+                        <div class="col-md-<%= (12 / allStories[i].image.length)%>">
+                            <img src="data:image/jpeg;base64,  <%= allStories[i].image.toString('base64');%>" alt="inn_logo" class="img-fluid">
+                        </div>
+                        <div class="col-md-<%= (12 / allStories[i].image.length)%>">
+                            <img src="data:image/jpeg;base64,  <%= allStories[i].image.toString('base64');%>" alt="inn_logo" class="img-fluid">
+                        </div>
+                    <% } %>
+                    <% if(allStories[i].image.length == 3){ %>
+                        <div class="col-md-<%= (12 / allStories[i].image.length)%>">
+                            <img src="data:image/jpeg;base64,  <%= allStories[i].image.toString('base64');%>" alt="inn_logo" class="img-fluid">
+                        </div>
+                    <% } %>
+                </div>
 
-            <div class="row">
-                <div class="col-md-6 ml-10">
-                    <img src="https://images.unsplash.com/reserve/bOvf94dPRxWu0u3QsPjF_tree.jpg?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60" alt="inn_logo" class="img-fluid">
-                </div>
-                <div class="col-md-6">
-                    <img src="https://images.unsplash.com/reserve/bOvf94dPRxWu0u3QsPjF_tree.jpg?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60" alt="inn_logo" class="img-fluid">
-                </div>
             </div>
-
-        </div>
-        <div class="card-footer">
-            <button class="btn btn-primary editPost" id="editID1">
-                Edit Post
-            </button>
-            <button class="btn btn-primary sharePost" id="shareID1">
-                Share
-            </button>
-            <button class="btn btn-danger deletePost" id="deleteID1" onclick="deletePost(this.id)">
-                Delete Post
-            </button>
-        </div>
-        <div class="alert alert-success alert-dismissible hide" role="alert" id="changeSuccess1" style="display: none; padding-top: 10px;">
-            Changes saved successfully.
-            <button type="button" class="close" onclick="$('#changeSuccess1').hide();">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    </div>
-
-
-    <div class="card" id="storyID2">
-        <div class="card-header">
-            <div class="" id="profileImage">
-                <img src="<%= profileSource %>" alt="Profile Image" width="10%" height="100%" class="img-fluid rounded float-left" id="profileImage">
-                <div id="userName">
-                    <%= userName %>
-                </div>
-                <div id="timePosted" style="padding-top: 10px;">
-                    <%= timePosted %>
-                </div>
+            <div class="card-footer">
+                <button class="btn btn-primary editPost" id="editID1">
+                    Edit Post
+                </button>
+                <button class="btn btn-primary sharePost" id="shareID1">
+                    Share
+                </button>
+                <button class="btn btn-danger deletePost" id="deleteID1" onclick="deletePost(this.id)">
+                    Delete Post
+                </button>
+            </div>
+            <div class="alert alert-success alert-dismissible hide" role="alert" id="changeSuccess1" style="display: none; padding-top: 10px;">
+                Changes saved successfully.
+                <button type="button" class="close" onclick="$('#changeSuccess1').hide();">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
         </div>
-        <div class="card-body">
-            <p class="storyText" id="textID2">"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur</p>
-
-            <div class="row">
-                <div class="col-md-4 ml-10">
-                    <img src="https://images.unsplash.com/reserve/bOvf94dPRxWu0u3QsPjF_tree.jpg?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60" alt="inn_logo" class="img-fluid">
-                </div>
-                <div class="col-md-4">
-                    <img src="https://images.unsplash.com/reserve/bOvf94dPRxWu0u3QsPjF_tree.jpg?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60" alt="inn_logo" class="img-fluid">
-                </div>
-                <div class="col-md-4">
-                    <img src="https://images.unsplash.com/reserve/bOvf94dPRxWu0u3QsPjF_tree.jpg?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60" alt="inn_logo" class="img-fluid">
-                </div>
-            </div>
-
-        </div>
-        <div class="card-footer">
-            <button class="btn btn-primary editPost" id="editID2">
-                Edit Post
-            </button>
-            <button class="btn btn-primary sharePost" id="shareID2">
-                Share
-            </button>
-            <button class="btn btn-danger deletePost" id="deleteID2" onclick="deletePost(this.id)">
-                Delete Post
-            </button>
-        </div>
-        <div class="alert alert-success alert-dismissible hide" role="alert" id="changeSuccess2" style="display: none; padding-top: 10px;">
-            Changes saved successfully.
-            <button type="button" class="close" onclick="$('#changeSuccess2').hide();">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    </div>
+    <% } %>
 
     <div class="modal fade" id="editPostModal" role="dialog" aria-labelledby="previewTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog modal-lg" role="document">
