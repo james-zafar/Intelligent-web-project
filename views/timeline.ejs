@@ -31,9 +31,10 @@
             <span>
                   <!--TODO: Have these hide and show correctly based on user log-in status-->
                   <button class="btn btn-outline-secondary" type="button"
-                          onclick="window.location.href='logout'">Logout</button>
+                      onclick="window.location.href='logout'">Logout
+                  </button>
                   <button class="btn btn-outline-secondary" type="button" onclick="window.location.href='createPost'">Submit Post</button>
-                </span>
+            </span>
         </div>
     </nav>
     <div class="container">
@@ -43,8 +44,8 @@
             These will then be used to amend the "id" attribute of the card tags
             timeline.js is already set up to identify stories based on the ID of the card
         ------------------>
-        <% for(let i = 0; i < allStories.length; i++) { %>
-            <div class="card body-card" id="storyID1">
+        <% for(let i = (allStories.length - 1); i > 0; i--) { %>
+            <div class="card body-card" id="<%= allStories[i]._id %>">
                 <div class="card-header">
                     <div class="" id="profileImage">
                         <img src="<%= profileSource %>" alt="Profile Image" width="10%" height="100%"
@@ -99,13 +100,13 @@
 
                 </div>
                 <div class="card-footer">
-                    <button class="btn btn-primary editPost" id="editID1">
+                    <button class="btn btn-primary editPost" id="edit<%= allStories[i]._id %>">
                         Edit Post
                     </button>
-                    <button class="btn btn-primary sharePost" id="shareID1">
+                    <button class="btn btn-primary sharePost" id="share<%= allStories[i]._id %>">
                         Share
                     </button>
-                    <button class="btn btn-danger deletePost" id="deleteID1" onclick="deletePost(this.id)">
+                    <button class="btn btn-danger deletePost" id="del<%= allStories[i]._id %>" onclick="deletePost(this.id)">
                         Delete Post
                     </button>
                 </div>
