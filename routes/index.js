@@ -15,55 +15,27 @@ router.get('/', function(req, res, next) {
     if (!req.session.loggedIn) {
         return res.redirect('/login');
     }
-    /*** The below will eventually be called via the getStories class ***/
-    var url = 'mongodb://localhost:27017/';
-    mongodb.connect(url, function (error, client) {
-        if (error) {
-            console.log("Database error: ", error);
-            res.send(error);
-        } else {
-            var db = client.db('myStory');
-            var collection = db.collection('stories');
-            /** This query needs to be amended if/when we can retrieve the username **/
-            var query = collection.find({});
-            //Use the below to check if a user is logged in
-            //if(this.user === undefined) {
-            //If username arg is provided, look up that users stories
-            //query = collection.find({'user_id': this.user});
-            //}
-            collection.find({}).toArray(function (error, results) {
-                if (error) {
-                    console.log("Error retrieving data: ", error);
-                    res.send(error);
-                } else {
-                    res.render('index', {
-                        title: 'View your timeline',
-                        //Currently uses generic profile pic
-                        profileSource: 'https://images.unsplash.com/reserve/bOvf94dPRxWu0u3QsPjF_tree.jpg?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60',
-                        allStories: results
-                    });
-                }
-            });
-        }
-    });
+    res.render('index', { title: 'Express' });
 });
 
 router.get('/createPost', function(req, res, next) {
     if (!req.session.loggedIn) {
         return res.redirect('/login');
     }
-    res.render('createPost', {title: 'Create New Post'});
-
+    res.render('createPost', { title: 'Create New Post'});
 });
 
 router.get('/login', function (req, res, next) {
+    if (req.session.loggedIn) {
+        return res.redirect('/timeline');
+    }
     res.render('login', { title: 'Login'});
 });
 
 router.post('/login', function(req, res, next) {
     users.authenticate(req, res, function (error, user) {
         if (error || !user) {
-            const message = 'Wrong email or password.';
+            const message = 'Wrong email or password.'
             console.log(message);
             const err = new Error(message);
             return next(err);
@@ -71,7 +43,7 @@ router.post('/login', function(req, res, next) {
         console.log("Login successful");
         req.session.loggedIn = true;
         console.log(user);
-        req.session.username = user.email;
+        req.session.user = user;
         res.setHeader("Content-Type", "application/json");
         res.send(JSON.stringify({redirect: '/timeline'}));
         // res.redirect() didnt work for me no idea why
@@ -80,7 +52,7 @@ router.post('/login', function(req, res, next) {
 
 router.get('/logout', function(req, res, next) {
     req.session.loggedIn = false;
-    req.session.userName = false;
+    req.session.user = undefined;
     return res.redirect('/login');
 });
 
@@ -136,8 +108,8 @@ router.get('/timeline', function(req, res) {
             var query = collection.find({});
             //Use the below to check if a user is logged in
             //if(this.user === undefined) {
-                //If username arg is provided, look up that users stories
-                //query = collection.find({'user_id': this.user});
+            //If username arg is provided, look up that users stories
+            //query = collection.find({'user_id': this.user});
             //}
             collection.find({}).toArray(function (error, results) {
                 if (error) {
@@ -153,7 +125,6 @@ router.get('/timeline', function(req, res) {
             });
         }
     });
-
 });
 
 module.exports = router;
