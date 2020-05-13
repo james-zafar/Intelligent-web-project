@@ -53,9 +53,8 @@ router.get('/createPost', function(req, res, next) {
     if (!req.session.loggedIn) {
         return res.redirect('/login');
     }
-    res.render('createPost', { title: 'Create New Post'});
-router.get('/createPost', function(req, res) {
-    res.render('createPost', {title: 'Create New Post'})
+    res.render('createPost', {title: 'Create New Post'});
+
 });
 
 router.get('/login', function (req, res, next) {
@@ -65,7 +64,7 @@ router.get('/login', function (req, res, next) {
 router.post('/login', function(req, res, next) {
     users.authenticate(req, res, function (error, user) {
         if (error || !user) {
-            const message = 'Wrong email or password.'
+            const message = 'Wrong email or password.';
             console.log(message);
             const err = new Error(message);
             return next(err);
@@ -86,17 +85,6 @@ router.get('/logout', function(req, res, next) {
     return res.redirect('/login');
 });
 
-router.get('/timeline', function(req, res, next) {
-    if (!req.session.loggedIn) {
-        return res.redirect('/login');
-    }
-    console.log(req.session.loggedIn)
-    res.render('timeline', {
-        title: 'View your timeline',
-        profileSource: 'https://images.unsplash.com/reserve/bOvf94dPRxWu0u3QsPjF_tree.jpg?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60',
-        userName: req.session.username,
-        timePosted: '10 Minutes Ago'
-    });
 router.post('/createStory', function (req, res) {
     //Get all possible content of the story
     var storyText = req.body.storyContent;
@@ -127,6 +115,11 @@ router.post('/createStory', function (req, res) {
 });
 
 router.get('/timeline', function(req, res) {
+    if (!req.session.loggedIn) {
+        return res.redirect('/login');
+    }
+    console.log(req.session.loggedIn);
+
     //console.log("Username? ?" + req.session.userId);
     /*** The below will eventually be called via the getStories class ***/
     var url = 'mongodb://localhost:27017/';
