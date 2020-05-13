@@ -6,7 +6,7 @@ const Story = require('../models/stories');
 exports.init = function() {
     // uncomment if you need to drop the database
 
-    // Character.remove({}, function(err) {
+    //Story.remove({}, function(err) {
     //    console.log('collection removed')
     // });
 

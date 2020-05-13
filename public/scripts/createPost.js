@@ -127,5 +127,6 @@ $('#submitPost').click(function() {
     }else {
         //Trigger form submission
         $('#submitStory').trigger('click');
+        $('#success').show();
     }
 });

@@ -45,8 +45,8 @@ router.get('/', function(req, res, next) {
     });
 });
 
-router.get('/createPost', function(req, res, next) {
-    res.render('createPost', {title: 'Create New Post', displayParam: 'display:none;'})
+router.get('/createPost', function(req, res) {
+    res.render('createPost', {title: 'Create New Post'})
 });
 
 router.get('/login', function (req, res, next) {
@@ -90,7 +90,7 @@ router.post('/createStory', function (req, res) {
             console.log("Error ", error);
             response.status(500).send('Internal Server Error')
         } else {
-            res.render('createPost', {title: 'Create New Post', displayParam: ''})
+            res.redirect('createPost');
         }
     });
 });

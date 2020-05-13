@@ -37,7 +37,8 @@
 <div class="container">
     <% allStories%>
         <!----------------
-            To allow stories to be liked/edited we need to be able to retrieve the IDs associated with each story
+
+            FIXME: To allow stories to be liked/edited we need to be able to retrieve the IDs associated with each story
             These will then be used to amend the "id" attribute of the card tags
             timeline.js is already set up to identify stories based on the ID of the card
         ------------------>
@@ -64,26 +65,29 @@
                 <div id="results"></div>
                 <div class="row">
                     <!----------------
-                        The src of these img tags needs to be fixed to display images properly
+                        TODO: The src of these img tags needs to be fixed to display images properly
                         The arg parsed from JS is the buffer from the DB,
                         I am unsure how this is encoded/how to use it to create an image
                     ------------------>
-                    <% if(typeof(allStories[i].image) === 'string' || allStories[i].image instanceof String) { %>
-                        <div class="col-md-4">
-                            <img src="data:image/jpeg;base64,  <%= allStories[i].image.toString('base64');%>" alt="inn_logo" class="img-fluid">
-                        </div>
-                    <% } else { %>
-                        <div class="col-md-<%= (12 / allStories[i].image.length)%>">
-                            <img src="data:image/jpeg;base64,  <%= allStories[i].image.toString('base64');%>" alt="inn_logo" class="img-fluid">
-                        </div>
-                        <div class="col-md-<%= (12 / allStories[i].image.length)%>">
-                            <img src="data:image/jpeg;base64,  <%= allStories[i].image.toString('base64');%>" alt="inn_logo" class="img-fluid">
-                        </div>
-                    <% } %>
-                    <% if(allStories[i].image.length == 3){ %>
-                        <div class="col-md-<%= (12 / allStories[i].image.length)%>">
-                            <img src="data:image/jpeg;base64,  <%= allStories[i].image.toString('base64');%>" alt="inn_logo" class="img-fluid">
-                        </div>
+                    <% if(allStories[i].image.length !== 0) { %>
+
+                        <% if(allStories[i].image.length === 1) { %>
+                            <div class="col-md-4">
+                                <img src="data:image/jpeg;base64,  <%= allStories[i].image.toString('base64');%>" alt="inn_logo" class="img-fluid">
+                            </div>
+                        <% } else { %>
+                            <div class="col-md-<%= (12 / allStories[i].image.length)%>">
+                                <img src="data:image/jpeg;base64,  <%= allStories[i].image.toString('base64');%>" alt="inn_logo" class="img-fluid">
+                            </div>
+                            <div class="col-md-<%= (12 / allStories[i].image.length)%>">
+                                <img src="data:image/jpeg;base64,  <%= allStories[i].image.toString('base64');%>" alt="inn_logo" class="img-fluid">
+                            </div>
+                        <% } %>
+                        <% if(allStories[i].image.length == 3){ %>
+                            <div class="col-md-<%= (12 / allStories[i].image.length)%>">
+                                <img src="data:image/jpeg;base64,  <%= allStories[i].image.toString('base64');%>" alt="inn_logo" class="img-fluid">
+                            </div>
+                        <% } %>
                     <% } %>
                 </div>
 
