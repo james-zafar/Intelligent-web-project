@@ -15,7 +15,6 @@ router.get('/', function(req, res, next) {
     if (!req.session.loggedIn) {
         return res.redirect('/login');
     }
-    res.render('index', { title: 'Express' });
     /*** The below will eventually be called via the getStories class ***/
     var url = 'mongodb://localhost:27017/';
     mongodb.connect(url, function (error, client) {
@@ -102,12 +101,13 @@ router.post('/createStory', function (req, res) {
     }
     var theStory = new Story({
         text: storyText,
-        images: images
+        images: images,
+        user_id: req.session.username
     });
     theStory.save(function (error, response) {
         if (error) {
             console.log("Error ", error);
-            response.status(500).send('Internal Server Error')
+            res.status(500).send('Internal Server Error: ', + error);
         } else {
             res.redirect('createPost');
         }
@@ -119,6 +119,7 @@ router.get('/timeline', function(req, res) {
         return res.redirect('/login');
     }
     console.log(req.session.loggedIn);
+    console.log(req.session.username);
 
     //console.log("Username? ?" + req.session.userId);
     /*** The below will eventually be called via the getStories class ***/
