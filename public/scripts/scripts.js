@@ -17,10 +17,10 @@ function sendAjaxQuery(url, data) {
     $.ajax({
         url: url ,
         data: data,
-        dataType: 'json',
+        contentType: 'application/json',
         type: 'POST',
-        success: function () {
-            window.location.href = redirect;
+        success: function (dataR) {
+            window.location.href = dataR.redirect;
         },
         error: function (xhr, status, error) {
             alert('Error: ' + error.message);
@@ -28,14 +28,15 @@ function sendAjaxQuery(url, data) {
     });
 }
 
-function send(url, redirect) {
+function send(url) {
     const formArray = $("form").serializeArray();
     let data = {};
     for (let index in formArray) {
         data[formArray[index].name] = formArray[index].value;
     }
-    // data = JSON.stringify($(this).serializeArray());
-    sendAjaxQuery(url, data, redirect);
+    data = JSON.stringify(data);
+    console.log(data);
+    sendAjaxQuery(url, data);
     event.preventDefault();
 }
 
