@@ -22,6 +22,9 @@ router.get('/createPost', function(req, res, next) {
 });
 
 router.get('/login', function (req, res, next) {
+    if (req.session.loggedIn) {
+        return res.redirect('/timeline');
+    }
     res.render('login', { title: 'Login'});
 });
 
@@ -36,7 +39,7 @@ router.post('/login', function(req, res, next) {
         console.log("Login successful");
         req.session.loggedIn = true;
         console.log(user);
-        req.session.username = user.email;
+        req.session.user = user;
         res.setHeader("Content-Type", "application/json");
         res.send(JSON.stringify({redirect: '/timeline'}));
         // res.redirect() didnt work for me no idea why
@@ -45,7 +48,7 @@ router.post('/login', function(req, res, next) {
 
 router.get('/logout', function(req, res, next) {
     req.session.loggedIn = false;
-    req.session.userName = false;
+    req.session.user = undefined;
     return res.redirect('/login');
 });
 
@@ -53,7 +56,7 @@ router.get('/timeline', function(req, res, next) {
     if (!req.session.loggedIn) {
         return res.redirect('/login');
     }
-    console.log(req.session.loggedIn)
+    console.log(req.session.user._id)
     res.render('timeline', {
         title: 'View your timeline',
         profileSource: 'https://images.unsplash.com/reserve/bOvf94dPRxWu0u3QsPjF_tree.jpg?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60',
