@@ -12,6 +12,10 @@ var Story = require('../models/stories');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
+    if (!req.session.loggedIn) {
+        return res.redirect('/login');
+    }
+    res.render('index', { title: 'Express' });
     /*** The below will eventually be called via the getStories class ***/
     var url = 'mongodb://localhost:27017/';
     mongodb.connect(url, function (error, client) {
@@ -45,6 +49,11 @@ router.get('/', function(req, res, next) {
     });
 });
 
+router.get('/createPost', function(req, res, next) {
+    if (!req.session.loggedIn) {
+        return res.redirect('/login');
+    }
+    res.render('createPost', { title: 'Create New Post'});
 router.get('/createPost', function(req, res) {
     res.render('createPost', {title: 'Create New Post'})
 });
@@ -56,16 +65,38 @@ router.get('/login', function (req, res, next) {
 router.post('/login', function(req, res, next) {
     users.authenticate(req, res, function (error, user) {
         if (error || !user) {
-            const err = new Error('Wrong email or password.');
+            const message = 'Wrong email or password.'
+            console.log(message);
+            const err = new Error(message);
             return next(err);
-        } else {
-            // req.session.userId = user._id;
-            // res.render('index')
-            res.redirect('/');
         }
+        console.log("Login successful");
+        req.session.loggedIn = true;
+        console.log(user);
+        req.session.username = user.email;
+        res.setHeader("Content-Type", "application/json");
+        res.send(JSON.stringify({redirect: '/timeline'}));
+        // res.redirect() didnt work for me no idea why
     });
 });
 
+router.get('/logout', function(req, res, next) {
+    req.session.loggedIn = false;
+    req.session.userName = false;
+    return res.redirect('/login');
+});
+
+router.get('/timeline', function(req, res, next) {
+    if (!req.session.loggedIn) {
+        return res.redirect('/login');
+    }
+    console.log(req.session.loggedIn)
+    res.render('timeline', {
+        title: 'View your timeline',
+        profileSource: 'https://images.unsplash.com/reserve/bOvf94dPRxWu0u3QsPjF_tree.jpg?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60',
+        userName: req.session.username,
+        timePosted: '10 Minutes Ago'
+    });
 router.post('/createStory', function (req, res) {
     //Get all possible content of the story
     var storyText = req.body.storyContent;

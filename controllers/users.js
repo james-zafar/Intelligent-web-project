@@ -69,19 +69,8 @@ exports.authenticate = function(req, res, callback) {
             }
             if (!user.validPassword(userData.password)) {
                 return callback();
-            } else {
-                res.setHeader('Content-Type', 'application/json');
-                res.send(user);
             }
-            // if (user.validPassword(userData.password)) {
-            //     console.log("3333333");
-            //     res.setHeader('Content-Type', 'application/json');
-            //     res.send(user);
-            //     // return callback(null, user);
-            // } else {
-            //     console.log("444444");
-            //     return callback();
-            // }
+            return callback(null, user);
         });
     } catch (e) {
         res.status(500).send('error ' + e);
