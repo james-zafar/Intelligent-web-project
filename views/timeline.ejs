@@ -54,7 +54,7 @@
                             <% if((allStories[i].user_id) === undefined) { %>
                                 Unknown User
                             <% } else { %>
-                                <%= allStories.user_id[i]; %>
+                                <%= allStories[i].user_id; %>
                             <% } %>
 
                         </div>
@@ -64,7 +64,7 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <p class="storyText" id="textID1"><%= allStories[i].text %></p>
+                    <p class="storyText" id="text<%= allStories[i]._id %>"><%= allStories[i].text %></p>
                     <div id="results"></div>
                     <div class="row">
                         <!----------------
@@ -110,10 +110,10 @@
                         Delete Post
                     </button>
                 </div>
-                <div class="alert alert-success alert-dismissible hide" role="alert" id="changeSuccess1"
+                <div class="alert alert-success alert-dismissible hide" role="alert" id="change<%= allStories[i]._id %>"
                      style="display: none; padding-top: 10px;">
                     Changes saved successfully.
-                    <button type="button" class="close" onclick="$('#changeSuccess1').hide();">
+                    <button type="button" class="close" onclick="$('#change<%= allStories[i]._id %>').hide();">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -147,13 +147,13 @@
             <div class="modal-dialog modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Are you sure you want to delete this post?</h5>
+                        <h5 class="modal-title">Are you sure?</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <p>Warning, once the post has been deleted this action can not be reversed. Are you sure?</p>
+                        <p>Warning, once the post has been deleted this action can not be reversed.</p>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" id="confirmDelete" data-dismiss="modal">Continue

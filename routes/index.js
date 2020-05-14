@@ -15,7 +15,36 @@ router.get('/', function(req, res, next) {
     if (!req.session.loggedIn) {
         return res.redirect('/login');
     }
-    res.render('index', { title: 'Express' });
+    /*** The below will eventually be called via the getStories class ***/
+    var url = 'mongodb://localhost:27017/';
+    mongodb.connect(url, function (error, client) {
+        if (error) {
+            console.log("Database error: ", error);
+            res.send(error);
+        } else {
+            var db = client.db('myStory');
+            var collection = db.collection('stories');
+            /** This query needs to be amended if/when we can retrieve the username **/
+            var query = collection.find({});
+            //Use the below to check if a user is logged in
+            //if(this.user === undefined) {
+            //If username arg is provided, look up that users stories
+            //query = collection.find({'user_id': this.user});
+            //}
+            collection.find({}).toArray(function (error, results) {
+                if (error) {
+                    console.log("Error retrieving data: ", error);
+                    res.send(error);
+                } else {
+                    res.render('index', {
+                        title: 'Index',
+                        profileSource: 'https://images.unsplash.com/reserve/bOvf94dPRxWu0u3QsPjF_tree.jpg?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60',
+                        allStories: results
+                    });
+                }
+            });
+        }
+    });
 });
 
 router.get('/createPost', function(req, res, next) {
@@ -74,7 +103,7 @@ router.post('/createStory', function (req, res) {
     var theStory = new Story({
         text: storyText,
         images: images,
-        user_id: req.session.username
+        user_id: req.session.user._id
     });
     theStory.save(function (error, response) {
         if (error) {

@@ -35,10 +35,9 @@ function addTextToEdit(source) {
  */
 function saveChanges() {
     var newText = $('#editArea').val();
-    $('#' + window.textID).text(newText);
+    $('#text' + window.storyID).text(newText);
     //Select the correct success message to show
-    var successID =  window.textID.replace( /^\D+/g, '');
-    $('#changeSuccess' + successID).show();
+    $('#change' + storyID).show();
 }
 
 /**
@@ -48,9 +47,9 @@ $('.editPost').click(function() {
     showModal('editPostModal');
     //Extract ID of the text of the clicked story
     var clickID = this.id;
-    var textID = clickID.replace('edit', '');
-    window.textID = "text" + textID;
-    addTextToEdit(window.textID);
+    window.storyID =  clickID.replace('edit', '');
+    var textID = "text" + window.storyID;
+    addTextToEdit(textID);
 
 });
 
@@ -67,8 +66,7 @@ $('.sharePost').click(function () {
 function deletePost(source) {
     showModal('deleteModal');
     //Get the id of the story being deleted
-    var storyID = source.replace('delete', '');
-    window.storyID = "story" + storyID;
+    window.storyID = source.replace('del', '');
 }
 
 /**
