@@ -39,7 +39,8 @@ router.get('/', function(req, res, next) {
                     res.render('index', {
                         title: 'Index',
                         profileSource: 'https://images.unsplash.com/reserve/bOvf94dPRxWu0u3QsPjF_tree.jpg?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60',
-                        allStories: results
+                        allStories: results,
+                        req: req
                     });
                 }
             });
@@ -51,7 +52,7 @@ router.get('/createPost', function(req, res, next) {
     if (!req.session.loggedIn) {
         return res.redirect('/login');
     }
-    res.render('createPost', { title: 'Create New Post'});
+    res.render('createPost', { title: 'Create New Post', req: req});
 });
 
 router.get('/login', function (req, res, next) {
@@ -110,7 +111,7 @@ router.post('/createStory', function (req, res) {
             console.log("Error ", error);
             res.status(500).send('Internal Server Error: ', + error);
         } else {
-            res.redirect('createPost');
+            res.redirect('/createPost/?disp=true');
         }
     });
 });
@@ -146,7 +147,8 @@ router.get('/timeline', function(req, res) {
                     res.render('timeline', {
                         title: 'View your timeline',
                         profileSource: 'https://images.unsplash.com/reserve/bOvf94dPRxWu0u3QsPjF_tree.jpg?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60',
-                        allStories: results
+                        allStories: results,
+                        req: req
                     });
                 }
             });
@@ -171,13 +173,12 @@ router.post('/editPost', function(req, res) {
         //collection.count({_id: mongoID}, function (err, count) {
         //    console.log("Stoies with ID: " + count);
         //});
-        collection.updateOne(selectStory, update, function(error, res) {
+        collection.updateOne(selectStory, update, function(error, result) {
             if (error) {
                 console.log("Error updating story...", error);
                 throw error;
             }else {
-                console.log("Updated story...");
-                //Redirect somewhere appropriate after...
+                res.redirect('/timeline?editTrue=' + storyID);
             }
         });
         client.close();
@@ -188,12 +189,12 @@ router.post('/sharePost', function (req, res) {
     var storyID = req.body.storyID;
     var mongoID = new mongodb.ObjectID(storyID);
     console.log("Sharing: " + storyID);
+    res.redirect('/timeline?sharePostID=' + storyID);
     //TODO: Implement the share button feature
 });
 
 router.post('/deletePost', function (req, res) {
     var postToDelete = req.body.storyID;
-    console.log("Heere with: " + postToDelete);
     var url = 'mongodb://localhost:27017/';
     mongodb.connect(url, function(err, client) {
         if (err) throw err;
@@ -208,12 +209,11 @@ router.post('/deletePost', function (req, res) {
                 console.log("Error removing story...", error);
                 throw error;
             }else {
-                res.redirect('/timeline');
+                res.redirect('/timeline?deleteID=' + postToDelete + '&removed=true');
             }
             client.close();
         });
     });
-
 });
 
 module.exports = router;

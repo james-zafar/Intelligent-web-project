@@ -60,10 +60,9 @@ $('.editPost').click(function() {
  */
 $('.sharePost').click(function () {
     // TODO: Implement the share post feature
-    console.log("To be implemented...");
+    console.log("Not yet implemented");
     window.storyID = (this.id).replace('share', '');
     var submitID = 'submitShare' + window.storyID;
-    console.log(submitID);
     $('#' + submitID).trigger('click');
 });
 
@@ -81,8 +80,6 @@ $('.deletePost').click(function () {
  */
 
 $('#confirmDelete').click(function () {
-    $('#' + window.storyID).remove();
     var deleteID = 'rm' + window.storyID;
-    console.log("Button: " + deleteID);
     $('#' + deleteID).trigger('click');
 });
