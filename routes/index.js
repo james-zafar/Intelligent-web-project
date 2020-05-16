@@ -115,9 +115,9 @@ router.post('/createStory', function (req, res) {
     theStory.save(function (error, response) {
         if (error) {
             console.log("Error ", error);
-            res.status(500).send('Internal Server Error: ', + error);
+            //res.status(500).send('Internal Server Error: ', + error);
         } else {
-            res.redirect('/createPost/?disp=true');
+            res.redirect('createPost/?disp=true');
         }
     });
 });
@@ -191,9 +191,8 @@ router.post('/editPost', function(req, res) {
 
 router.post('/sharePost', function (req, res) {
     var storyID = req.body.storyID;
-    var mongoID = new mongodb.ObjectID(storyID);
-    console.log("Sharing: " + storyID);
-    res.redirect('/timeline?sharePostID=' + storyID);
+    var shareURL = 'share?direct=true%26viewPostID=' + storyID;
+    res.redirect('/timeline?share=True&sharePostID=' + storyID + '&url=' + shareURL);
     //TODO: Implement the share button feature
 });
 
@@ -217,6 +216,42 @@ router.post('/deletePost', function (req, res) {
             }
             client.close();
         });
+    });
+});
+
+router.get('/share', function (req, res) {
+    var url = 'mongodb://localhost:27017/';
+    console.log("Shared story: " + req.query.viewPostID);
+    var mongoID = new mongodb.ObjectID(req.query.viewPostID);
+    mongodb.connect(url, function (error, client) {
+        if (error) {
+            console.log("Database error: ", error);
+            res.send(error);
+        } else {
+
+            var db = client.db('myStory');
+            var collection = db.collection('stories');
+
+            collection.find({_id : mongoID}).toArray(function (error, results) {
+                if (error) {
+                    console.log("Error retrieving data: ", error);
+                    res.send(error);
+                } else {
+                    var userDB = db.collection('users');
+                    var newQuery = userDB.find({_id: results[0].user_id});
+                    newQuery.toArray(function(err, result) {
+                        var author = result[0].first_name + " " + result[0].family_name;
+                        res.render('share', {
+                            title: 'View Shared Post',
+                            profileSource: 'https://images.unsplash.com/reserve/bOvf94dPRxWu0u3QsPjF_tree.jpg?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60',
+                            theStory: results[0],
+                            author: author,
+                            req: req
+                        });
+                    });
+                }
+            });
+        }
     });
 });
 

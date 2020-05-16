@@ -39,11 +39,6 @@
     </nav>
     <div class="container">
         <% allStories %>
-        <!-----------------
-           FIXME: To allow stories to be liked/edited we need to be able to retrieve the IDs associated with each story
-            These will then be used to amend the "id" attribute of the card tags
-            timeline.js is already set up to identify stories based on the ID of the card
-        ------------------>
         <% for(let i = (allStories.length - 1); i > 0; i--) { %>
             <div class="card body-card" id="<%= allStories[i]._id %>">
                 <div class="card-header">
@@ -128,6 +123,15 @@
                          style=" padding-top: 10px;">
                         Changes saved successfully.
                         <button type="button" class="close" onclick="$('#change<%= allStories[i]._id %>').hide();">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                <% } %>
+                <% if(req.query.share == 'True' && req.query.sharePostID == allStories[i]._id) { %>
+                    <div class="alert alert-success alert-dismissible hide" role="alert" id="share<%= allStories[i]._id %>"
+                         style=" padding-top: 10px;">
+                        <div id="shareTextArea" >Use the following link to share this post: https://localhost:3000/<%= req.query.url %></div>
+                        <button type="button" class="close" onclick="$('#share<%= allStories[i]._id %>').hide();">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>

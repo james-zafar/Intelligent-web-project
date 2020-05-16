@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="/scripts/scripts.js"></script>
+    <script src="/scripts/timeline.js" defer></script>
+    <script src="/scripts/bootstrap.bundle.min.js"></script>
+    <link rel='stylesheet' href='/stylesheets/style.css'/>
+    <link rel='stylesheet' href='/stylesheets/bootstrap.min.css'/>
+    <link rel='stylesheet' href="/stylesheets/timeline.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+</head>
+<body>
+<nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">myStory</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+            aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="/#">View Posts<span class="sr-only">(current)</span></a>
+            </li>
+            <!--TODO: Have this hide and show correctly based on user log-in status-->
+            <li class="nav-item">
+                <a class="nav-link" href="/timeline">View Your Posts</a>
+            </li>
+        </ul>
+        <span>
+                  <!--TODO: Have these hide and show correctly based on user log-in status-->
+                  <button class="btn btn-outline-secondary" type="button"
+                          onclick="window.location.href='logout'">Logout
+                  </button>
+                  <button class="btn btn-outline-secondary" type="button" onclick="window.location.href='createPost'">Submit Post</button>
+            </span>
+    </div>
+</nav>
+<div class="container">
+    <% theStory %>
+        <div class="card body-card" id="<%= theStory._id %>">
+            <div class="card-header">
+                <div class="" id="profileImage">
+                    <img src="<%= profileSource %>" alt="Profile Image" width="10%" height="100%"
+                         class="img-fluid rounded float-left" id="profileImage">
+                    <div id="userName">
+                        <% if((theStory.user_id) === undefined) { %>
+                            Unknown User
+                        <% } else { %>
+                            <%= author %>
+                        <% } %>
+
+                    </div>
+                    <div id="timePosted" style="padding-top: 10px;">
+                        <%= theStory.date %>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <p class="storyText" id="text<%= theStory._id %>"><%= theStory.text %></p>
+                <div id="results"></div>
+                <div class="row">
+                    <!----------------
+                       TODO: The src of these img tags needs to be fixed to display images properly
+                        The arg parsed from JS is the buffer from the DB,
+                        I am unsure how this is encoded/how to use it to create an image
+                    ------------------>
+                    <% if(theStory.image.length !== 0) { %>
+
+                        <% if(theStory.image.length === 1) { %>
+                            <div class="col-md-4">
+                                <img src="data:image/jpeg;base64,  <%= theStory.image; %>"
+                                     alt="inn_logo" class="img-fluid">
+                            </div>
+                        <% } else { %>
+                            <div class="col-md-<%= (12 / theStory.image.length) %>">
+                                <img src="data:image/jpeg;base64,  <%= theStory.image; %>"
+                                     alt="inn_logo" class="img-fluid">
+                            </div>
+                            <div class="col-md-<%= (12 / theStory.image.length) %>">
+                                <img src="data:image/jpeg;base64,  <%= theStory.image; %>"
+                                     alt="inn_logo" class="img-fluid">
+                            </div>
+                        <% } %>
+                        <% if(theStory.image.length == 3){ %>
+                            <div class="col-md-<%= (12 / theStory.image.length) %>">
+                                <img src="data:image/jpeg;base64,  <%= theStory.image.toString('base64'); %>"
+                                     alt="inn_logo" class="img-fluid">
+                            </div>
+                        <% } %>
+                    <% } %>
+                </div>
+
+            </div>
+            <div class="card-footer">
+                Reseved for like feature...
+            </div>
+        </div>
+</div>
+</body>
+</html>
