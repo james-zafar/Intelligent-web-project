@@ -9,6 +9,8 @@ initDB.init();
 
 var Story = require('../models/stories');
 
+var fs = require('fs');
+
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -95,6 +97,7 @@ router.post('/createStory', function (req, res) {
     var image1 = req.body.image1;
     var image2 = req.body.image2;
     var images;
+    console.log("Image? " + image0 + " 1 " + image1 + " 2 " + image2);
     //Check if images actually exist
     if(image0 === undefined) {
         images = [];
@@ -103,6 +106,7 @@ router.post('/createStory', function (req, res) {
     }else if(image2 === undefined) {
         images = [image0, image1];
     }
+    console.log("Adding images: " + images.length);
     var theStory = new Story({
         text: storyText,
         images: images,

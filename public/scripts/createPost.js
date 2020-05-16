@@ -29,6 +29,7 @@ function addAttachment(fileList) {
                     height: '100%',
                     id: ('image' + i),
                     class: 'uploadImages',
+                    name: ('image' + i),
                     click: function(e) {
                         showImagePreviw(('image' + i))
                     },

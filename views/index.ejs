@@ -107,26 +107,29 @@
                             The arg parsed from JS is the buffer from the DB,
                             I am unsure how this is encoded/how to use it to create an image
                         ------------------>
-                        <% if(typeof (allStories[i].image) === 'string' || allStories[i].image instanceof String) { %>
-                            <div class="col-md-4">
-                                <img src="data:image/jpeg;base64,  <%= allStories[i].image.toString('base64'); %>"
-                                     alt="inn_logo" class="img-fluid">
-                            </div>
-                        <% } else { %>
-                            <div class="col-md-<%= (12 / allStories[i].image.length) %>">
-                                <img src="data:image/jpeg;base64,  <%= allStories[i].image.toString('base64'); %>"
-                                     alt="inn_logo" class="img-fluid">
-                            </div>
-                            <div class="col-md-<%= (12 / allStories[i].image.length) %>">
-                                <img src="data:image/jpeg;base64,  <%= allStories[i].image.toString('base64'); %>"
-                                     alt="inn_logo" class="img-fluid">
-                            </div>
-                        <% } %>
-                        <% if(allStories[i].image.length == 3){ %>
-                            <div class="col-md-<%= (12 / allStories[i].image.length) %>">
-                                <img src="data:image/jpeg;base64,  <%= allStories[i].image.toString('base64'); %>"
-                                     alt="inn_logo" class="img-fluid">
-                            </div>
+                        <% if(allStories[i].image.length !== 0) { %>
+
+                            <% if(allStories[i].image.length === 1) { %>
+                                <div class="col-md-4">
+                                    <img src="data:image/jpeg;base64,  <%= allStories[i].image.toString('base64'); %>"
+                                         alt="inn_logo" class="img-fluid">
+                                </div>
+                            <% } else { %>
+                                <div class="col-md-<%= (12 / allStories[i].image.length) %>">
+                                    <img src="data:image/jpeg;base64,  <%= allStories[i].image.toString('base64'); %>"
+                                         alt="inn_logo" class="img-fluid">
+                                </div>
+                                <div class="col-md-<%= (12 / allStories[i].image.length) %>">
+                                    <img src="data:image/jpeg;base64,  <%= allStories[i].image.toString('base64'); %>"
+                                         alt="inn_logo" class="img-fluid">
+                                </div>
+                            <% } %>
+                            <% if(allStories[i].image.length == 3){ %>
+                                <div class="col-md-<%= (12 / allStories[i].image.length) %>">
+                                    <img src="data:image/jpeg;base64,  <%= allStories[i].image.toString('base64'); %>"
+                                         alt="inn_logo" class="img-fluid">
+                                </div>
+                            <% } %>
                         <% } %>
                     </div>
 
