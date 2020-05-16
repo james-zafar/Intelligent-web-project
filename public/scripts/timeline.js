@@ -49,8 +49,7 @@ function saveChanges() {
 $('.editPost').click(function() {
     showModal('editPostModal');
     //Extract ID of the text of the clicked story
-    var clickID = this.id;
-    window.storyID =  clickID.replace('edit', '');
+    window.storyID =  (this.id).replace('edit', '');
     var textID = "text" + window.storyID;
     addTextToEdit(textID);
 
@@ -62,7 +61,10 @@ $('.editPost').click(function() {
 $('.sharePost').click(function () {
     // TODO: Implement the share post feature
     console.log("To be implemented...");
-    $('#submitShare').trigger('click');
+    window.storyID = (this.id).replace('share', '');
+    var submitID = 'submitShare' + window.storyID;
+    console.log(submitID);
+    $('#' + submitID).trigger('click');
 });
 
 /**
@@ -71,8 +73,6 @@ $('.sharePost').click(function () {
 $('.deletePost').click(function () {
     var source = this.id;
     window.storyID = source.replace('del', '');
-    console.log(window.storyID);
-
     showModal('deleteModal');
 });
 
@@ -80,15 +80,9 @@ $('.deletePost').click(function () {
  * Executes when the user confirms they wish to delete a post
  */
 
-function clickDelete() {
-    var theButton = 'Rm' + window.storyID;
-    console.log("Button: " + theButton);
-    setTimeout(function(){
-        $(("#" + theButton)).click();
-    }, 1);
-}
-
 $('#confirmDelete').click(function () {
     $('#' + window.storyID).remove();
-    clickDelete();
+    var deleteID = 'rm' + window.storyID;
+    console.log("Button: " + deleteID);
+    $('#' + deleteID).trigger('click');
 });

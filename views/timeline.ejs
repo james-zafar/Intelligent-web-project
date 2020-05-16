@@ -76,16 +76,16 @@
 
                             <% if(allStories[i].image.length === 1) { %>
                                 <div class="col-md-4">
-                                    <img src="data:image/jpeg;base64,  <%= allStories[i].image.toString('base64'); %>"
+                                    <img src="data:image/jpeg;base64,  <%= allStories[i].image; %>"
                                          alt="inn_logo" class="img-fluid">
                                 </div>
                             <% } else { %>
                                 <div class="col-md-<%= (12 / allStories[i].image.length) %>">
-                                    <img src="data:image/jpeg;base64,  <%= allStories[i].image.toString('base64'); %>"
+                                    <img src="data:image/jpeg;base64,  <%= allStories[i].image; %>"
                                          alt="inn_logo" class="img-fluid">
                                 </div>
                                 <div class="col-md-<%= (12 / allStories[i].image.length) %>">
-                                    <img src="data:image/jpeg;base64,  <%= allStories[i].image.toString('base64'); %>"
+                                    <img src="data:image/jpeg;base64,  <%= allStories[i].image; %>"
                                          alt="inn_logo" class="img-fluid">
                                 </div>
                             <% } %>
@@ -112,16 +112,16 @@
                     <form action="/editPost" method="post">
                         <textarea name="storyID" style="display: none;"><%= allStories[i]._id %></textarea>
                         <textarea name="storyText" id="storyText" style="display: none;"></textarea>
-                        <button type="submit" id="submitEdit<%= allStories[i]._id %>" style="display: none;"></button>
+                        <input type="submit" id="submitEdit<%= allStories[i]._id %>" style="display: none;" />
                     </form>
                     <form action="/sharePost" method="post">
                         <textarea name="storyID" style="display: none;"><%= allStories[i]._id %></textarea>
-                        <button type="submit" id="submitShare<%= allStories[i]._id %>" style="display: none;"></button>
+                        <input type="submit" id="submitShare<%= allStories[i]._id %>" style="display: none;" />
                     </form>
                     <form action="/deletePost" method="post">
                         <textarea name="storyID" style="display: none;"><%= allStories[i]._id %></textarea>
-                        <button type="submit" id="Rm<%= allStories[i]._id %>" style="display: none;"></button>
-                        </form>
+                        <input type="submit" id="rm<%= allStories[i]._id %>" style="display: none;" />
+                    </form>
                 </div>
                 <div class="alert alert-success alert-dismissible hide" role="alert" id="change<%= allStories[i]._id %>"
                      style="display: none; padding-top: 10px;">
