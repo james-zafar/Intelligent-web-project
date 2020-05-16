@@ -100,15 +100,28 @@
 
                 </div>
                 <div class="card-footer">
-                    <button class="btn btn-primary editPost" id="edit<%= allStories[i]._id %>">
-                        Edit Post
-                    </button>
-                    <button class="btn btn-primary sharePost" id="share<%= allStories[i]._id %>">
-                        Share
-                    </button>
-                    <button class="btn btn-danger deletePost" id="del<%= allStories[i]._id %>" onclick="deletePost(this.id)">
-                        Delete Post
-                    </button>
+                        <button class="btn btn-primary editPost" id="edit<%= allStories[i]._id %>">
+                            Edit Post
+                        </button>
+                        <button class="btn btn-primary sharePost" id="share<%= allStories[i]._id %>">
+                            Share
+                        </button>
+                        <button class="btn btn-danger deletePost" id="del<%= allStories[i]._id %>">
+                            Delete Post
+                        </button>
+                    <form action="/editPost" method="post">
+                        <textarea name="storyID" style="display: none;"><%= allStories[i]._id %></textarea>
+                        <textarea name="storyText" id="storyText" style="display: none;"></textarea>
+                        <button type="submit" id="submitEdit<%= allStories[i]._id %>" style="display: none;"></button>
+                    </form>
+                    <form action="/sharePost" method="post">
+                        <textarea name="storyID" style="display: none;"><%= allStories[i]._id %></textarea>
+                        <button type="submit" id="submitShare<%= allStories[i]._id %>" style="display: none;"></button>
+                    </form>
+                    <form action="/deletePost" method="post">
+                        <textarea name="storyID" style="display: none;"><%= allStories[i]._id %></textarea>
+                        <button type="submit" id="Rm<%= allStories[i]._id %>" style="display: none;"></button>
+                        </form>
                 </div>
                 <div class="alert alert-success alert-dismissible hide" role="alert" id="change<%= allStories[i]._id %>"
                      style="display: none; padding-top: 10px;">

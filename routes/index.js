@@ -64,7 +64,7 @@ router.get('/login', function (req, res, next) {
 router.post('/login', function(req, res, next) {
     users.authenticate(req, res, function (error, user) {
         if (error || !user) {
-            const message = 'Wrong email or password.'
+            const message = 'Wrong email or password.';
             console.log(message);
             const err = new Error(message);
             return next(err);
@@ -119,8 +119,6 @@ router.get('/timeline', function(req, res) {
     if (!req.session.loggedIn) {
         return res.redirect('/login');
     }
-    console.log(req.session.loggedIn);
-    console.log(req.session.username);
 
     //console.log("Username? ?" + req.session.userId);
     /*** The below will eventually be called via the getStories class ***/
@@ -154,6 +152,68 @@ router.get('/timeline', function(req, res) {
             });
         }
     });
+});
+
+router.post('/editPost', function(req, res) {
+    var storyID = req.body.storyID;
+    var mongoID = new mongodb.ObjectID(storyID);
+
+    var newText = req.body.storyText;
+
+    var url = 'mongodb://localhost:27017/';
+    mongodb.connect(url, function(err, client) {
+        if (err) throw err;
+
+        var db = client.db('myStory');
+        var collection = db.collection('stories');
+        var selectStory = { _id: mongoID };
+        var update = { $set: {text: newText } };
+        //collection.count({_id: mongoID}, function (err, count) {
+        //    console.log("Stoies with ID: " + count);
+        //});
+        collection.updateOne(selectStory, update, function(error, res) {
+            if (error) {
+                console.log("Error updating story...", error);
+                throw error;
+            }else {
+                console.log("Updated story...");
+                //Redirect somewhere appropriate after...
+            }
+        });
+        client.close();
+    });
+});
+
+router.post('/sharePost', function (req, res) {
+    var storyID = req.body.storyID;
+    var mongoID = new mongodb.ObjectID(storyID);
+    console.log("Sharing: " + storyID);
+    //TODO: Implement the share button feature
+});
+
+router.post('/deletePost', function (req, res) {
+    var postToDelete = req.body.storyID;
+    console.log("Heere with: " + postToDelete);
+    var url = 'mongodb://localhost:27017/';
+    mongodb.connect(url, function(err, client) {
+        if (err) throw err;
+
+        var db = client.db('myStory');
+        var collection = db.collection('stories');
+
+        var mongoID = new mongodb.ObjectID(postToDelete);
+        var queryPost = { _id: mongoID };
+        collection.deleteOne(queryPost, function(error, result) {
+            if (error) {
+                console.log("Error removing story...", error);
+                throw error;
+            }else {
+                res.redirect('/timeline');
+            }
+            client.close();
+        });
+    });
+
 });
 
 module.exports = router;
