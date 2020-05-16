@@ -15,7 +15,7 @@ router.get('/', function(req, res, next) {
     if (!req.session.loggedIn) {
         return res.redirect('/login');
     }
-    /*** The below will eventually be called via the getStories class ***/
+
     var url = 'mongodb://localhost:27017/';
     mongodb.connect(url, function (error, client) {
         if (error) {
@@ -24,18 +24,20 @@ router.get('/', function(req, res, next) {
         } else {
             var db = client.db('myStory');
             var collection = db.collection('stories');
-            /** This query needs to be amended if/when we can retrieve the username **/
-            var query = collection.find({});
-            //Use the below to check if a user is logged in
-            //if(this.user === undefined) {
-            //If username arg is provided, look up that users stories
-            //query = collection.find({'user_id': this.user});
-            //}
+
             collection.find({}).toArray(function (error, results) {
                 if (error) {
                     console.log("Error retrieving data: ", error);
                     res.send(error);
                 } else {
+                    for(let i = 0; i < results.length; i++) {
+                        var userID = new mongodb.ObjectID(results[i].user_id);
+                        var userDB = db.collection('users');
+                        var newQuery = userDB.find({_id: userID});
+                        newQuery.toArray(function(err, result) {
+                            results[i].user_id = result[0].first_name + " " + result[0].family_name;
+                        });
+                    }
                     res.render('index', {
                         title: 'Index',
                         profileSource: 'https://images.unsplash.com/reserve/bOvf94dPRxWu0u3QsPjF_tree.jpg?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60',
@@ -120,9 +122,8 @@ router.get('/timeline', function(req, res) {
     if (!req.session.loggedIn) {
         return res.redirect('/login');
     }
+    var currentUser = req.session.user.first_name + " " + req.session.user.family_name;
 
-    //console.log("Username? ?" + req.session.userId);
-    /*** The below will eventually be called via the getStories class ***/
     var url = 'mongodb://localhost:27017/';
     mongodb.connect(url, function (error, client) {
         if (error) {
@@ -132,14 +133,10 @@ router.get('/timeline', function(req, res) {
             var db = client.db('myStory');
             var collection = db.collection('stories');
 
-            /** This query needs to be amended if/when we can retrieve the username **/
-            var query = collection.find({});
-            //Use the below to check if a user is logged in
-            //if(this.user === undefined) {
-            //If username arg is provided, look up that users stories
-            //query = collection.find({'user_id': this.user});
-            //}
-            collection.find({}).toArray(function (error, results) {
+            var userObject = new mongodb.ObjectID(req.session.user._id);
+            var findStories = collection.find({user_id: userObject});
+
+            findStories.toArray(function (error, results) {
                 if (error) {
                     console.log("Error retrieving data: ", error);
                     res.send(error);
@@ -148,6 +145,7 @@ router.get('/timeline', function(req, res) {
                         title: 'View your timeline',
                         profileSource: 'https://images.unsplash.com/reserve/bOvf94dPRxWu0u3QsPjF_tree.jpg?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60',
                         allStories: results,
+                        author: currentUser,
                         req: req
                     });
                 }
@@ -170,15 +168,17 @@ router.post('/editPost', function(req, res) {
         var collection = db.collection('stories');
         var selectStory = { _id: mongoID };
         var update = { $set: {text: newText } };
+
         //collection.count({_id: mongoID}, function (err, count) {
         //    console.log("Stoies with ID: " + count);
         //});
         collection.updateOne(selectStory, update, function(error, result) {
             if (error) {
                 console.log("Error updating story...", error);
+                res.redirect('/timeline?edit=False&error=fatal&postID=' + storyID);
                 throw error;
             }else {
-                res.redirect('/timeline?editTrue=' + storyID);
+                res.redirect('/timeline?edit=True&postID=' + storyID);
             }
         });
         client.close();
