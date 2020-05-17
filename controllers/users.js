@@ -1,7 +1,6 @@
 const User = require('../models/users');
 
 var mongodb = require('mongodb');
-const mongoose = require('mongoose');
 
 
 exports.insert = function (req, res) {
@@ -94,33 +93,26 @@ exports.updateRating = function (req, res) {
             var votes = user.voted_stories;
             (function () {
                 votes.forEach(function (current) {
-                    if (current['story_id'] === storyLiked) {
+                    if (current['story_id'] == req.body.story_id) {
                         current['vote'] = rating;
                         updateSuccess = -1;
                         return;
                     }
                 });
             })();
-            if (rating === -1) {
-                //Update complete
-                console.log("Rating updated.");
-            } else {
-                console.log("Creating new rating...");
-
+            if (updateSuccess !== -1) {
                 var newRating = {};
                 newRating['vote'] = rating;
                 newRating['story_id'] = storyLiked;
                 votes.push(newRating);
-                console.log(votes);
                 var update = {$set: {voted_stories: votes}};
-
-                User.updateOne({_id: currentUser}, update, function (error, result) {
-                    if (error) {
-                        console.log("Error adding like...", error);
-                        throw error;
-                    }
-                });
             }
+            User.updateOne({_id: currentUser}, update, function (error, result) {
+                if (error) {
+                    console.log("Error adding like...", error);
+                    throw error;
+                }
+            });
         }
     });
 };

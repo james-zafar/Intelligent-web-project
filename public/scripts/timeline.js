@@ -62,8 +62,12 @@ $('.sharePost').click(function () {
     // TODO: Implement the share post feature
     console.log("Not yet implemented");
     window.storyID = (this.id).replace('share', '');
-    var submitID = 'submitShare' + window.storyID;
-    $('#' + submitID).trigger('click');
+    var newText = 'Use the following link to share this post:' +
+        ' https://localhost:3000/share?direct=true&viewPostID=' +
+        window.storyID;
+        var displayID = 'sharePost' + window.storyID;
+    $('#' + displayID).text(newText);
+    $('#' + displayID).show();
 });
 
 /**

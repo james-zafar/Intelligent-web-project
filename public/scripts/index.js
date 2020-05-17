@@ -24,6 +24,6 @@ $('.likeButtons').on('click', function () {
     datatToSend['story_id'] = storyLiked;
     datatToSend['currentUser'] = $('#currentUser').text().trim();;
 
-    $('#likeDropDown').text($('#' + likeRating).text());
+    $('#likeDropDown'+ storyLiked).text($('#' + likeRating).text());
     submitRating(datatToSend);
 });

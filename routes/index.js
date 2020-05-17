@@ -189,13 +189,6 @@ router.post('/editPost', function(req, res) {
     });
 });
 
-router.post('/sharePost', function (req, res) {
-    var storyID = req.body.storyID;
-    var shareURL = 'share?direct=true%26viewPostID=' + storyID;
-    res.redirect('/timeline?share=True&sharePostID=' + storyID + '&url=' + shareURL);
-    //TODO: Implement the share button feature
-});
-
 router.post('/deletePost', function (req, res) {
     var postToDelete = req.body.storyID;
     var url = 'mongodb://localhost:27017/';
@@ -256,12 +249,5 @@ router.get('/share', function (req, res) {
 });
 
 router.post('/addLikeRating', users.updateRating);
-
-/*router.post('/addLikeRating', function (req, res) {
-    console.log("Here rofl");
-    var likeRating = req.body.vote;
-    var storyLiked = new mongodb.ObjectID(req.body.story_id);
-    var currentUser = new mongodb.ObjectID(req.session.user_id);
-});*/
 
 module.exports = router;

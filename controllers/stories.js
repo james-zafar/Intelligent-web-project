@@ -26,3 +26,7 @@ exports.insert = function (req, res) {
         res.status(500).send('error ' + e);
     }
 };
+
+exports.getRatings = function (req, res) {
+
+}
