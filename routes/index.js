@@ -255,4 +255,13 @@ router.get('/share', function (req, res) {
     });
 });
 
+router.post('/addLikeRating', users.updateRating);
+
+/*router.post('/addLikeRating', function (req, res) {
+    console.log("Here rofl");
+    var likeRating = req.body.vote;
+    var storyLiked = new mongodb.ObjectID(req.body.story_id);
+    var currentUser = new mongodb.ObjectID(req.session.user_id);
+});*/
+
 module.exports = router;

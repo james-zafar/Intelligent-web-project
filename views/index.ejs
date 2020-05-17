@@ -4,6 +4,7 @@
     <title><%= title %></title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="/scripts/scripts.js"></script>
+    <script src="/scripts/index.js" defer></script>
     <script src="/scripts/bootstrap.bundle.min.js"></script>
     <link rel='stylesheet' href='/stylesheets/style.css'/>
     <link rel='stylesheet' href="/stylesheets/timeline.css"/>
@@ -75,6 +76,9 @@
         </div>
         <br>
         <% allStories %>
+        <div class="hidden" id="currentUser" style="display: none;">
+            <%= req.session.user._id %>
+        </div>
         <!----------------
               FIXME: To allow stories to be liked/edited we need to be able to retrieve the IDs associated with each story
                These will then be used to amend the "id" attribute of the card tags
@@ -136,7 +140,18 @@
 
                 </div>
                 <div class="card-footer">
-                    This area should be used to allow users to like posts (not implemented yet)
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" id="likeDropDown" aria-haspopup="true" aria-expanded="false">
+                            Like
+                        </button>
+                            <div class="dropdown-menu" id="like<%= allStories[i]._id %>">
+                                <button class="dropdown-item likeButtons" id="like5" type="button">5 - I love this!</button>
+                                <button class="dropdown-item likeButtons" id="like4" type="button">4 - I like this a lot</button>
+                                <button class="dropdown-item likeButtons" id="like3" type="button">3 - I like this</button>
+                                <button class="dropdown-item likeButtons" id="like2" type="button">2 - I dislike this</button>
+                                <button class="dropdown-item likeButtons" id="like1" type="button">1 - I strongly dislike this!</button>
+                            </div>
+                    </div>
                 </div>
             </div>
         <% } %>
