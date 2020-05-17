@@ -16,7 +16,7 @@ var dataCacheName = 'exampleName-v1';
 var cacheName = 'exampleNameCache';
 var filesToCache = [
   '/',
-  '/scripts/app.js',
+  '/scripts/scripts.js',
   '/styles/inline.css',
   '/styles/bootstrap.min.css',
   '/scripts/bootstrap.min.js',

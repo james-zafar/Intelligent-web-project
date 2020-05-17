@@ -35,10 +35,12 @@ function addTextToEdit(source) {
  */
 function saveChanges() {
     var newText = $('#editArea').val();
-    $('#' + window.textID).text(newText);
+    $('#text' + window.storyID).text(newText);
+    $('#storyText').text(newText);
     //Select the correct success message to show
-    var successID =  window.textID.replace( /^\D+/g, '');
-    $('#changeSuccess' + successID).show();
+    $('#change' + storyID).show();
+    var submitID = 'submitEdit' + window.storyID;
+    $(('#' + submitID)).trigger('click');
 }
 
 /**
@@ -47,10 +49,9 @@ function saveChanges() {
 $('.editPost').click(function() {
     showModal('editPostModal');
     //Extract ID of the text of the clicked story
-    var clickID = this.id;
-    var textID = clickID.replace('edit', '');
-    window.textID = "text" + textID;
-    addTextToEdit(window.textID);
+    window.storyID =  (this.id).replace('edit', '');
+    var textID = "text" + window.storyID;
+    addTextToEdit(textID);
 
 });
 
@@ -58,23 +59,27 @@ $('.editPost').click(function() {
  * Generate a sharable link to a given post
  */
 $('.sharePost').click(function () {
-    console.log("To be implemented...");
+    // TODO: Implement the share post feature
+    console.log("Not yet implemented");
+    window.storyID = (this.id).replace('share', '');
+    var submitID = 'submitShare' + window.storyID;
+    $('#' + submitID).trigger('click');
 });
 
 /**
  * Handle click event on request to delete a post
  */
-function deletePost(source) {
+$('.deletePost').click(function () {
+    var source = this.id;
+    window.storyID = source.replace('del', '');
     showModal('deleteModal');
-    //Get the id of the story being deleted
-    var storyID = source.replace('delete', '');
-    window.storyID = "story" + storyID;
-}
+});
 
 /**
  * Executes when the user confirms they wish to delete a post
  */
+
 $('#confirmDelete').click(function () {
-    /*** This will need to be altered to find the ID of the story to be deleted ***/
-    $('#' + window.storyID).remove();
+    var deleteID = 'rm' + window.storyID;
+    $('#' + deleteID).trigger('click');
 });

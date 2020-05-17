@@ -1,6 +1,7 @@
 const bodyParser = require('body-parser');
 const createError = require('http-errors');
 const express = require('express');
+const session = require('express-session');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
@@ -22,6 +23,17 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+// sessions setup
+app.use(session({
+  secret: 'secret',
+  resave: true,
+  saveUninitialized: true,
+  loggedIn: false
+}));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);

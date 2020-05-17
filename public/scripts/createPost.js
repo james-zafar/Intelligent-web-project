@@ -1,3 +1,4 @@
+
 //Remove the default text display on input field
 if ($('#addFile').val() === "") {
     $('#addFile').css('color', 'transparent');
@@ -28,6 +29,7 @@ function addAttachment(fileList) {
                     height: '100%',
                     id: ('image' + i),
                     class: 'uploadImages',
+                    name: ('image' + i),
                     click: function(e) {
                         showImagePreviw(('image' + i))
                     },
@@ -123,5 +125,9 @@ $('#submitPost').click(function() {
         $('#postError').show();
     }else if(text === '') {
         $('#postWarning').show();
+    }else {
+        //Trigger form submission
+        $('#submitStory').trigger('click');
+        $('#success').show();
     }
 });

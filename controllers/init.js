@@ -6,7 +6,7 @@ const Story = require('../models/stories');
 exports.init = function() {
     // uncomment if you need to drop the database
 
-    // Character.remove({}, function(err) {
+    //Story.remove({}, function(err) {
     //    console.log('collection removed')
     // });
 
@@ -23,14 +23,13 @@ exports.init = function() {
         console.log(results._id);
     });
 
-    const img = fs.readFileSync('public/images/dummy_img.png').toString('base64');
-    const story = new Story({
-        text: 'Test',
-        image: Buffer.from(img, 'base64'),
-        data: Date.now,
-    });
-    story.save(function (err, results) {
-        console.log(err);
-        console.log(results._id);
-    });
+    //const story = new Story({
+    //    text: 'Test',
+    //    image: Buffer.from(img, 'base64'),
+    //    data: Date.now,
+    //});
+    //story.save(function (err, results) {
+    //    console.log(err);
+    //    console.log(results._id);
+    //});
 };
