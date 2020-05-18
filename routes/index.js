@@ -112,14 +112,7 @@ router.post('/createStory', function (req, res) {
         images: images,
         user_id: req.session.user._id
     });
-    theStory.save(function (error, response) {
-        if (error) {
-            console.log("Error ", error);
-            //res.status(500).send('Internal Server Error: ', + error);
-        } else {
-            res.redirect('createPost/?disp=true');
-        }
-    });
+    storeStory()
 });
 
 router.get('/timeline', function(req, res) {
