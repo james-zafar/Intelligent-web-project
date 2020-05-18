@@ -1,28 +1,66 @@
-function initPostsApp() {
-  // loadData();
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker
-      .register('./service-worker.js')
-      .then(function(registration) {
-        //success
-        console.log('Service Worker Registered with scope: ' + registration.scope);
-      }, function(err) {
-        // registration failed :(
-        console.log('ServiceWorker registration failed: ', err);
-      });
-  }
+function initMyStory() {
+    // loadData();
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker
+            .register('./service-worker.js')
+            .then(function(registration) {
+            //success
+            console.log('Service Worker Registered with scope: ' + registration.scope);
+            }, function(err) {
+            // registration failed :(
+            console.log('ServiceWorker registration failed: ', err);
+            });
+    }
+    //check for support
+    if ('indexedDB' in window) {
+        initDatabase();
+    }
+    else {
+        console.log('This browser doesn\'t support IndexedDB');
+    }
+}
+
+
+/**
+ * Given the list of stories, it will retrieve all the data from
+ * the server (or failing that) from the database
+ */
+function loadData() {
+    const stories = JSON.parse(localStorage.getItem('stories'));
+    // cityList = removeDuplicates(cityList);
+    retrieveStories(stories, new Date().getTime());
 }
 
 /**
- * Loads stories for a specific user
- * @param user
- * @param date
+ * Cycles through the list of stories and requests the data from the server for each
+ * story
+ * @param stories - the list of the stories the user has requested
+ * @param date - the date of the stories (not in use)
  */
-function loadStorydata(user, date) {
-    const input = JSON.stringify({user: user, date: date});
+function retrieveStories(stories, date){
+    // refreshCityList();
+    for (let story of stories) {
+        loadStorydata(story, date);
+    }
+}
+
+/**
+ * it removes all stories from the result div
+ */
+function refreshCityList() {
+    if (document.getElementById('results')!=null) {
+        document.getElementById('results').innerHTML='';
+    }
+}
+
+/**
+ * Loads all stories
+ // * @param date
+ */
+function loadStories(user, date) {
+    // const input = JSON.stringify({user: user, date: date});
     $.ajax({
         url: '/stories',
-        data: input,
         contentType: 'application/json',
         type: 'POST',
         success: function (dataR) {
@@ -49,56 +87,24 @@ function loadStorydata(user, date) {
     //     document.getElementById('city_list').style.display = 'none';
 }
 
-function sendAjaxQuery(url, data) {
-    $.ajax({
-        url: url ,
-        data: data,
-        contentType: 'application/json',
-        type: 'POST',
-        success: function (dataR) {
-            window.location.href = dataR.redirect;
-        },
-        error: function (xhr, status, error) {
-            alert('Error: ' + error.message);
-        }
-    });
-}
-
-function send(url) {
-    const formArray = $("form").serializeArray();
-    let data = {};
-    for (let index in formArray) {
-        data[formArray[index].name] = formArray[index].value;
-    }
-    data = JSON.stringify(data);
-    console.log(data);
-    sendAjaxQuery(url, data);
-    event.preventDefault();
-}
-
-function loadData() {
-  //Believe this should get stuff from database.js when we have stuff to store
-  return null;
-}
-
 /**
  * When the client gets off-line, it shows an off line warning to the user
  * so that it is clear that the data is stale
  */
 window.addEventListener('offline', function(e) {
-  // Queue up events for server.
-  console.log("You are offline");
-  showOfflineWarning();
+    // Queue up events for server.
+    console.log("You are offline");
+    showOfflineWarning();
 }, false);
 
 /**
  * When the client gets online, it hides the off line warning
  */
 window.addEventListener('online', function(e) {
-  // Resync data with server.
-  console.log("You are online");
-  hideOfflineWarning();
-  loadData();
+    // Resync data with server.
+    console.log("You are online");
+    hideOfflineWarning();
+    loadData();
 }, false);
 
 
@@ -119,4 +125,43 @@ function hideOfflineWarning(){
 function showCityList() {
   if (document.getElementById('city_list')!=null)
     document.getElementById('city_list').style.display = 'block';
+}
+
+/**
+ * Send ajax query then if response contains redirect,
+ * redirect to that page
+ * @param url
+ * @param data
+ */
+function sendAjaxQuery(url, data) {
+    $.ajax({
+        url: url ,
+        data: data,
+        contentType: 'application/json',
+        type: 'POST',
+        success: function (dataR) {
+            if (dataR !== undefined) {
+                window.location.href = dataR.redirect;
+            }
+        },
+        error: function (xhr, status, error) {
+            alert('Error: ' + error.message);
+        }
+    });
+}
+
+/**
+ * Send a post request from a form to a specific url
+ * @param url
+ */
+function send(url) {
+    const formArray = $("form").serializeArray();
+    let data = {};
+    for (let index in formArray) {
+        data[formArray[index].name] = formArray[index].value;
+    }
+    data = JSON.stringify(data);
+    console.log(data);
+    sendAjaxQuery(url, data);
+    event.preventDefault();
 }

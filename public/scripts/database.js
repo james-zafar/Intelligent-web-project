@@ -9,48 +9,47 @@ const STORIES_STORE_NAME = 'store_stories';
 function initDatabase() {
     dbPromise = idb.openDb(DB_NAME, 1, function (upgradeDb) {
         if (!upgradeDb.objectStoreNames.contains(STORIES_STORE_NAME)) {
-            let forecastDB = upgradeDb.createObjectStore(STORIES_STORE_NAME, {keyPath: 'id', autoIncrement: true});
-            forecastDB.createIndex('text', 'text', {unique: false, multiEntry: true});
-            forecastDB.createIndex('image', 'image', {unique: false, multiEntry: true});
-            forecastDB.createIndex('date', 'date', {unique: false, multiEntry: true});
-            forecastDB.createIndex('user_id', 'user_id', {unique: false, multiEntry: true});
+            let storiesDB = upgradeDb.createObjectStore(STORIES_STORE_NAME, {keyPath: 'id'});
+            storiesDB.createIndex('text', 'text', {unique: false, multiEntry: true});
+            storiesDB.createIndex('image', 'image', {unique: false, multiEntry: true});
+            storiesDB.createIndex('date', 'date', {unique: false, multiEntry: true});
+            storiesDB.createIndex('user_id', 'user_id', {unique: false, multiEntry: true});
         }
     });
 }
 
 /**
  * Saves stories for a user in indexedDB
- * @param user
  * @param storyObject
  */
-function storeCachedData(user, storyObject) {
+function storeCachedData(storyObject) {
     console.log('inserting: '+ JSON.stringify(storyObject));
     if (dbPromise) {
         dbPromise.then(async db => {
             let tx = db.transaction(STORIES_STORE_NAME, 'readwrite');
             let store = tx.objectStore(STORIES_STORE_NAME);
-            await store.put(storyObject);
+            // await store.put(storyObject);
+            await store.add(storyObject);
             return tx.complete;
         }).then(function () {
             console.log('added item to the store! '+ JSON.stringify(storyObject));
         }).catch(function (e) {
-            localStorage.setItem(user, JSON.stringify(storyObject));
+            localStorage.setItem(storyObject._id, JSON.stringify(storyObject));
         });
     } else  {
-        localStorage.setItem(user, JSON.stringify(storyObject));
+        localStorage.setItem(storyObject._id, JSON.stringify(storyObject));
     }
 }
 
 /**
- * Gets story data for a user from the database
- * @param user
- * @param date
+ * Gets a story for a from the database
+ * @param storyID - story's unique id
  * @returns {*}
  */
-function getCachedData(user, date) {
+function getCachedData(storyID) {
     if (dbPromise) {
         dbPromise.then(function (db) {
-            console.log('fetching: '+ user);
+            console.log('fetching: '+ storyID);
             let tx = db.transaction(STORIES_STORE_NAME, 'readonly');
             let store = tx.objectStore(STORIES_STORE_NAME);
             let index = store.index('location');
@@ -67,7 +66,7 @@ function getCachedData(user, date) {
                     addToResults(max);
                 }
             } else {
-                const value = localStorage.getItem(user);
+                const value = localStorage.getItem(storyID);
                 if (value == null) {
                     addToResults({city: city, date: date});
                 }
