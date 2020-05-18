@@ -2,7 +2,7 @@ function initMyStory() {
     loadData();
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker
-            .register('./service-worker.js')
+            .register('../service-worker.js')
             .then(function(registration) {
             //success
             console.log('Service Worker Registered with scope: ' + registration.scope);

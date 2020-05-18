@@ -16,13 +16,22 @@ var dataCacheName = 'myStory-v1';
 var cacheName = 'myStoryCache';
 var filesToCache = [
   '/',
-  '/stylesheets/inline.css',
+  '/stylesheets/createPost.css',
+  '/stylesheets/login.css',
+  '/stylesheets/timeline.css',
+  '/stylesheets/style.css',
   '/stylesheets/bootstrap.min.css',
+  '/scripts/jquery-3.5.1.js',
   '/scripts/scripts.js',
+  '/scripts/createPost.js',
   '/scripts/database.js',
+  '/scripts/timeline.js',
   '/scripts/idb.js',
-  '/scripts/bootstrap.min.js',
-  '/scripts/jquery.min.js'
+  '/scripts/bootstrap.bundle.min.js',
+  '/timeline',
+  // '/login',
+  '/createPost',
+  // '/share',
 ];
 
 
@@ -80,10 +89,11 @@ self.addEventListener('activate', function (e) {
  */
 self.addEventListener('fetch', function (e) {
   console.log('[Service Worker] Fetch', e.request.url);
-  var dataUrl = '/';
+  var dataUrl = '/testtesttest';
   //TODO: Add any pages here that we do not want to be cached
   //if the request is contained in data url do not cache
   if (e.request.url.indexOf(dataUrl) > -1) {
+    console.log("SERVICE indexof");
     /*
      * When the request URL contains dataUrl, the app is asking for fresh
      * weather data. In this case, the service worker always goes to the
@@ -97,6 +107,7 @@ self.addEventListener('fetch', function (e) {
       return response;
     })
   } else {
+    console.log("SERVICE falling back to the network");
     /*
      * The app is asking for app shell files. In this scenario the app uses the
      * "Cache, falling back to the network" offline strategy:
