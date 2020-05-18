@@ -9,7 +9,7 @@ const STORIES_STORE_NAME = 'store_stories';
 function initDatabase() {
     dbPromise = idb.openDb(DB_NAME, 1, function (upgradeDb) {
         if (!upgradeDb.objectStoreNames.contains(STORIES_STORE_NAME)) {
-            let storiesDB = upgradeDb.createObjectStore(STORIES_STORE_NAME, {keyPath: 'id'});
+            let storiesDB = upgradeDb.createObjectStore(STORIES_STORE_NAME, {keyPath: '_id'});
             storiesDB.createIndex('text', 'text', {unique: false, multiEntry: true});
             storiesDB.createIndex('image', 'image', {unique: false, multiEntry: true});
             storiesDB.createIndex('date', 'date', {unique: false, multiEntry: true});
@@ -29,12 +29,13 @@ function storeCachedData(storyObject) {
         dbPromise.then(async db => {
             let tx = db.transaction(STORIES_STORE_NAME, 'readwrite');
             let store = tx.objectStore(STORIES_STORE_NAME);
-            // await store.put(storyObject);
-            await store.add(storyObject);
+            await store.put(storyObject);
+            // await store.add(storyObject);
             return tx.complete;
         }).then(function () {
             console.log('added item to the store! '+ JSON.stringify(storyObject));
-        }).catch(function () {
+        }).catch(function (e) {
+            console.log(e);
             localStorage.setItem(storyObject._id, JSON.stringify(storyObject));
         });
     } else  {
