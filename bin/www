@@ -22,10 +22,17 @@ app.set('port', port);
 /**
  * Set HTTPs server options
  */
-const options = {
-  key: fs.readFileSync('./private_access/key.pem'),
-  cert: fs.readFileSync('./private_access/server.crt')
-};
+try {
+  options = {
+    key: fs.readFileSync('../private_access/key.pem'),
+    cert: fs.readFileSync('../private_access/server.crt')
+  }
+} catch(error) {
+  options = {
+    key: fs.readFileSync('./private_access/key.pem'),
+    cert: fs.readFileSync('./private_access/server.crt')
+  }
+}
 
 /**
  * Create HTTPs server and socket.io
