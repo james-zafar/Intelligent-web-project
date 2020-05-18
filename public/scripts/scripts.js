@@ -14,6 +14,7 @@ function initMyStory() {
     //check for support
     if ('indexedDB' in window) {
         initDatabase();
+        console.log("index db installed");
     }
     else {
         console.log('This browser doesn\'t support IndexedDB');
@@ -26,30 +27,60 @@ function initMyStory() {
  * the server (or failing that) from the database
  */
 function loadData() {
-    const stories = JSON.parse(localStorage.getItem('stories'));
+    // const stories = JSON.parse(localStorage.getItem('stories'));
     // cityList = removeDuplicates(cityList);
-    retrieveStories(stories, new Date().getTime());
+    refreshStories();
+    loadStories()
 }
 
 /**
- * Cycles through the list of stories and requests the data from the server for each
- * story
- * @param stories - the list of the stories the user has requested
- * @param date - the date of the stories (not in use)
+ * Removes all stories from the results div
  */
-function retrieveStories(stories, date){
-    // refreshCityList();
-    for (let story of stories) {
-        loadStorydata(story, date);
+function refreshStories() {
+    if (document.getElementById('results') != null) {
+        document.getElementById('results').innerHTML='';
     }
 }
 
 /**
- * it removes all stories from the result div
+ * Given the story data returned by the server,
+ * it adds a story to the results div
+ * @param dataR the data returned by the server:
+ *}
  */
-function refreshCityList() {
-    if (document.getElementById('results')!=null) {
-        document.getElementById('results').innerHTML='';
+function addToResults(dataR) {
+    let resultsDiv = document.getElementById('results')
+    if (resultsDiv != null) {
+        const storyDiv = document.createElement('div');
+        resultsDiv.appendChild(storyDiv);
+        storyDiv.setAttribute('id', dataR.id);
+        storyDiv.classList.add('card');
+        storyDiv.classList.add('body-card');
+
+        let storyHeader = document.createElement('div');
+        storyDiv.appendChild(storyHeader);
+        storyHeader.classList.add('card-header');
+        // let storyHeaderContent = document.createElement('div');
+        // let storyProfileImage = document.createElement('div');
+
+        let storyUsername = document.createElement('div');
+        storyHeader.appendChild(storyUsername);
+        storyUsername.setAttribute('id', 'userName')
+        storyUsername.innerHTML = dataR.user_id;
+
+        let storyContent = document.createElement('div');
+        storyDiv.appendChild(storyContent);
+        storyContent.classList.add('card-body');
+
+        let storyText = document.createElement('p');
+        storyContent.appendChild(storyText);
+        storyText.classList.add('storyText');
+        storyText.innerHTML = dataR.text;
+
+        let storyLikes = document.createElement('div');
+        storyDiv.appendChild(storyLikes);
+        storyLikes.classList.add('card-footer');
+        storyLikes.innerHTML = dataR.votes;
     }
 }
 
@@ -57,29 +88,28 @@ function refreshCityList() {
  * Loads all stories
  // * @param date
  */
-function loadStories(user, date) {
+function loadStories() {
     // const input = JSON.stringify({user: user, date: date});
     $.ajax({
-        url: '/stories',
+        url: '/getStories',
         contentType: 'application/json',
         type: 'POST',
         success: function (dataR) {
             // no need to JSON parse the result, as we are using
             // dataType:json, so JQuery knows it and unpacks the
             // object for us before returning it
-            // addToResults(dataR);
-            storeCachedData(dataR.user, dataR);
-            // if (document.getElementById('offline_div')!=null)
-            //     document.getElementById('offline_div').style.display='none';
+            for (let story of dataR) {
+                addToResults(story);
+                storeCachedData(story);
+            }
+            console.log("ONLINE!!!!");
+            // hideOfflineWarning();
         },
         // the request to the server has failed. Let's show the cached data
         error: function (xhr, status, error) {
+            getCachedData();
+            console.log("OFFLINE!!!!");
             // showOfflineWarning();
-            getCachedData(user, date);
-            // const dvv = document.getElementById('offline_div');
-            // if (dvv != null) {
-            //     dvv.style.display='block';
-            // }
         }
     });
     // // hide the list of cities if currently shown

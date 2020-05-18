@@ -14,6 +14,7 @@ function initDatabase() {
             storiesDB.createIndex('image', 'image', {unique: false, multiEntry: true});
             storiesDB.createIndex('date', 'date', {unique: false, multiEntry: true});
             storiesDB.createIndex('user_id', 'user_id', {unique: false, multiEntry: true});
+            storiesDB.createIndex('votes', 'votes', {unique: false, multiEntry: true});
         }
     });
 }
@@ -33,7 +34,7 @@ function storeCachedData(storyObject) {
             return tx.complete;
         }).then(function () {
             console.log('added item to the store! '+ JSON.stringify(storyObject));
-        }).catch(function (e) {
+        }).catch(function () {
             localStorage.setItem(storyObject._id, JSON.stringify(storyObject));
         });
     } else  {
@@ -42,46 +43,53 @@ function storeCachedData(storyObject) {
 }
 
 /**
- * Gets a story for a from the database
- * @param storyID - story's unique id
+ * Gets all stories from indexedDB
  * @returns {*}
  */
-function getCachedData(storyID) {
+function getCachedData() {
     if (dbPromise) {
         dbPromise.then(function (db) {
-            console.log('fetching: '+ storyID);
-            let tx = db.transaction(STORIES_STORE_NAME, 'readonly');
-            let store = tx.objectStore(STORIES_STORE_NAME);
-            let index = store.index('location');
-            return index.getAll(IDBKeyRange.only(user));
-        }).then(function (readingsList) {
-            if (readingsList && readingsList.length > 0){
-                let max;
-                for (let elem of readingsList) {
-                    if (!max || elem.date > max.date) {
-                        max = elem;
-                    }
-                }
-                if (max) {
-                    addToResults(max);
-                }
-            } else {
-                const value = localStorage.getItem(storyID);
-                if (value == null) {
-                    addToResults({city: city, date: date});
-                }
-                else {
-                    addToResults(value);
+            console.log('fetching stories');
+            const tx = db.transaction(STORIES_STORE_NAME, 'readonly');
+            const store = tx.objectStore(STORIES_STORE_NAME);
+            return store.getAll();
+            // let index = store.index('location');
+            // return index.getAll(IDBKeyRange.only(user));
+        }).then(function () {
+            console.log('got stories from indexeddb');
+        }).catch(function () {
+            for (let story of localStorage) {
+                if (story == null) {
+                    addToResults(story);
                 }
             }
         });
+        // }).then(function (readingsList) {
+        //     if (readingsList && readingsList.length > 0){
+        //         let max;
+        //         for (let elem of readingsList) {
+        //             if (!max || elem.date > max.date) {
+        //                 max = elem;
+        //             }
+        //         }
+        //         if (max) {
+        //             addToResults(max);
+        //         }
+        //     } else {
+        //         const value = localStorage.getItem(storyID);
+        //         if (value == null) {
+        //             addToResults({city: city, date: date});
+        //         }
+        //         else {
+        //             addToResults(value);
+        //         }
+        //     }
+        // });
     } else {
-        const value = localStorage.getItem(user);
-        if (value == null) {
-            addToResults( {user: user, date: date});
-        }
-        else {
-            addToResults(value);
+        for (let story of localStorage) {
+            if (story == null) {
+                addToResults(story);
+            }
         }
     }
 }
