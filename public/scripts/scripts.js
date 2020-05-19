@@ -53,20 +53,24 @@ function addToResults(dataR) {
     if (resultsDiv != null) {
         const storyDiv = document.createElement('div');
         resultsDiv.appendChild(storyDiv);
-        storyDiv.setAttribute('id', dataR.id);
+        storyDiv.setAttribute('id', dataR._id);
         storyDiv.classList.add('card');
         storyDiv.classList.add('body-card');
 
         let storyHeader = document.createElement('div');
         storyDiv.appendChild(storyHeader);
         storyHeader.classList.add('card-header');
-        // let storyHeaderContent = document.createElement('div');
-        // let storyProfileImage = document.createElement('div');
 
         let storyUsername = document.createElement('div');
         storyHeader.appendChild(storyUsername);
-        storyUsername.setAttribute('id', 'userName')
+        storyUsername.setAttribute('id', 'userName');
         storyUsername.innerHTML = dataR.user_id;
+
+        // let storyDate = document.createElement('div');
+        // storyHeader.appendChild(storyDate);
+        // storyUsername.setAttribute('id', 'timePosted');
+        // storyUsername.innerHTML = new Date(dataR.date).toString();
+        // storyUsername.style = 'padding-top: 10px';
 
         let storyContent = document.createElement('div');
         storyDiv.appendChild(storyContent);
@@ -81,6 +85,8 @@ function addToResults(dataR) {
         storyDiv.appendChild(storyLikes);
         storyLikes.classList.add('card-footer');
         storyLikes.innerHTML = dataR.votes;
+
+        resultsDiv.appendChild(document.createElement('br'));
     }
 }
 
