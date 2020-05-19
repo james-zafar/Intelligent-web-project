@@ -2,6 +2,7 @@ let dbPromise;
 
 const DB_NAME = 'db_my_story_1';
 const STORIES_STORE_NAME = 'store_stories';
+const LOGGED_IN_STORE_NAME = 'store_logged_in'
 
 /**
  * Initialises the database
@@ -56,11 +57,18 @@ function getCachedData() {
             return store.getAll();
             // let index = store.index('location');
             // return index.getAll(IDBKeyRange.only(user));
-        }).then(function () {
-            console.log('got stories from indexeddb');
+        }).then(function (stories) {
+            if (stories.length > 0) {
+                for (let story of stories) {
+                    if (story != null) {
+                        addToResults(story);
+                    }
+                }
+            }
+            console.log('Got stories from indexeddb');
         }).catch(function () {
             for (let story of localStorage) {
-                if (story == null) {
+                if (story != null) {
                     addToResults(story);
                 }
             }
@@ -88,7 +96,7 @@ function getCachedData() {
         // });
     } else {
         for (let story of localStorage) {
-            if (story == null) {
+            if (story != null) {
                 addToResults(story);
             }
         }

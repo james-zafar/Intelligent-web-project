@@ -109,13 +109,13 @@ function loadStories() {
                 storeCachedData(story);
             }
             console.log("ONLINE!!!!");
-            // hideOfflineWarning();
+            hideOfflineWarning();
         },
         // the request to the server has failed. Let's show the cached data
         error: function (xhr, status, error) {
             getCachedData();
             console.log("OFFLINE!!!!");
-            // showOfflineWarning();
+            showOfflineWarning();
         }
     });
     // // hide the list of cities if currently shown
@@ -128,7 +128,6 @@ function loadStories() {
  * so that it is clear that the data is stale
  */
 window.addEventListener('offline', function(e) {
-    // Queue up events for server.
     console.log("You are offline");
     showOfflineWarning();
 }, false);
@@ -137,7 +136,6 @@ window.addEventListener('offline', function(e) {
  * When the client gets online, it hides the off line warning
  */
 window.addEventListener('online', function(e) {
-    // Resync data with server.
     console.log("You are online");
     hideOfflineWarning();
     loadData();
@@ -145,13 +143,25 @@ window.addEventListener('online', function(e) {
 
 
 function showOfflineWarning(){
-  if (document.getElementById('offline_div')!=null)
-    document.getElementById('offline_div').style.display='block';
+    const offlineWarning = document.getElementById('offline-warning');
+    if (offlineWarning != null) {
+        offlineWarning.style.display = 'inline-block';
+    }
+    const onlineWarning = document.getElementById('online-warning');
+    if (onlineWarning != null) {
+        onlineWarning.style.display = 'none';
+    }
 }
 
 function hideOfflineWarning(){
-  if (document.getElementById('offline_div')!=null)
-    document.getElementById('offline_div').style.display='none';
+    const offlineWarning = document.getElementById('offline-warning');
+    if (offlineWarning != null) {
+        offlineWarning.style.display = 'none';
+    }
+    const onlineWarning = document.getElementById('online-warning');
+    if (onlineWarning != null) {
+        onlineWarning.style.display = 'inline-block';
+    }
 }
 
 
@@ -176,9 +186,7 @@ function sendAjaxQuery(url, data) {
         contentType: 'application/json',
         type: 'POST',
         success: function (dataR) {
-            if (dataR !== undefined) {
-                window.location.href = dataR.redirect;
-            }
+            window.location.href = dataR.redirect;
         },
         error: function (xhr, status, error) {
             alert('Error: ' + error.message);

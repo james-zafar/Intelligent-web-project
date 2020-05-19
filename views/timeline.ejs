@@ -23,17 +23,17 @@
                 <li class="nav-item active">
                     <a class="nav-link" href="/#">View Posts<span class="sr-only">(current)</span></a>
                 </li>
-                <!--TODO: Have this hide and show correctly based on user log-in status-->
                 <li class="nav-item">
                     <a class="nav-link" href="/timeline">View Your Posts</a>
                 </li>
             </ul>
             <span>
-                  <!--TODO: Have these hide and show correctly based on user log-in status-->
-                  <button class="btn btn-outline-secondary" type="button"
-                      onclick="window.location.href='logout'">Logout
-                  </button>
-                  <button class="btn btn-outline-secondary" type="button" onclick="window.location.href='createPost'">Submit Post</button>
+                <button class="btn btn-outline-success" id="online-warning" disabled>Online</button>
+                <button class="btn btn-outline-danger" id="offline-warning" disabled>Offline</button>
+                <button class="btn btn-outline-secondary" type="button" onclick="window.location.href='createPost'">Submit Post</button>
+                <button class="btn btn-outline-secondary" type="button"
+                  onclick="window.location.href='logout'">Logout
+                </button>
             </span>
         </div>
     </nav>

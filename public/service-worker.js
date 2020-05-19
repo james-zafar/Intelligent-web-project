@@ -15,23 +15,23 @@
 var dataCacheName = 'myStory-v1';
 var cacheName = 'myStoryCache';
 var filesToCache = [
-  '/',
-  '/stylesheets/createPost.css',
-  '/stylesheets/login.css',
-  '/stylesheets/timeline.css',
-  '/stylesheets/style.css',
-  '/stylesheets/bootstrap.min.css',
-  '/scripts/jquery-3.5.1.js',
-  '/scripts/scripts.js',
-  '/scripts/createPost.js',
-  '/scripts/database.js',
-  '/scripts/timeline.js',
-  '/scripts/idb.js',
-  '/scripts/bootstrap.bundle.min.js',
-  '/timeline',
-  // '/login',
-  '/createPost',
-  // '/share',
+    '/',
+    '/timeline',
+    '/createPost',
+    // '/login',
+    // '/share',
+    '/stylesheets/createPost.css',
+    '/stylesheets/login.css',
+    '/stylesheets/timeline.css',
+    '/stylesheets/style.css',
+    '/stylesheets/bootstrap.min.css',
+    '/scripts/jquery-3.5.1.js',
+    '/scripts/scripts.js',
+    '/scripts/createPost.js',
+    '/scripts/database.js',
+    '/scripts/timeline.js',
+    '/scripts/idb.js',
+    '/scripts/bootstrap.bundle.min.js',
 ];
 
 
@@ -39,13 +39,13 @@ var filesToCache = [
  * installation event: it adds all the files to be cached
  */
 self.addEventListener('install', function (e) {
-  console.log('[ServiceWorker] Install');
-  e.waitUntil(
-    caches.open(cacheName).then(function (cache) {
-      console.log('[ServiceWorker] Caching app shell');
-      return cache.addAll(filesToCache);
-    })
-  );
+    console.log('[ServiceWorker] Install');
+    e.waitUntil(
+        caches.open(cacheName).then(function (cache) {
+            console.log('[ServiceWorker] Caching app shell');
+            return cache.addAll(filesToCache);
+        })
+    );
 });
 
 
@@ -53,28 +53,28 @@ self.addEventListener('install', function (e) {
  * activation of service worker: it removes all cashed files if necessary
  */
 self.addEventListener('activate', function (e) {
-  console.log('[ServiceWorker] Activate');
-  e.waitUntil(
-    caches.keys().then(function (keyList) {
-      return Promise.all(keyList.map(function (key) {
-        if (key !== cacheName && key !== dataCacheName) {
-          console.log('[ServiceWorker] Removing old cache', key);
-          return caches.delete(key);
-        }
-      }));
-    })
-  );
-  /*
-   * Fixes a corner case in which the app wasn't returning the latest data.
-   * You can reproduce the corner case by commenting out the line below and
-   * then doing the following steps: 1) load app for first time so that the
-   * initial New York City data is shown 2) press the refresh button on the
-   * app 3) go offline 4) reload the app. You expect to see the newer NYC
-   * data, but you actually see the initial data. This happens because the
-   * service worker is not yet activated. The code below essentially lets
-   * you activate the service worker faster.
-   */
-  return self.clients.claim();
+    console.log('[ServiceWorker] Activate');
+    e.waitUntil(
+        caches.keys().then(function (keyList) {
+            return Promise.all(keyList.map(function (key) {
+                if (key !== cacheName && key !== dataCacheName) {
+                    console.log('[ServiceWorker] Removing old cache', key);
+                    return caches.delete(key);
+                }
+            }));
+        })
+    );
+    /*
+     * Fixes a corner case in which the app wasn't returning the latest data.
+     * You can reproduce the corner case by commenting out the line below and
+     * then doing the following steps: 1) load app for first time so that the
+     * initial New York City data is shown 2) press the refresh button on the
+     * app 3) go offline 4) reload the app. You expect to see the newer NYC
+     * data, but you actually see the initial data. This happens because the
+     * service worker is not yet activated. The code below essentially lets
+     * you activate the service worker faster.
+     */
+    return self.clients.claim();
 });
 
 
@@ -87,48 +87,67 @@ self.addEventListener('activate', function (e) {
  *      from there (e.g. showing the cached data)
  * all the other pages are searched for in the cache. If not found, they are returned
  */
-self.addEventListener('fetch', function (e) {
-  console.log('[Service Worker] Fetch', e.request.url);
-  var dataUrl = '/testtesttest';
-  //TODO: Add any pages here that we do not want to be cached
-  //if the request is contained in data url do not cache
-  if (e.request.url.indexOf(dataUrl) > -1) {
-    console.log("SERVICE indexof");
-    /*
-     * When the request URL contains dataUrl, the app is asking for fresh
-     * weather data. In this case, the service worker always goes to the
-     * network and then caches the response. This is called the "Cache then
-     * network" strategy:
-     * https://jakearchibald.com/2014/offline-cookbook/#cache-then-network
-     */
-    return fetch(e.request).then(function (response) {
-      // note: it the network is down, response will contain the error
-      // that will be passed to Ajax
-      return response;
-    })
-  } else {
-    console.log("SERVICE falling back to the network");
-    /*
-     * The app is asking for app shell files. In this scenario the app uses the
-     * "Cache, falling back to the network" offline strategy:
-     * https://jakearchibald.com/2014/offline-cookbook/#cache-falling-back-to-network
-     */
-    e.respondWith(
-      caches.match(e.request).then(function (response) {
-        return response
-          || fetch(e.request)
-            .then(function (response) {
-              // note if network error happens, fetch does not return
-              // an error. it just returns response not ok
-              // https://www.tjvantoll.com/2015/09/13/fetch-and-errors/
-              if (!response.ok) {
-                console.log("error: " + response.error());
-              }
-            })
-            .catch(function (e) {
-              console.log("error: " + err);
-            })
-      })
-    );
-  }
+self.addEventListener('fetch', function (event) {
+    console.log('[Service Worker] Fetch', event.request.url);
+    var dataUrl = '/getStories';
+    //TODO: Add any pages here that we do not want to be cached
+
+    //if the request is contained in data url do not cache
+    if (event.request.url.indexOf(dataUrl) > -1) {
+        /*
+         * When the request URL contains dataUrl, the app is asking for fresh
+         * weather data. In this case, the service worker always goes to the
+         * network and then caches the response. This is called the "Cache then
+         * network" strategy:
+         * https://jakearchibald.com/2014/offline-cookbook/#cache-then-network
+         */
+        return fetch(event.request).then(function (response) {
+            // note: it the network is down, response will contain the error
+            // that will be passed to Ajax
+            return response;
+        });
+    } else {
+        console.log("SERVICE falling back to the network");
+        /*
+         * The app is asking for app shell files. In this scenario the app uses the
+         * "Cache, then if network available, it will refresh the cache
+         * see stale-while-revalidate at
+         * https://jakearchibald.com/2014/offline-cookbook/#on-activate
+         */
+        event.respondWith(async function () {
+            const cache = await caches.open('myStoryCache');
+            const cachedResponse = await cache.match(event.request);
+            const networkResponsePromise = fetch(event.request);
+
+            event.waitUntil(async function () {
+                const networkResponse = await networkResponsePromise;
+                await cache.put(event.request, networkResponse.clone());
+            }());
+
+            // Returned the cached response if we have one, otherwise return the network response.
+            return cachedResponse || networkResponsePromise;
+        }());
+        /*
+         * The app is asking for app shell files. In this scenario the app uses the
+         * "Cache, falling back to the network" offline strategy:
+         * https://jakearchibald.com/2014/offline-cookbook/#cache-falling-back-to-network
+         */
+        // e.respondWith(
+        //     caches.match(e.request).then(function (response) {
+        //         return response
+        //             || fetch(e.request)
+        //                 .then(function (response) {
+        //                     // note if network error happens, fetch does not return
+        //                     // an error. it just returns response not ok
+        //                     // https://www.tjvantoll.com/2015/09/13/fetch-and-errors/
+        //                     if (!response.ok) {
+        //                         console.log("error: " + response.error());
+        //                     }
+        //                 })
+        //                 .catch(function (e) {
+        //                     console.log("error: " + e);
+        //                 })
+        //     })
+        // );
+    }
 });

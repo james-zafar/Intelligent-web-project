@@ -6,6 +6,8 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
+const MongoStore = require('connect-mongo')(session)
+
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 
@@ -29,7 +31,8 @@ app.use(session({
   secret: 'secret',
   resave: true,
   saveUninitialized: true,
-  loggedIn: false
+  store: new MongoStore({ url: 'mongodb://localhost:27017/myStory' })
+  // loggedIn: false
 }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));

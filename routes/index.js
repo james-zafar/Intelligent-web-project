@@ -61,7 +61,7 @@ router.get('/createPost', function(req, res, next) {
 
 router.get('/login', function (req, res, next) {
     if (req.session.loggedIn) {
-        return res.redirect('/timeline');
+        return res.redirect('/');
     }
     res.render('login', { title: 'Login'});
 });
@@ -106,14 +106,6 @@ router.post('/getStories', function(req, res) {
                 } else {
                     res.setHeader("Content-Type", "application/json");
                     res.send(JSON.stringify(results));
-                    // for (let result of results) {
-                    //     var userID = new mongodb.ObjectID(result.user_id);
-                    //     var userDB = db.collection('users');
-                    //     var newQuery = userDB.find({_id: userID});
-                    //     newQuery.toArray(function(err, result) {
-                    //         results[i].user_id = result[0].first_name + " " + result[0].family_name;
-                    //     });
-                    // }
                 }
             });
         }

@@ -4,9 +4,9 @@
     <title><%= title %></title>
     <script src="/scripts/jquery-3.5.1.js"></script>
     <script src="/scripts/scripts.js"></script>
-    <link rel="stylesheet" href="/stylesheets/createPost.css"/>
     <script src="/scripts/createPost.js" defer></script>
     <script src="/scripts/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="/stylesheets/createPost.css"/>
     <link rel='stylesheet' href='/stylesheets/style.css'/>
     <link rel='stylesheet' href='/stylesheets/bootstrap.min.css'/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -23,18 +23,18 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/#">View Posts</a>
                 </li>
-                <!--TODO: Have this hide and show correctly based on user log-in status-->
                 <li class="nav-item">
                     <a class="nav-link" href="/timeline">View Your Posts</a>
                 </li>
             </ul>
             <span>
-                      <!--TODO: Have these hide and show correctly based on user log-in status-->
-                      <button class="btn btn-outline-secondary" type="button"
-                              onclick="window.location.href='logout'">Logout</button>
-                      <button class="btn btn-outline-secondary active" type="button"
-                              onclick="window.location.href='createPost'">Submit Post<span class="sr-only">(current)</span></button>
-                    </span>
+                <button class="btn btn-outline-success" id="online-warning" disabled>Online</button>
+                <button class="btn btn-outline-danger" id="offline-warning" disabled>Offline</button>
+                <button class="btn btn-outline-secondary active" type="button"
+                      onclick="window.location.href='createPost'">Submit Post<span class="sr-only">(current)</span></button>
+                <button class="btn btn-outline-secondary" type="button"
+                        onclick="window.location.href='logout'">Logout</button>
+            </span>
         </div>
     </nav>
     <div class="offline_div" id="offline_div" style="display: none">You are offline</div>
