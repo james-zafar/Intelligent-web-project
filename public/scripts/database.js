@@ -45,8 +45,7 @@ function storeCachedData(storyObject) {
 }
 
 /**
- * Gets all stories from indexedDB
- * @returns {*}
+ * Gets all stored stories from the indexedDB
  */
 function getCachedData() {
     if (dbPromise) {

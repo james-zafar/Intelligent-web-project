@@ -5,13 +5,13 @@ if ($('#addFile').val() === "") {
 }
 
 /**
- *
+ * Takes a list image files supplied by the user and adds it to the post
  * @param fileList the list of files selected by the user
  */
 function addAttachment(fileList) {
     if (fileList.files) {
         let length = fileList.files.length;
-        //Check to ee how many images already attached to enforce 4 image limit
+        //Check to see how many images already attached to enforce 4 image limit
         const child = $('#previewArea').children('img').length;
         if((length + child) > 3) {
             $('#tooManyImage').show();
@@ -31,7 +31,7 @@ function addAttachment(fileList) {
                     class: 'uploadImages',
                     name: ('image' + i),
                     click: function(e) {
-                        showImagePreviw(('image' + i))
+                        showImagePreview(('image' + i))
                     },
                     css: {
                         paddingBottom: '25px',
@@ -52,7 +52,7 @@ $('#addFile').change(function() {
 
 
 /**
- *
+ * For a given image add a preview to the post
  * @param imageID the id of the image to be previewed
  */
 function addImgPreview(imageID) {
@@ -69,10 +69,10 @@ function addImgPreview(imageID) {
 
 
 /**
- *
+ * For a givenh image show the preview of the image
  * @param source the id of the image to be previewed
  */
-function showImagePreviw(source) {
+function showImagePreview(source) {
     addImgPreview(source);
     var img = $('#imagePreview');
     //Show modal with the image preview
@@ -100,7 +100,7 @@ function removePicture() {
 }
 
 /**
- *
+ * Get all of the images that the user has currently uploaded
  * @returns {[]} An array of images uploaded by the user (maximum 4)
  */
 function getImages() {
