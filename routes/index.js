@@ -4,6 +4,7 @@ const router = express.Router();
 var mongodb = require('mongodb');
 
 const users = require('../controllers/users');
+const stories = require('../controllers/stories');
 const initDB = require('../controllers/init');
 initDB.init();
 
@@ -17,38 +18,17 @@ router.get('/', function(req, res, next) {
     if (!req.session.loggedIn) {
         return res.redirect('/login');
     }
-
-    var url = 'mongodb://localhost:27017/';
-    mongodb.connect(url, function (error, client) {
-        if (error) {
-            console.log("Database error: ", error);
-            res.send(error);
-        } else {
-            var db = client.db('myStory');
-            var collection = db.collection('stories');
-
-            collection.find({}).toArray(function (error, results) {
-                if (error) {
-                    console.log("Error retrieving data: ", error);
-                    res.send(error);
-                } else {
-                    for(let i = 0; i < results.length; i++) {
-                        var userID = new mongodb.ObjectID(results[i].user_id);
-                        var userDB = db.collection('users');
-                        var newQuery = userDB.find({_id: userID});
-                        newQuery.toArray(function(err, result) {
-                            results[i].user_id = result[0].first_name + " " + result[0].family_name;
-                        });
-                    }
-                    res.render('index', {
-                        title: 'Index',
-                        profileSource: 'https://images.unsplash.com/reserve/bOvf94dPRxWu0u3QsPjF_tree.jpg?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60',
-                        allStories: results,
-                        req: req
-                    });
-                }
-            });
+    res.render('index');
+    stories.getAll(req, res, function (error, stories) {
+        if (error || !stories) {
+                const message = 'No stories in db.';
+                console.log(message);
+                const err = new Error(message);
+                return next(err);
         }
+        res.io.on('connection', function() {
+            res.io.sockets.emit('broadcast', stories);
+        });
     });
 });
 
