@@ -90,6 +90,10 @@ router.get('/logout', function(req, res, next) {
     return res.redirect('/login');
 });
 
+router.post('/upload', function (req, res) {
+
+})
+
 router.post('/getStories', function(req, res) {
     const url = 'mongodb://localhost:27017/';
     mongodb.connect(url, function (error, client) {
