@@ -57,9 +57,9 @@
                             <label class="custom-file-label" for="addFile" id="labelText">Select up to 3 images to attach to
                                 your post</label>
                         </div>
-                        <video autoplay></video>
-                        <img src="">
-                        <canvas style="display:none;"></canvas>
+<!--                        <video autoplay></video>-->
+<!--                        <img src="">-->
+<!--                        <canvas style="display:none;"></canvas>-->
                     </div>
                     <div class="alert alert-danger alert-dismissible hide" role="alert" id="tooManyImage"
                          style="display: none">
@@ -95,6 +95,14 @@
             <button type="button" class="close" onclick="$('#postWarning').hide();">
                 <span aria-hidden="true">&times;</span>
             </button>
+        </div>
+
+        <div class="cameraContainer">
+            <video id="video"></video>
+            <a href="#" id="capture" class="cameraCaptureButton btn btn-info">Take photo</a>
+            <canvas id="canvas" width="400" height="300"></canvas>
+            <img id="photo" src="https://via.placeholder.com/400x300">
+            <a href="#" id="uploadCapturedPhoto" class="uploadPhotoButton btn btn-info">Upload photo</a>
         </div>
 
         <div class="modal fade" id="imagePreview" role="dialog" aria-labelledby="previewTitle" aria-hidden="true">

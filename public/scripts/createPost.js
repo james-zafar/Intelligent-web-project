@@ -132,61 +132,90 @@ $('#submitPost').click(function() {
     }
 });
 
-function hasGetUserMedia() {
-    return !!(navigator.mediaDevices.getUserMedia ||
-      navigator.mediaDevices.webkitGetUserMedia ||
-      navigator.mediaDevices.mozGetUserMedia ||
-      navigator.mediaDevices.msGetUserMedia);}
+// function hasGetUserMedia() {
+//     return !!(navigator.mediaDevices.getUserMedia ||
+//       navigator.mediaDevices.webkitGetUserMedia ||
+//       navigator.mediaDevices.mozGetUserMedia ||
+//       navigator.mediaDevices.msGetUserMedia);}
+//
+// if (hasGetUserMedia()) {
+//     // Good to go!
+//     console.log("CLEARCLEARLCREARRGOADNOAG");
+// } else {
+//     alert('getUserMedia() is not supported in your browser');
+// }
+//
+// function prepareVideo(camid) {
+//     // MediaStreamTrack.getSources(getSources);
+//     var session = {
+//         audio: false,
+//         video: {
+//             // if camera id not null, use it, otherwise select any
+//             deviceId: camid ? {exact: camid} : true,
+//             // to choose the back camera use:
+//             // facingMode: 'environment',
+//             // needs a minimum frame rate or it will not work
+//             //https://github.com/webrtc/samples/issues/922
+//             frameRate: {
+//                 min: 10 },},};
+//     navigator.mediaDevices.getUserMedia(session)
+//       .then(async mediaStream => {
+//           // Chrome crbug.com/711524 requires await sleep
+//           new Promise(res => setTimeout(res, 1000))
+//           gotStream(mediaStream);})
+//       .catch(function (e) {
+//           alert('Not supported on this device. Update your browser: ' + e.message);
+//       });
+//     var video = document.querySelector('video');
+//     var canvas = document.querySelector('canvas');
+//     var ctx = canvas.getContext('2d');
+//     var localMediaStream = null;
+//     video.addEventListener('click', snapshot, false);
+//
+//     function errorCallback() {
+//         console.log("error");
+//     }
+//
+//     navigator.mediaDevices.getUserMedia({video: true}, function(stream) {
+//         video.src = window.URL.createObjectURL(stream);
+//         localMediaStream = stream;
+//     }, errorCallback);
+//     function snapshot() {
+//         if (localMediaStream) {
+//             ctx.drawImage(video, 0, 0);
+//             document.querySelector('img').src
+//               = canvas.toDataURL('image/png');
+//         }
+//     }
+// }
+//
+// prepareVideo(null)
 
-if (hasGetUserMedia()) {
-    // Good to go!
-    console.log("CLEARCLEARLCREARRGOADNOAG");
-} else {
-    alert('getUserMedia() is not supported in your browser');
-}
+(function () {
+    let video = document.getElementById('video'),
+        canvas = document.getElementById('canvas'),
+        context = canvas.getContext('2d'),
+        photo = document.getElementById('photo'),
+        vendorUrl = window.URL || window.webkitURL;
 
-function prepareVideo(camid) {
-    // MediaStreamTrack.getSources(getSources);
-    var session = {
-        audio: false,
-        video: {
-            // if camera id not null, use it, otherwise select any
-            deviceId: camid ? {exact: camid} : true,
-            // to choose the back camera use:
-            // facingMode: 'environment',
-            // needs a minimum frame rate or it will not work
-            //https://github.com/webrtc/samples/issues/922
-            frameRate: {
-                min: 10 },},};
-    navigator.mediaDevices.getUserMedia(session)
-      .then(async mediaStream => {
-          // Chrome crbug.com/711524 requires await sleep
-          new Promise(res => setTimeout(res, 1000))
-          gotStream(mediaStream);})
-      .catch(function (e) {
-          alert('Not supported on this device. Update your browser: ' + e.message);
-      });
-    var video = document.querySelector('video');
-    var canvas = document.querySelector('canvas');
-    var ctx = canvas.getContext('2d');
-    var localMediaStream = null;
-    video.addEventListener('click', snapshot, false);
+    navigator.getMedia =    navigator.getUserMedia ||
+                            navigator.webkitGetUserMedia ||
+                            navigator.mozGetUserMedia ||
+                            navigator.msGetUserMedia;
 
-    function errorCallback() {
-        console.log("error");
-    }
+    navigator.getMedia({
+        video: true,
+        audio: false
+    }, function (stream) {
+        video.srcObject = stream;
+        video.play();
+    }, function (error) {
+        console.log(error.code);
+        window.alert("Error getting video stream")
+    })
 
-    navigator.mediaDevices.getUserMedia({video: true}, function(stream) {
-        video.src = window.URL.createObjectURL(stream);
-        localMediaStream = stream;
-    }, errorCallback);
-    function snapshot() {
-        if (localMediaStream) {
-            ctx.drawImage(video, 0, 0);
-            document.querySelector('img').src
-              = canvas.toDataURL('image/png');
-        }
-    }
-}
-
-prepareVideo(null)
+    document.getElementById('capture').addEventListener('click', function () {
+        context.drawImage(video, 0, 0, 400, 300);
+        photo.setAttribute('src', canvas.toDataURL('image/png'))
+    })
+})();

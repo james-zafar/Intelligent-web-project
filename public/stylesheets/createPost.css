@@ -1,3 +1,23 @@
 .uploadImages:hover {
     opacity: 0.4;
 }
+
+.cameraContainer {
+    width: 420px;
+    background-color: #ccc;
+    border: 10px solid #ddd;
+    margin: 0 auto;
+}
+
+#video {
+    width: 400px;
+    height: 300px;
+}
+
+.cameraCaptureButton .uploadPhotoButton {
+    margin: 10px;
+}
+
+#canvas {
+    display: none;
+}
