@@ -13,7 +13,7 @@ function addAttachment(fileList) {
         let length = fileList.files.length;
         //Check to see how many images already attached to enforce 4 image limit
         const child = $('#previewArea').children('img').length;
-        if((length + child) > 3) {
+        if((length + child) >= 3) {
             $('#tooManyImage').show();
             length = 3 - child;
         }
@@ -133,6 +133,7 @@ $('#submitPost').click(function() {
 });
 
 function cameraFunc() {
+    console.log("11111");
     let cameraContainer = document.getElementById('submitCameraContainer'),
         toggleButton = document.getElementById('toggleCameraButton')
 
@@ -167,15 +168,16 @@ function cameraFunc() {
     })
 
     document.getElementById('capture').addEventListener('click', function () {
-        context.drawImage(video, 0, 0, 400, 300);
+        context.drawImage(video, 0, 0, 300, 255);
         photo.setAttribute('src', canvas.toDataURL('image/png'))
     })
 
     document.getElementById('uploadCapturedPhoto').addEventListener('click', function () {
         const child = $('#previewArea').children('img').length;
-        if (child > 3){
+        if (child >= 3){
             $('#tooManyImage').show();
         } else {
+            console.log("22222");
             $('<img />', {
                 src: photo.src,
                 alt: 'Images taken by user',
