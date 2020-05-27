@@ -132,6 +132,7 @@ $('#submitPost').click(function() {
     }
 });
 
+// TODO: Bug here where button needs to be pressed. Either fix or remove button as a workaround.
 function toggleCamera() {
     let cameraContainer = document.getElementById('submitCameraContainer'),
         toggleButton = document.getElementById('toggleCameraButton')
