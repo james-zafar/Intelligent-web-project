@@ -4,11 +4,9 @@
  * Module dependencies.
  */
 
-const app = require('../app');
+const app = require('../app').app;
 const debug = require('debug')('pro:server');
 const https = require('https');
-const socket = require('socket.io')
-const fs = require('fs');
 
 // Loading in database
 require('../databases/my_story');
@@ -20,25 +18,9 @@ const port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 /**
- * Set HTTPs server options
+ * Create HTTPs server
  */
-try {
-  options = {
-    key: fs.readFileSync('../private_access/key.pem'),
-    cert: fs.readFileSync('../private_access/server.crt')
-  }
-} catch(error) {
-  options = {
-    key: fs.readFileSync('./private_access/key.pem'),
-    cert: fs.readFileSync('./private_access/server.crt')
-  }
-}
-
-/**
- * Create HTTPs server and socket.io
- */
-const server = https.createServer(options, app);
-socket(server);
+const server = require('../app.js').server;
 
 /**
  * Listen on provided port, on all network interfaces.

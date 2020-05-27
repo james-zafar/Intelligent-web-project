@@ -25,13 +25,14 @@ var filesToCache = [
     '/stylesheets/timeline.css',
     '/stylesheets/style.css',
     '/stylesheets/bootstrap.min.css',
-    '/scripts/jquery-3.5.1.js',
     '/scripts/scripts.js',
     '/scripts/createPost.js',
     '/scripts/database.js',
     '/scripts/timeline.js',
     '/scripts/idb.js',
+    '/scripts/jquery-3.5.1.js',
     '/scripts/bootstrap.bundle.min.js',
+    '/scripts/socket.io.js'
 ];
 
 

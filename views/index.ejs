@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title><%= title %></title>
+    <title>myStory</title>
     <script src="/scripts/jquery-3.5.1.js"></script>
     <script src="/scripts/bootstrap.bundle.min.js"></script>
+    <script src="/scripts/socket.io.js"></script>
     <link rel='stylesheet' href='/stylesheets/style.css'/>
     <link rel='stylesheet' href="/stylesheets/timeline.css"/>
     <link rel='stylesheet' href='/stylesheets/bootstrap.min.css'/>
@@ -49,71 +50,7 @@
         </div>
         <br>
         <div id="results">
-            <% allStories %>
-            <!----------------
-                  FIXME: To allow stories to be liked/edited we need to be able to retrieve the IDs associated with each story
-                   These will then be used to amend the "id" attribute of the card tags
-                   timeline.js is already set up to identify stories based on the ID of the card (to be edited slightly for index.js)
-               ------------------>
-            <% for(let i = (allStories.length - 1); i > 0; i--) { %>
-                <div class="card body-card" id="<%= allStories[i]._id %>">
-                    <div class="card-header">
-                        <div class="" id="profileImage">
-                            <img src="<%= profileSource %>" alt="Profile Image" width="10%" height="100%"
-                                 class="img-fluid rounded float-left" id="profileImage">
-                            <div id="userName">
-                                <% if((allStories[i].user_id) === undefined) { %>
-                                    Unknown User
-                                <% } else { %>
-                                    <%= allStories[i].user_id; %>
-                                <% } %>
 
-                            </div>
-                            <div id="timePosted" style="padding-top: 10px;">
-                                <%= allStories[i].date %>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <p class="storyText" id="textID1"><%= allStories[i].text %></p>
-                        <div class="row">
-                            <!----------------
-                               TODO: The src of these img tags needs to be fixed to display images properly
-                                The arg parsed from JS is the buffer from the DB,
-                                I am unsure how this is encoded/how to use it to create an image
-                            ------------------>
-                            <% if(allStories[i].image.length !== 0) { %>
-
-                                <% if(allStories[i].image.length === 1) { %>
-                                    <div class="col-md-4">
-                                        <img src="data:image/jpeg;base64,  <%= allStories[i].image.toString('base64'); %>"
-                                             alt="inn_logo" class="img-fluid">
-                                    </div>
-                                <% } else { %>
-                                    <div class="col-md-<%= (12 / allStories[i].image.length) %>">
-                                        <img src="data:image/jpeg;base64,  <%= allStories[i].image.toString('base64'); %>"
-                                             alt="inn_logo" class="img-fluid">
-                                    </div>
-                                    <div class="col-md-<%= (12 / allStories[i].image.length) %>">
-                                        <img src="data:image/jpeg;base64,  <%= allStories[i].image.toString('base64'); %>"
-                                             alt="inn_logo" class="img-fluid">
-                                    </div>
-                                <% } %>
-                                <% if(allStories[i].image.length == 3){ %>
-                                    <div class="col-md-<%= (12 / allStories[i].image.length) %>">
-                                        <img src="data:image/jpeg;base64,  <%= allStories[i].image.toString('base64'); %>"
-                                             alt="inn_logo" class="img-fluid">
-                                    </div>
-                                <% } %>
-                            <% } %>
-                        </div>
-
-                    </div>
-                    <div class="card-footer">
-                        This area should be used to allow users to like posts (not implemented yet)
-                    </div>
-                </div>
-            <% } %>
         </div>
     </div>
 </body>
