@@ -218,4 +218,28 @@ $('#submitPost').click(function() {
         context.drawImage(video, 0, 0, 400, 300);
         photo.setAttribute('src', canvas.toDataURL('image/png'))
     })
+
+    document.getElementById('uploadCapturedPhoto').addEventListener('click', function () {
+        const child = $('#previewArea').children('img').length;
+        if (child > 3){
+            $('#tooManyImage').show();
+        } else {
+            $('<img />', {
+                src: photo.src,
+                alt: 'Images taken by user',
+                width: '32%',
+                height: '100%',
+                id: ('image' + (child + 1)),
+                class: 'uploadImages',
+                name: ('image' + (child + 1)),
+                click: function(e) {
+                    showImagePreview('image' + (child + 1))
+                },
+                css: {
+                    paddingBottom: '25px',
+                    paddingLeft: '3%'
+                }
+            }).appendTo('#previewArea');
+        }
+    })
 })();
