@@ -1,3 +1,6 @@
+/**
+ * Initiates the web application
+ */
 function initMyStory() {
     loadData();
     if ('serviceWorker' in navigator) {
@@ -46,7 +49,6 @@ function refreshStories() {
  * Given the story data returned by the server,
  * it adds a story to the results div
  * @param dataR the data returned by the server:
- *}
  */
 function addToResults(dataR) {
     let resultsDiv = document.getElementById('results')
@@ -92,7 +94,6 @@ function addToResults(dataR) {
 
 /**
  * Loads all stories
- // * @param date
  */
 function loadStories() {
     // const input = JSON.stringify({user: user, date: date});
@@ -141,7 +142,9 @@ window.addEventListener('online', function(e) {
     loadData();
 }, false);
 
-
+/**
+ * Shows any hidden offline warnings and hides any non-hidden online warnings
+ */
 function showOfflineWarning(){
     const offlineWarning = document.getElementById('offline-warning');
     if (offlineWarning != null) {
@@ -153,6 +156,9 @@ function showOfflineWarning(){
     }
 }
 
+/**
+ * Hides any non-hidden offline warnings and shows any hidden online warnings
+ */
 function hideOfflineWarning(){
     const offlineWarning = document.getElementById('offline-warning');
     if (offlineWarning != null) {
