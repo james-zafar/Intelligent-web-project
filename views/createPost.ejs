@@ -49,6 +49,7 @@
                     <textarea class="form-control" name="storyContent" id="storyContent" rows="10"
                               placeholder="Add a story..."></textarea>
                     <div class="input-group mb-3">
+                        <button id="toggleCameraButton" class="btn" onclick="cameraFunc()">Use camera</button>
                         <div class="input-group-prepend">
                             <span class="input-group-text">Upload Images</span>
                         </div>
@@ -57,9 +58,6 @@
                             <label class="custom-file-label" for="addFile" id="labelText">Select up to 3 images to attach to
                                 your post</label>
                         </div>
-<!--                        <video autoplay></video>-->
-<!--                        <img src="">-->
-<!--                        <canvas style="display:none;"></canvas>-->
                     </div>
                     <div class="alert alert-danger alert-dismissible hide" role="alert" id="tooManyImage"
                          style="display: none">
@@ -73,7 +71,7 @@
                 </form>
             </div>
             <div class="card-footer">
-                <button type="button" class="btn btn-secondary" id="submitPost">Submit Post</button>
+                <button type="button" class="btn" id="submitPost">Submit Post</button>
             </div>
         </div>
         <% if(req.query.disp == 'true') { %>
@@ -97,7 +95,7 @@
             </button>
         </div>
 
-        <div class="cameraContainer">
+        <div class="cameraContainer" id="submitCameraContainer">
             <video id="video"></video>
             <a href="#" id="capture" class="cameraCaptureButton btn btn-info">Take photo</a>
             <canvas id="canvas" width="400" height="300"></canvas>

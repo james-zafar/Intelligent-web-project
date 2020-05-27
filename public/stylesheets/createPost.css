@@ -3,6 +3,7 @@
 }
 
 .cameraContainer {
+    display: none;
     width: 420px;
     background-color: #ccc;
     border: 10px solid #ddd;
