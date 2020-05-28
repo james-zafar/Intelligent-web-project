@@ -88,9 +88,7 @@
     <% for(let i = (allStories.length - 1); i > 0; i--) { %>
         <div class="card body-card" id="<%= allStories[i]._id %>">
             <div class="card-header">
-                <div class="" id="profileImage">
-                    <img src="<%= profileSource %>" alt="Profile Image" width="10%" height="100%"
-                         class="img-fluid rounded float-left" id="profileImage">
+                <div class="" id="profileArea">
                     <div id="userName">
                         <% if((allStories[i].user_id) === undefined) { %>
                             Unknown User
@@ -167,12 +165,12 @@
                     </div>
                     <div class="col-md-3">
                         <div class="" id="averageRating">
-                            Average like rating: 3.333
+                            Average like rating: <%= allStories[i].averageRating %>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div>
-                            Liked by n users
+                            Liked by <%= allStories[i].likeCount%> users
                         </div>
                     </div>
                 </div>

@@ -13,7 +13,7 @@ var fs = require('fs');
 
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
+router.get('/', function (req, res, next) {
     if (!req.session.loggedIn) {
         return res.redirect('/login');
     }
@@ -26,47 +26,60 @@ router.get('/', function(req, res, next) {
         } else {
             var db = client.db('myStory');
             var collection = db.collection('stories');
-
             collection.find({}).toArray(function (error, results) {
                 if (error) {
                     console.log("Error retrieving data: ", error);
                     res.send(error);
                 } else {
-                    for(let i = 0; i < results.length; i++) {
-                        var userID = new mongodb.ObjectID(results[i].user_id);
-                        var userDB = db.collection('users');
-                        var newQuery = userDB.find({_id: userID});
-                        newQuery.toArray(function(err, result) {
-                            results[i].user_id = result[0].first_name + " " + result[0].family_name;
+                    (async function (results) {
+                        function processResults(results) {
+                            return new Promise(resolve => {
+                                for (let current of results) {
+                                    console.log("Starting loop...");
+                                    var userID = new mongodb.ObjectID(current.user_id);
+                                    var userDB = db.collection('users');
+                                    var newQuery = userDB.find({_id: userID});
+                                    newQuery.toArray(function (err, result) {
+                                        current.user_id = result[0].first_name + " " + result[0].family_name;
+                                        current['averageRating'] = 3;
+                                        current.likeCount = 4;
+                                        console.log("Exiting Loop " + current.user_id);
+                                    });
+                                }
+                                console.log("Finished: " + results);
+                                resolve(results);
+                            });
+                        }
+
+                        const processedRes = await processResults(results);
+                        res.render('index', {
+                            title: 'Index',
+                            allStories: processedRes,
+                            req: req,
+
                         });
-                    }
-                    res.render('index', {
-                        title: 'Index',
-                        profileSource: 'https://images.unsplash.com/reserve/bOvf94dPRxWu0u3QsPjF_tree.jpg?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60',
-                        allStories: results,
-                        req: req
-                    });
+                    })(results);
                 }
             });
         }
     });
 });
 
-router.get('/createPost', function(req, res, next) {
+router.get('/createPost', function (req, res, next) {
     if (!req.session.loggedIn) {
         return res.redirect('/login');
     }
-    res.render('createPost', { title: 'Create New Post', req: req});
+    res.render('createPost', {title: 'Create New Post', req: req});
 });
 
 router.get('/login', function (req, res, next) {
     if (req.session.loggedIn) {
         return res.redirect('/timeline');
     }
-    res.render('login', { title: 'Login'});
+    res.render('login', {title: 'Login'});
 });
 
-router.post('/login', function(req, res, next) {
+router.post('/login', function (req, res, next) {
     users.authenticate(req, res, function (error, user) {
         if (error || !user) {
             const message = 'Wrong email or password.';
@@ -84,7 +97,7 @@ router.post('/login', function(req, res, next) {
     });
 });
 
-router.get('/logout', function(req, res, next) {
+router.get('/logout', function (req, res, next) {
     req.session.loggedIn = false;
     req.session.user = undefined;
     return res.redirect('/login');
@@ -99,11 +112,11 @@ router.post('/createStory', function (req, res) {
     var images;
     console.log("Image? " + image0 + " 1 " + image1 + " 2 " + image2);
     //Check if images actually exist
-    if(image0 === undefined) {
+    if (image0 === undefined) {
         images = [];
-    }else if(image1 === undefined) {
+    } else if (image1 === undefined) {
         images = [image0];
-    }else if(image2 === undefined) {
+    } else if (image2 === undefined) {
         images = [image0, image1];
     }
     console.log("Adding images: " + images.length);
@@ -122,7 +135,7 @@ router.post('/createStory', function (req, res) {
     });
 });
 
-router.get('/timeline', function(req, res) {
+router.get('/timeline', function (req, res) {
     if (!req.session.loggedIn) {
         return res.redirect('/login');
     }
@@ -147,7 +160,6 @@ router.get('/timeline', function(req, res) {
                 } else {
                     res.render('timeline', {
                         title: 'View your timeline',
-                        profileSource: 'https://images.unsplash.com/reserve/bOvf94dPRxWu0u3QsPjF_tree.jpg?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60',
                         allStories: results,
                         author: currentUser,
                         req: req
@@ -158,30 +170,30 @@ router.get('/timeline', function(req, res) {
     });
 });
 
-router.post('/editPost', function(req, res) {
+router.post('/editPost', function (req, res) {
     var storyID = req.body.storyID;
     var mongoID = new mongodb.ObjectID(storyID);
 
     var newText = req.body.storyText;
 
     var url = 'mongodb://localhost:27017/';
-    mongodb.connect(url, function(err, client) {
+    mongodb.connect(url, function (err, client) {
         if (err) throw err;
 
         var db = client.db('myStory');
         var collection = db.collection('stories');
-        var selectStory = { _id: mongoID };
-        var update = { $set: {text: newText } };
+        var selectStory = {_id: mongoID};
+        var update = {$set: {text: newText}};
 
         //collection.count({_id: mongoID}, function (err, count) {
         //    console.log("Stoies with ID: " + count);
         //});
-        collection.updateOne(selectStory, update, function(error, result) {
+        collection.updateOne(selectStory, update, function (error, result) {
             if (error) {
                 console.log("Error updating story...", error);
                 res.redirect('/timeline?edit=False&error=fatal&postID=' + storyID);
                 throw error;
-            }else {
+            } else {
                 res.redirect('/timeline?edit=True&postID=' + storyID);
             }
         });
@@ -192,19 +204,19 @@ router.post('/editPost', function(req, res) {
 router.post('/deletePost', function (req, res) {
     var postToDelete = req.body.storyID;
     var url = 'mongodb://localhost:27017/';
-    mongodb.connect(url, function(err, client) {
+    mongodb.connect(url, function (err, client) {
         if (err) throw err;
 
         var db = client.db('myStory');
         var collection = db.collection('stories');
 
         var mongoID = new mongodb.ObjectID(postToDelete);
-        var queryPost = { _id: mongoID };
-        collection.deleteOne(queryPost, function(error, result) {
+        var queryPost = {_id: mongoID};
+        collection.deleteOne(queryPost, function (error, result) {
             if (error) {
                 console.log("Error removing story...", error);
                 throw error;
-            }else {
+            } else {
                 res.redirect('/timeline?deleteID=' + postToDelete + '&removed=true');
             }
             client.close();
@@ -225,18 +237,17 @@ router.get('/share', function (req, res) {
             var db = client.db('myStory');
             var collection = db.collection('stories');
 
-            collection.find({_id : mongoID}).toArray(function (error, results) {
+            collection.find({_id: mongoID}).toArray(function (error, results) {
                 if (error) {
                     console.log("Error retrieving data: ", error);
                     res.send(error);
                 } else {
                     var userDB = db.collection('users');
                     var newQuery = userDB.find({_id: results[0].user_id});
-                    newQuery.toArray(function(err, result) {
+                    newQuery.toArray(function (err, result) {
                         var author = result[0].first_name + " " + result[0].family_name;
                         res.render('share', {
                             title: 'View Shared Post',
-                            profileSource: 'https://images.unsplash.com/reserve/bOvf94dPRxWu0u3QsPjF_tree.jpg?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60',
                             theStory: results[0],
                             author: author,
                             req: req

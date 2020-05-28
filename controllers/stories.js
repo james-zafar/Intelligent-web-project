@@ -29,4 +29,4 @@ exports.insert = function (req, res) {
 
 exports.getRatings = function (req, res) {
 
-}
+};
