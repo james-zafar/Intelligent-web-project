@@ -1,25 +1,45 @@
 /**
- * JSON upload handling
+ * Handles reading of JSON file to be uploaded to DB
  */
-const file = document.getElementById('json_upload');
-const reader = new FileReader();
-reader.readAsText(file, 'UTF-8');
-reader.onload = uploadJsonToDB;
+$(function() {
+    const fileSelector = document.getElementById('json_upload');
+    fileSelector.addEventListener('change', (event) => {
+        const fileList = event.target.files;
+        const reader = new FileReader();
+        reader.readAsText(fileList[0], 'UTF-8');
+        reader.addEventListener('load', (event) => {
+            const data = JSON.parse(event.target.result);
+            try {
+                for (let user of data.users) {
+                    upload(user, 'user');
+                }
+                for (let story of data.stories) {
+                    upload(story, 'story');
+                }
+                alert('Successfully uploaded JSON');
+            } catch (e) {
+                alert(e);
+            }
+        });
+    });
+});
 
 /**
- * Makes Ajax request to upload file
+ * Send Ajax request for a story or user to be uploaded to db
+ * @param  data - story or user object
+ * @param modelType - 'story' or 'user'
  */
-function uploadJsonToDB() {
+function upload(data, modelType) {
     $.ajax({
-        url: '/uploadJson' ,
-        data: file,
+        url: '/upload' + modelType.toUpperCase(),
+        data: JSON.stringify(data),
         contentType: 'application/json',
         type: 'POST',
         success: function () {
-            alert('Successfully uploaded file');
+            console.log('Successfully uploaded ' + modelType);
         },
         error: function (xhr, status, error) {
-            alert('Error uploading file. With error:' + error);
+            console.log('Error uploading file. Error Message: ' + error);
         }
     });
 }

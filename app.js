@@ -66,9 +66,11 @@ app.use(session({
   store: new MongoStore({ url: 'mongodb://localhost:27017/myStory' }),
   loggedIn: false
 }));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: false }));
 
+app.use(bodyParser.json({ limit: '100mb' }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '100mb' }));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);

@@ -70,9 +70,27 @@ router.get('/logout', function(req, res, next) {
     return res.redirect('/login');
 });
 
-router.post('/upload', function (req, res) {
+router.post('/uploadUser', function (req, res, next) {
+    users.insertFromJson(req, res, function (error, results) {
+        if (error || !results) {
+            console.log(error)
+            const err = new Error(error);
+            return next(err);
+        }
+        res.sendStatus(200);
+    });
+});
 
-})
+router.post('/uploadStory', function (req, res, next) {
+    stories.insertFromJson(req, res, function (error, results) {
+        if (error || !results) {
+            console.log(error)
+            const err = new Error(error);
+            return next(err);
+        }
+        res.sendStatus(200);
+    });
+});
 
 router.post('/getStories', function(req, res) {
     const url = 'mongodb://localhost:27017/';

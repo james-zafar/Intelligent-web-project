@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Story = require('../models/stories');
 
 exports.insert = function (req, res) {
@@ -25,6 +26,38 @@ exports.insert = function (req, res) {
         });
     } catch (e) {
         res.status(500).send('error ' + e);
+    }
+};
+
+exports.insertFromJson = function (req, res, callback) {
+    const storyData = req.body;
+    console.log(storyData);
+    if (storyData == null) {
+        res.status(403).send('No data sent!')
+    }
+    try {
+        const story = new Story({
+            text: storyData.text,
+            image: storyData.image,
+            date: new Date(),
+            user_id: storyData.userId,
+            votes: storyData.votes,
+            _id: storyData.storyId
+        });
+        console.log('received: ' + story);
+
+        story.save(function (err, results) {
+            if (err) {
+                console.log(err);
+                return callback(err);
+            }
+            return callback(null, results);
+            // res.setHeader('Content-Type', 'application/json');
+            // res.send(JSON.stringify(user));
+        });
+    } catch (e) {
+        console.log(e);
+        return callback(e);
     }
 };
 

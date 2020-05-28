@@ -5,14 +5,14 @@ const Schema = mongoose.Schema;
 
 const userSchema = new Schema(
     {
-        // user_id: {type: String},
+        _id: {type: String, required: true},
         // Not sure if we need this looks like mongoose adds an '_id' property to every schema.
         // Hence why I have mongoose.Schema.Types.ObjectId, which is the type if '_id'
         first_name: {type: String, required: true, max: 100},
-        family_name: {type: String, required: true, max: 100},
+        family_name: {type: String, max: 100},
         email: {type: String, required: true},
         password: {type: String},
-        voted_stories: [{vote: Number, story_id: mongoose.Schema.Types.ObjectId}]
+        voted_stories: [{rating: Number, storyId: String}]
     }
 );
 

@@ -6,6 +6,7 @@
         <script src="/scripts/bootstrap.bundle.min.js"></script>
         <script src="/scripts/socket.io.js"></script>
         <script src="/scripts/scripts.js"></script>
+        <script src="/scripts/jsonUpload.js"></script>
         <link rel='stylesheet' href='/stylesheets/style.css'/>
         <link rel='stylesheet' href='/stylesheets/login.css'/>
         <link rel='stylesheet' href='/stylesheets/bootstrap.min.css' />
@@ -30,10 +31,10 @@
                                     <label for="password">Password</label>
                                     <input type="password" id="password" class="form-control" name="password" placeholder="Password" required>
                                 </div>
-                                <button type="submit" class="btn submit-btn btn-secondary mb-2">Log in</button>
+                                <button type="submit" name="submit2" class="btn submit-btn btn-secondary mb-2">Log in</button>
                             </form>
-                            <div class="json-upload">
-                                <input type="file" id="json_upload" accept="application/json">
+                            <div>
+                                <input type="file" id="json_upload" accept="application/json" multiple>
                             </div>
                         </div>
                     </div>
