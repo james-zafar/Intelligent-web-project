@@ -8,7 +8,6 @@ $(function() {
         const reader = new FileReader();
         reader.readAsText(fileList[0], 'UTF-8');
         reader.addEventListener('load', (event) => {
-
             const data = JSON.parse(event.target.result);
             try {
                 for (let user of data.users) {
