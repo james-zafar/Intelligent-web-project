@@ -4,39 +4,53 @@ const RankingAlgorithm = require('./Ranking');
 const Story = require('../models/stories');
 const Users = require('../models/users');
 
+/**
+ *
+ * @param user The ID associated with the user currently logged in
+ * @returns An array of stories and ratings associated with the user
+ */
 async function getUserPreferences(user) {
-    const query = Users.find({_id: user});
-
-    return query.voted_stories;
-}
-
-async function getAllPostPreferences() {
-    const query = Users.find({});
-    console.log("The user ID... ", query);
-    let allPostPrefs = [];
-    query.toArray(function (error, results) {
-        if(error) {
-            //Do something
-        }
-        for(let current in results) {
-            allPostPrefs[current._id] = current.voted_stories;
-        }
+    return new Promise(resolve => {
+        Users.find({_id: user}, function (error, result) {
+            if(error) {
+                throw error;
+            }
+            resolve(result.voted_stories);
+        });
     });
-    return allPostPrefs;
 }
 
+/**
+ *
+ * @returns {Promise<[]>} A list of all votes on all stories in the db
+ */
+async function getAllPostPreferences() {
+    return new Promise(resolve => {
+        Users.find({}, {voted_stories: 1}, function (error, result) {
+            if(error) {
+                throw error;
+            }
+            resolve(result);
+        });
+    });
+}
+
+/**
+ *
+ * @param posts A list of posts returned by the recommendation algorithm
+ */
 function sortPosts(posts) {
 
 }
 
 exports.getSortedStories = async function(currentUser) {
     const rankingAlgo = new RankingAlgorithm();
-
     let preferences = await getUserPreferences(currentUser);
 
     let postPreferences = await getAllPostPreferences();
 
+    //Add a third parameter of "similarity = 'sim_euclidean' to run with euclidean algorithm
     let actualScores = await rankingAlgo.getRecommendations(postPreferences, preferences);
-
+    console.log(actualScores);
     return await sortPosts(actualScores);
 };
