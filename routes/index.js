@@ -71,38 +71,25 @@ router.get('/logout', function(req, res, next) {
 });
 
 router.post('/uploadUser', function (req, res, next) {
-    users.clearAll(req, res, function (error, results) {
+    users.insertFromJson(req, res, function (error, results) {
         if (error || !results) {
             console.log(error)
             const err = new Error(error);
             return next(err);
         }
-        users.insertFromJson(req, res, function (error, results) {
-            if (error || !results) {
-                console.log(error)
-                const err = new Error(error);
-                return next(err);
-            }
-            res.sendStatus(200);
-        });
+        res.sendStatus(200);
     });
 });
 
 router.post('/uploadStory', function (req, res, next) {
-    stories.clearAll(req, res, function (error, results) {
+    stories.insertFromJson(req, res, function (error, results) {
+        console.log("story added");
         if (error || !results) {
             console.log(error)
             const err = new Error(error);
             return next(err);
         }
-        stories.insertFromJson(req, res, function (error, results) {
-            if (error || !results) {
-                console.log(error)
-                const err = new Error(error);
-                return next(err);
-            }
-            res.sendStatus(200);
-        });
+        res.sendStatus(200);
     });
 });
 
@@ -175,7 +162,7 @@ router.get('/timeline', function(req, res) {
             var db = client.db('myStory');
             var collection = db.collection('stories');
 
-            var userObject = new mongodb.ObjectID(req.session.user._id);
+            var userObject = req.session.user._id;
             var findStories = collection.find({user_id: userObject});
 
             findStories.toArray(function (error, results) {
