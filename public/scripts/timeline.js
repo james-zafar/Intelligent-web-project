@@ -1,5 +1,5 @@
 /**
- *
+ * FOr a given modal: display the modal on the page
  * @param modalID the ID of the modal to be displayed
  */
 function showModal(modalID) {
@@ -14,7 +14,7 @@ function showModal(modalID) {
 }
 
 /**
- *
+ * For a given story add a text bopx that allows the data of the story to be edited
  * @param source the ID of the element containing the text of the story to be edited
  */
 function addTextToEdit(source) {
@@ -52,7 +52,6 @@ $('.editPost').click(function() {
     window.storyID =  (this.id).replace('edit', '');
     var textID = "text" + window.storyID;
     addTextToEdit(textID);
-
 });
 
 /**
@@ -78,7 +77,6 @@ $('.deletePost').click(function () {
 /**
  * Executes when the user confirms they wish to delete a post
  */
-
 $('#confirmDelete').click(function () {
     var deleteID = 'rm' + window.storyID;
     $('#' + deleteID).trigger('click');

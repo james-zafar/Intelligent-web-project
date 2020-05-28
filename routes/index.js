@@ -61,7 +61,7 @@ router.get('/createPost', function(req, res, next) {
 
 router.get('/login', function (req, res, next) {
     if (req.session.loggedIn) {
-        return res.redirect('/timeline');
+        return res.redirect('/');
     }
     res.render('login', { title: 'Login'});
 });
@@ -75,11 +75,11 @@ router.post('/login', function(req, res, next) {
             return next(err);
         }
         console.log("Login successful");
-        req.session.loggedIn = true;
         console.log(user);
+        req.session.loggedIn = true;
         req.session.user = user;
         res.setHeader("Content-Type", "application/json");
-        res.send(JSON.stringify({redirect: '/timeline'}));
+        res.send(JSON.stringify({redirect: '/'}));
         // res.redirect() didnt work for me no idea why
     });
 });
@@ -88,6 +88,28 @@ router.get('/logout', function(req, res, next) {
     req.session.loggedIn = false;
     req.session.user = undefined;
     return res.redirect('/login');
+});
+
+router.post('/getStories', function(req, res) {
+    const url = 'mongodb://localhost:27017/';
+    mongodb.connect(url, function (error, client) {
+        if (error) {
+            console.log("Database error: ", error);
+            res.send(error);
+        } else {
+            const db = client.db('myStory');
+            const collection = db.collection('stories');
+            collection.find({}).toArray(function (error, results) {
+                if (error) {
+                    console.log("Error retrieving data: ", error);
+                    res.send(error);
+                } else {
+                    res.setHeader("Content-Type", "application/json");
+                    res.send(JSON.stringify(results));
+                }
+            });
+        }
+    });
 });
 
 router.post('/createStory', function (req, res) {

@@ -10,7 +10,8 @@ exports.insert = function (req, res) {
             text: storyData.text,
             image: storyData.image,
             date: storyData.date,
-            user_id: storyData.user_id
+            user_id: storyData.user_id,
+            votes: storyData.votes
         });
         console.log('received: ' + storyData);
 

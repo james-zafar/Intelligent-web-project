@@ -23,7 +23,6 @@ exports.init = function() {
         console.log(results._id);
     });
 
-    //const img = fs.readFileSync('./public/images/dummy_img.png').toString('base64');
     //const story = new Story({
     //    text: 'Test',
     //    image: Buffer.from(img, 'base64'),

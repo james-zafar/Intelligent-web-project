@@ -7,3 +7,10 @@ a {
   color: #00B7FF;
 }
 
+#offline-warning {
+  display: none;
+}
+
+#online-warning {
+  display: inline-block;
+}
