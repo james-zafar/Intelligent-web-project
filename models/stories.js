@@ -6,7 +6,7 @@ const story = new Schema(
     {
         _id: {type: String, required: true},
         text: {type: String, required: true},
-        image: [{type: String, data: Buffer}],
+        image: [{type: Buffer}],
         date: {type: Date, default: Date.now},
         keywords: [{type: String}],
         user_id: {type: String},
