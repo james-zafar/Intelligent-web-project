@@ -127,6 +127,8 @@ router.post('/createStory', function (req, res) {
         images = [image0];
     }else if(image2 === undefined) {
         images = [image0, image1];
+    } else {
+        images = [image0, image1, image2];
     }
     console.log("Adding images: " + images.length);
     var theStory = new Story({

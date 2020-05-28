@@ -101,12 +101,12 @@ function removePicture() {
 
 /**
  * Get all of the images that the user has currently uploaded
- * @returns {[]} An array of images uploaded by the user (maximum 4)
+ * @returns {[]} An array of images uploaded by the user (maximum 3)
  */
 function getImages() {
     var images = [];
     let i = 0;
-    //Iterate over first 4 images, break when the element id does not exist (i.e. no image to get)
+    //Iterate over first 3 images, break when the element id does not exist (i.e. no image to get)
     $('#previewArea').children('img').each(function (){
         images[i] = $(this).attr('src');
         i++;
