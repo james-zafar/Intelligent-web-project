@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="/stylesheets/createPost.css"/>
     <link rel='stylesheet' href='/stylesheets/style.css'/>
     <link rel='stylesheet' href='/stylesheets/bootstrap.min.css'/>
+    <link rel="stylesheet" href="/stylesheets/createPost.css"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 </head>
 <body>
@@ -39,24 +40,21 @@
         </div>
     </nav>
     <div class="offline_div" id="offline_div" style="display: none">You are offline</div>
-    <div class="container">
+    <div class="container-fluid">
         <div class="card">
             <div class="card-header">
                 <h3>Create New Post</h3>
             </div>
 
-            <div class="form-group">
+            <div class="form-group card-body">
                 <form name="addStory" method="post" action="/createStory">
                     <textarea class="form-control" name="storyContent" id="storyContent" rows="10"
                               placeholder="Add a story..."></textarea>
                     <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">Upload Images</span>
-                        </div>
+                        <button id="toggleCameraButton" class="btn btn-outline-dark" onclick="toggleCamera()">Use camera</button>
                         <div class="custom-file">
                             <input type="file" class="custom-file-input" multiple id="addFile" accept="image/*">
-                            <label class="custom-file-label" for="addFile" id="labelText">Select up to 3 images to attach to
-                                your post</label>
+                            <label class="custom-file-label" for="addFile" id="labelText">Upload images</label>
                         </div>
                     </div>
                     <div class="alert alert-danger alert-dismissible hide" role="alert" id="tooManyImage"
@@ -66,12 +64,21 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
+                    <div class="cameraContainer" id="submitCameraContainer">
+                        <video id="video"></video>
+                        <a href="#" id="capture" class="cameraCaptureButton btn btn-info">Take photo</a>
+                        <canvas id="canvas" width="300" height="225"></canvas>
+                        <img id="photo" src="https://via.placeholder.com/300x255">
+                        <a href="#" id="uploadCapturedPhoto" class="uploadPhotoButton btn btn-info">Upload photo</a>
+                    </div>
+                    <hr>
+                    <p><u>Preview Area</u></p>
                     <div id="previewArea"></div>
                     <button id="submitStory" type="submit" style="display: none;"></button>
                 </form>
             </div>
             <div class="card-footer">
-                <button type="button" class="btn btn-secondary" id="submitPost">Submit Post</button>
+                <button type="button" class="btn" id="submitPost">Submit Post</button>
             </div>
         </div>
         <% if(req.query.disp == 'true') { %>

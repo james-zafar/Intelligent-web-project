@@ -9,7 +9,8 @@ const story = new Schema(
         image: [{type: String, data: Buffer}],
         date: {type: Date, default: Date.now},
         keywords: [{type: String}],
-        user_id: {type: String}
+        user_id: {type: String},
+        votes: [{vote: Number, user_id: mongoose.Schema.Types.ObjectId}]
     }
 );
 
