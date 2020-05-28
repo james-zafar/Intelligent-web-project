@@ -11,7 +11,7 @@ if ($('#addFile').val() === "") {
 function addAttachment(fileList) {
     if (fileList.files) {
         let length = fileList.files.length;
-        //Check to see how many images already attached to enforce 4 image limit
+        //Check to see how many images already attached to enforce 3 image limit
         const child = $('#previewArea').children('img').length;
         if((length + child) >= 3) {
             $('#tooManyImage').show();
