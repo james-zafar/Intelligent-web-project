@@ -178,7 +178,6 @@ function toggleCamera() {
         if (child >= 3){
             $('#tooManyImage').show();
         } else {
-            console.log("22222");
             $('<img />', {
                 src: photo.src,
                 alt: 'Images taken by user',
