@@ -82,3 +82,30 @@ exports.getAll = function (req, res, callback) {
         res.status(500).send('error ' + e);
     }
 };
+
+/**
+ * Clear stories collections completely
+ * @param req
+ * @param res
+ * @param callback
+ * @returns {*}
+ */
+exports.clearAll = function (req, res, callback) {
+    const userData = req.body;
+    // console.log(userData);
+    if (userData == null) {
+        res.status(403).send('No data sent!')
+    }
+    try {
+        Story.remove({}, function (err, results) {
+            if (err) {
+                console.log(err);
+                return callback(err);
+            }
+            return callback(null, results);
+        });
+    } catch (e) {
+        console.log(e);
+        return callback(e);
+    }
+};

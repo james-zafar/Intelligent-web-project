@@ -16,12 +16,19 @@ const userSchema = new Schema(
     }
 );
 
-// hash the password
+/**
+ * Generates hashed password with bcrypt
+ * @param password - String to be hashed
+ * @returns {string} - Hashed password
+ */
 userSchema.methods.generateHash = function(password) {
     return bcrypt.hashSync(password, bcrypt.genSaltSync(5), null);
 };
 
-// check if password is valid
+/**
+ * Checks if given password is valid
+ * @param password to be checked
+ */
 userSchema.methods.validPassword = function(password) {
     return bcrypt.compareSync(password, this.password);
 };

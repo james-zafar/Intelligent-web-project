@@ -71,24 +71,38 @@ router.get('/logout', function(req, res, next) {
 });
 
 router.post('/uploadUser', function (req, res, next) {
-    users.insertFromJson(req, res, function (error, results) {
+    users.clearAll(req, res, function (error, results) {
         if (error || !results) {
             console.log(error)
             const err = new Error(error);
             return next(err);
         }
-        res.sendStatus(200);
+        users.insertFromJson(req, res, function (error, results) {
+            if (error || !results) {
+                console.log(error)
+                const err = new Error(error);
+                return next(err);
+            }
+            res.sendStatus(200);
+        });
     });
 });
 
 router.post('/uploadStory', function (req, res, next) {
-    stories.insertFromJson(req, res, function (error, results) {
+    stories.clearAll(req, res, function (error, results) {
         if (error || !results) {
             console.log(error)
             const err = new Error(error);
             return next(err);
         }
-        res.sendStatus(200);
+        stories.insertFromJson(req, res, function (error, results) {
+            if (error || !results) {
+                console.log(error)
+                const err = new Error(error);
+                return next(err);
+            }
+            res.sendStatus(200);
+        });
     });
 });
 
