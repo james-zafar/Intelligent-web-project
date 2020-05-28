@@ -1,4 +1,5 @@
 const Story = require('../models/stories');
+const Users = require('../models/users');
 
 exports.insert = function (req, res) {
     const storyData = req.body;
@@ -43,6 +44,16 @@ exports.getAll = function (req, res, callback) {
                 err.status = 401;
                 return callback(err);
             }
+            for(let i = 0; i < stories.length; i++) {
+                var user = stories[i].user_id;
+                const query = Users.find({_id: user});
+                //console.log(query);
+                // Users.find({_id: user}), function(err, result) {
+                //     stories[i].user_id = result[0].first_name + " " + result[0].family_name;
+                //     console.log(stories[i].user_id);
+                // });
+            }
+
             return callback(null, stories);
         });
     } catch (e) {

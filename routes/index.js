@@ -6,6 +6,8 @@ var mongodb = require('mongodb');
 const users = require('../controllers/users');
 const stories = require('../controllers/stories');
 const initDB = require('../controllers/init');
+
+const rankedStories = require('../recommendation/recommendStories');
 initDB.init();
 
 var Story = require('../models/stories');
@@ -18,6 +20,7 @@ router.get('/', function(req, res, next) {
     if (!req.session.loggedIn) {
         return res.redirect('/login');
     }
+    const allStories = rankedStories.getSortedStories(req.session.user._id);
     res.render('index');
     stories.getAll(req, res, function (error, stories) {
         if (error || !stories) {
