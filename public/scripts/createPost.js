@@ -11,9 +11,9 @@ if ($('#addFile').val() === "") {
 function addAttachment(fileList) {
     if (fileList.files) {
         let length = fileList.files.length;
-        //Check to see how many images already attached to enforce 4 image limit
+        //Check to see how many images already attached to enforce 3 image limit
         const child = $('#previewArea').children('img').length;
-        if((length + child) > 3) {
+        if((length + child) >= 3) {
             $('#tooManyImage').show();
             length = 3 - child;
         }
@@ -131,3 +131,70 @@ $('#submitPost').click(function() {
         $('#success').show();
     }
 });
+
+// TODO: Bug here where button needs to be pressed. Either fix or remove button as a workaround.
+function toggleCamera() {
+    let cameraContainer = document.getElementById('submitCameraContainer'),
+        toggleButton = document.getElementById('toggleCameraButton')
+    if (cameraContainer.style.display === "none") {
+        cameraContainer.style.display = "block"
+        toggleButton.innerHTML = "Close camera"
+    } else {
+        cameraContainer.style.display = "none"
+        toggleButton.innerHTML = "Use camera"
+    }
+}
+
+(function () {
+    let video = document.getElementById('video'),
+      canvas = document.getElementById('canvas'),
+      context = canvas.getContext('2d'),
+      photo = document.getElementById('photo'),
+      vendorUrl = window.URL || window.webkitURL;
+
+    navigator.getMedia =    navigator.getUserMedia ||
+      navigator.webkitGetUserMedia ||
+      navigator.mozGetUserMedia ||
+      navigator.msGetUserMedia;
+
+    navigator.getMedia({
+        video: true,
+        audio: false
+    }, function (stream) {
+        video.srcObject = stream;
+        video.play();
+    }, function (error) {
+        console.log(error.code);
+        window.alert("Error getting video stream")
+    })
+
+    document.getElementById('capture').addEventListener('click', function () {
+        context.drawImage(video, 0, 0, 300, 255);
+        photo.setAttribute('src', canvas.toDataURL('image/png'))
+    })
+
+    document.getElementById('uploadCapturedPhoto').addEventListener('click', function () {
+        const child = $('#previewArea').children('img').length;
+        if (child >= 3){
+            $('#tooManyImage').show();
+        } else {
+            console.log("22222");
+            $('<img />', {
+                src: photo.src,
+                alt: 'Images taken by user',
+                width: '32%',
+                height: '100%',
+                id: ('image' + (child + 1)),
+                class: 'uploadImages',
+                name: ('image' + (child + 1)),
+                click: function(e) {
+                    showImagePreview('image' + (child + 1))
+                },
+                css: {
+                    paddingBottom: '25px',
+                    paddingLeft: '3%'
+                }
+            }).appendTo('#previewArea');
+        }
+    })
+} ())
