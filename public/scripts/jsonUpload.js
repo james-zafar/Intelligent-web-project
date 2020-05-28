@@ -3,8 +3,15 @@
  */
 $(function() {
     const fileSelector = document.getElementById('json_upload');
-    fileSelector.addEventListener('change', (event) => {
-        const fileList = event.target.files;
+    const uploadButton = document.getElementById('uploadButton');
+
+    fileSelector.addEventListener('change', () => {
+        let selectedFile = document.getElementById('selectedFile');
+        selectedFile.innerHTML = 'Selected file: ' + fileSelector.value.split(/(\\|\/)/g).pop()
+    });
+
+    uploadButton.addEventListener('click', (event) => {
+        const fileList = fileSelector.files;
         const reader = new FileReader();
         reader.readAsText(fileList[0], 'UTF-8');
         reader.addEventListener('load', (event) => {
