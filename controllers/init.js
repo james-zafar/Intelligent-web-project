@@ -12,6 +12,7 @@ exports.init = function() {
 
     // const dob=new Date(1908, 12, 1).getFullYear();
     const user = new User({
+        _id: Math.random().toString(36).substring(7),
         first_name: 'Mickey',
         family_name: 'Mouse',
         email: 'mickymouse@disney.com',

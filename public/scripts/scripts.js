@@ -33,7 +33,8 @@ function loadData() {
     // const stories = JSON.parse(localStorage.getItem('stories'));
     // cityList = removeDuplicates(cityList);
     refreshStories();
-    loadStories()
+    // loadStories();
+    loadStoriesSocketIO()
 }
 
 /**
@@ -51,7 +52,7 @@ function refreshStories() {
  * @param dataR the data returned by the server:
  */
 function addToResults(dataR) {
-    let resultsDiv = document.getElementById('results')
+    let resultsDiv = document.getElementById('results');
     if (resultsDiv != null) {
         const storyDiv = document.createElement('div');
         resultsDiv.appendChild(storyDiv);
@@ -93,7 +94,7 @@ function addToResults(dataR) {
 }
 
 /**
- * Loads all stories
+ * Loads all stories with Ajax. If there's a connection error use indexeddb data.
  */
 function loadStories() {
     // const input = JSON.stringify({user: user, date: date});
@@ -122,6 +123,40 @@ function loadStories() {
     // // hide the list of cities if currently shown
     // if (document.getElementById('city_list') != null)
     //     document.getElementById('city_list').style.display = 'none';
+}
+
+/**
+ * Loads stories with socket.io. If there's a connection error use indexeddb data.
+ */
+function loadStoriesSocketIO() {
+    const myStorySocket = io.connect('https://localhost:3000');
+    let reconnectErrors = 0;
+    myStorySocket.on('broadcast', function(data) {
+        Function.name = 'display';
+        $('#results').empty();
+        for (let story of data) {
+            addToResults(story);
+            storeCachedData(story);
+        }
+        console.log("ONLINE!!!!");
+        hideOfflineWarning();
+        reconnectErrors = 0;
+    });
+
+    myStorySocket.on('disconnect', function () {
+        console.log("OFFLINE!!!!");
+        showOfflineWarning();
+    });
+
+    myStorySocket.on('reconnect_error', function () {
+        if (reconnectErrors < 1) {
+            $('#results').empty();
+            console.log("OFFLINE!!!!");
+            getCachedData();
+            showOfflineWarning();
+        }
+        reconnectErrors++;
+    });
 }
 
 /**
