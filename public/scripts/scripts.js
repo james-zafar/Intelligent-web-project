@@ -80,10 +80,15 @@ function addToResults(dataR) {
         storyText.innerHTML = dataR.text;
 
         if (dataR.image != null) {
-            let storyImage = document.createElement('img');
-            storyContent.appendChild(storyText);
-            storyImage.classList.add('storyImage');
-            storyImage.src = 'data:image/png;base64' + dataR.image.toString('base64');
+            console.log(dataR.image[0]);
+            for (let i = 0; i < dataR.image.length; i++) {
+                console.log(dataR.text)
+                console.log(dataR.image[i]);
+                let storyImage = document.createElement('img');
+                storyContent.appendChild(storyImage);
+                storyImage.classList.add('storyImage', 'img-fluid');
+                storyImage.src = ('data:image/jpeg;base64,' + dataR.image[i]);
+            }
         }
 
         let storyRatings = document.createElement('div');
@@ -152,9 +157,6 @@ function loadStories() {
             showOfflineWarning();
         }
     });
-    // // hide the list of cities if currently shown
-    // if (document.getElementById('city_list') != null)
-    //     document.getElementById('city_list').style.display = 'none';
 }
 
 /**

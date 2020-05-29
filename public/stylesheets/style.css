@@ -14,3 +14,7 @@ a {
 #online-warning {
   display: inline-block;
 }
+
+.storyImage {
+  width: 300px
+}
