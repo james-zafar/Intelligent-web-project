@@ -25,10 +25,6 @@ exports.replaceUserIDs = async function replaceUserIDs(stories) {
                 const temp = () => {
                     return getUserName(stories[i].user_id);
                 };
-                /**
-                 * FIXME: The function now runs correctly but the stories variable does not update properly
-                 *  The value in console.log("finishing...") is still the old value
-                 */
                 stories[i].user_id = await temp();
                 console.log("Finishing... " + stories[i].user_id);
                 if(i === (stories.length - 1)) {

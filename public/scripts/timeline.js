@@ -86,6 +86,7 @@ $('#confirmDelete').click(function () {
     $('#' + deleteID).trigger('click');
 });
 
+
 function sendAjaxQuery(url, data) {
     $.ajax({
         url: url,

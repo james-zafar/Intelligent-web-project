@@ -65,10 +65,3 @@ function transferRatings() {
         }
     });
 }
-
-function clearDB() {
-    $.ajax({
-        url: '/clearDB'
-      }
-    )
-}

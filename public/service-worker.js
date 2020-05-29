@@ -18,8 +18,6 @@ var filesToCache = [
     '/',
     '/timeline',
     '/createPost',
-    // '/login',
-    // '/share',
     '/stylesheets/createPost.css',
     '/stylesheets/login.css',
     '/stylesheets/timeline.css',
@@ -95,8 +93,6 @@ self.addEventListener('activate', function (e) {
 self.addEventListener('fetch', function (event) {
     console.log('[Service Worker] Fetch', event.request.url);
     var dataUrl = '/getStories';
-    //TODO: Add any pages here that we do not want to be cached
-
     //if the request is contained in data url do not cache
     if (event.request.url.indexOf(dataUrl) > -1) {
         /*
@@ -132,27 +128,5 @@ self.addEventListener('fetch', function (event) {
             // Returned the cached response if we have one, otherwise return the network response.
             return cachedResponse || networkResponsePromise;
         }());
-        /*
-         * The app is asking for app shell files. In this scenario the app uses the
-         * "Cache, falling back to the network" offline strategy:
-         * https://jakearchibald.com/2014/offline-cookbook/#cache-falling-back-to-network
-         */
-        // e.respondWith(
-        //     caches.match(e.request).then(function (response) {
-        //         return response
-        //             || fetch(e.request)
-        //                 .then(function (response) {
-        //                     // note if network error happens, fetch does not return
-        //                     // an error. it just returns response not ok
-        //                     // https://www.tjvantoll.com/2015/09/13/fetch-and-errors/
-        //                     if (!response.ok) {
-        //                         console.log("error: " + response.error());
-        //                     }
-        //                 })
-        //                 .catch(function (e) {
-        //                     console.log("error: " + e);
-        //                 })
-        //     })
-        // );
     }
 });

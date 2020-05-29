@@ -39,7 +39,6 @@ exports.getAll = async function (req, res, callback) {
     try {
         Story.find({}, async function (err, stories) {
             if (err) {
-                // res.status(500).send('Invalid data!');
                 return callback(err)
             } else if (!stories) {
                 let err = new Error('Stories not found.');
@@ -76,8 +75,6 @@ exports.insertFromJson = function (req, res, callback) {
                 return callback(err);
             }
             return callback(null, results);
-            // res.setHeader('Content-Type', 'application/json');
-            // res.send(JSON.stringify(user));
         });
     } catch (e) {
         console.log(e);
@@ -140,7 +137,6 @@ exports.rateStories = function (req, res, callback) {
  */
 exports.clearAll = function (req, res, callback) {
     const userData = req.body;
-    // console.log(userData);
     if (userData == null) {
         res.status(403).send('No data sent!')
     }

@@ -6,8 +6,6 @@ const Schema = mongoose.Schema;
 const userSchema = new Schema(
     {
         _id: {type: String, required: true},
-        // Not sure if we need this looks like mongoose adds an '_id' property to every schema.
-        // Hence why I have mongoose.Schema.Types.ObjectId, which is the type if '_id'
         first_name: {type: String, required: true, max: 100},
         family_name: {type: String, max: 100},
         email: {type: String, required: true},

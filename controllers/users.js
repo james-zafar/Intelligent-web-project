@@ -10,7 +10,6 @@ const Stories = require('../models/users');
  */
 exports.insertFromJson = function (req, res, callback) {
     const userData = req.body;
-    // console.log(userData);
     if (userData == null) {
         res.status(403).send('No data sent!')
     }
@@ -23,7 +22,6 @@ exports.insertFromJson = function (req, res, callback) {
             voted_stories: userData.ratings,
         });
         user.password = user.generateHash(userData.userId);
-        // console.log('received: ' + user);
 
         user.save(function (err, results) {
             if (err) {
@@ -31,8 +29,6 @@ exports.insertFromJson = function (req, res, callback) {
                 return callback(err);
             }
             return callback(null, results);
-            // res.setHeader('Content-Type', 'application/json');
-            // res.send(JSON.stringify(user));
         });
     } catch (e) {
         console.log(e);
@@ -48,7 +44,6 @@ exports.getByEmail = function (req, res, callback) {
     try {
         User.findOne({email: userData.email}, function (err, user) {
             if (err) {
-                // res.status(500).send('Invalid data!');
                 return callback(err)
             } else if (!user) {
                 let err = new Error('User not found.');

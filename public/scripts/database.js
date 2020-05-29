@@ -51,8 +51,6 @@ function getCachedData() {
             const tx = db.transaction(STORIES_STORE_NAME, 'readonly');
             const store = tx.objectStore(STORIES_STORE_NAME);
             return store.getAll();
-            // let index = store.index('location');
-            // return index.getAll(IDBKeyRange.only(user));
         }).then(function (stories) {
             if (stories.length > 0) {
                 for (let story of stories) {

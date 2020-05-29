@@ -62,11 +62,6 @@
                 <p class="storyText" id="text<%= theStory._id %>"><%= theStory.text %></p>
                 <div id="results"></div>
                 <div class="row">
-                    <!----------------
-                       TODO: The src of these img tags needs to be fixed to display images properly
-                        The arg parsed from JS is the buffer from the DB,
-                        I am unsure how this is encoded/how to use it to create an image
-                    ------------------>
                     <% if(theStory.image.length !== 0) { %>
 
                         <% if(theStory.image.length === 1) { %>

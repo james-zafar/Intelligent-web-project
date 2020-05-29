@@ -29,10 +29,7 @@ function initMyStory() {
  * the server (or failing that) from the database
  */
 function loadData() {
-    // const stories = JSON.parse(localStorage.getItem('stories'));
-    // cityList = removeDuplicates(cityList);
     refreshStories();
-    // loadStories();
     loadStoriesSocketIO()
 }
 

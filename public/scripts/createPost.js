@@ -101,16 +101,17 @@ function removePicture() {
 
 /**
  * Get all of the images that the user has currently uploaded
- * @returns {[]} An array of images uploaded by the user (maximum 4)
+ * @returns {[]} An array of images uploaded by the user (maximum 3)
  */
 function getImages() {
     let images = [],
         i = 0,
         currentImage,
         imageText;
-    //Iterate over first 4 images, break when the element id does not exist (i.e. no image to get)
+    //Iterate over first 3 images, break when the element id does not exist (i.e. no image to get)
     $('#previewArea').children('img').each(function (){
         currentImage = $(this).attr('src')
+        //remove headers before storing
         currentImage = currentImage.replace(/data:.+?,/, "");
         images[i] = currentImage
         imageText = document.getElementById('imageText' + i)
@@ -138,7 +139,9 @@ $('#submitPost').click(function() {
     }
 });
 
-// TODO: Bug here where button needs to be pressed. Either fix or remove button as a workaround.
+/**
+ * Checks if the camera is displayed or not then hides or shows based on this
+ */
 function toggleCamera() {
     let cameraContainer = document.getElementById('submitCameraContainer'),
         toggleButton = document.getElementById('toggleCameraButton')
@@ -182,6 +185,7 @@ function toggleCamera() {
 
     document.getElementById('uploadCapturedPhoto').addEventListener('click', function () {
         const child = $('#previewArea').children('img').length;
+        //check to make sure number of images isn't over the maximum
         if (child >= 3){
             $('#tooManyImage').show();
         } else {

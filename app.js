@@ -39,7 +39,6 @@ const server = https.createServer(options, app);
 /**
  * Initialise socket.io
  */
-// const server = require('https').Server(app);
 const io = require('socket.io')(server);
 const socketModule = require('./socket/socket.io');
 app.use(function (req, res, next) {
@@ -66,8 +65,6 @@ app.use(session({
   store: new MongoStore({ url: 'mongodb://localhost:27017/myStory' }),
   loggedIn: false
 }));
-// app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(bodyParser.json({ limit: '100mb' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '100mb' }));
@@ -92,4 +89,3 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = {app: app, server: server};
-// module.exports = app;

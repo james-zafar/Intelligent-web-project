@@ -256,6 +256,7 @@ router.post('/editPost', function(req, res) {
     });
 });
 
+
 router.post('/deletePost', function (req, res) {
     let postToDelete = req.body.storyID,
         url = 'mongodb://localhost:27017/';
