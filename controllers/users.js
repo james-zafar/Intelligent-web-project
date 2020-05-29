@@ -1,30 +1,41 @@
+const mongoose = require('mongoose');
 const User = require('../models/users');
 
-exports.insert = function (req, res) {
+/**
+ * Inserts user into db from json file format
+ * @param req
+ * @param res
+ * @param callback
+ */
+exports.insertFromJson = function (req, res, callback) {
     const userData = req.body;
+    // console.log(userData);
     if (userData == null) {
         res.status(403).send('No data sent!')
     }
     try {
+        console.log(userData.ratings)
         const user = new User({
-            first_name: userData.first_name,
-            family_name: userData.family_name,
-            email: userData.email,
-            password: userData.password,
-            voted_stories: userData.voted_stories
+            _id: userData.userId,
+            first_name: userData.userId,
+            email: userData.userId,
+            voted_stories: userData.ratings,
         });
-        console.log('received: ' + user);
+        user.password = user.generateHash(userData.userId);
+        // console.log('received: ' + user);
 
         user.save(function (err, results) {
-            console.log(results._id);
-            if (err)
-                res.status(500).send('Invalid data!');
-
-            res.setHeader('Content-Type', 'application/json');
-            res.send(JSON.stringify(user));
+            if (err) {
+                console.log(err);
+                return callback(err);
+            }
+            return callback(null, results);
+            // res.setHeader('Content-Type', 'application/json');
+            // res.send(JSON.stringify(user));
         });
     } catch (e) {
-        res.status(500).send('error ' + e);
+        console.log(e);
+        return callback(e);
     }
 };
 
@@ -74,6 +85,33 @@ exports.authenticate = function(req, res, callback) {
         });
     } catch (e) {
         res.status(500).send('error ' + e);
+    }
+};
+
+/**
+ * Clear users collections completely
+ * @param req
+ * @param res
+ * @param callback
+ * @returns {*}
+ */
+exports.clearAll = function (req, res, callback) {
+    const userData = req.body;
+    // console.log(userData);
+    if (userData == null) {
+        res.status(403).send('No data sent!')
+    }
+    try {
+        User.remove({}, function (err, results) {
+            if (err) {
+                console.log(err);
+                return callback(err);
+            }
+            return callback(null, results);
+        });
+    } catch (e) {
+        console.log(e);
+        return callback(e);
     }
 };
 

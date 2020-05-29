@@ -69,11 +69,10 @@ function addToResults(dataR) {
         storyUsername.setAttribute('id', 'userName');
         storyUsername.innerHTML = dataR.user_id;
 
-        // let storyDate = document.createElement('div');
-        // storyHeader.appendChild(storyDate);
-        // storyUsername.setAttribute('id', 'timePosted');
-        // storyUsername.innerHTML = new Date(dataR.date).toString();
-        // storyUsername.style = 'padding-top: 10px';
+        let storyDate = document.createElement('div');
+        storyHeader.appendChild(storyDate);
+        storyDate.setAttribute('id', 'timePosted');
+        storyDate.innerHTML = new Date(dataR.date).toString();
 
         let storyContent = document.createElement('div');
         storyDiv.appendChild(storyContent);
@@ -84,10 +83,21 @@ function addToResults(dataR) {
         storyText.classList.add('storyText');
         storyText.innerHTML = dataR.text;
 
+        if (dataR.image != null) {
+            let storyImage = document.createElement('img');
+            storyContent.appendChild(storyText);
+            storyImage.classList.add('storyImage');
+            storyImage.src = 'data:image/png;base64' + dataR.image.toString('base64');
+        }
+
         let storyLikes = document.createElement('div');
         storyDiv.appendChild(storyLikes);
         storyLikes.classList.add('card-footer');
-        storyLikes.innerHTML = dataR.votes;
+        if (dataR.votes != null) {
+            storyLikes.innerHTML = dataR.votes;
+        } else {
+            storyLikes.innerHTML = "No ratings";
+        }
 
         resultsDiv.appendChild(document.createElement('br'));
     }

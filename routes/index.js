@@ -30,7 +30,7 @@ router.get('/', function(req, res, next) {
                 return next(err);
         }
         res.io.on('connection', function() {
-            res.io.sockets.emit('broadcast', stories);
+            res.io.sockets.emit('broadcast', stories.reverse());
         });
     });
 });
@@ -73,6 +73,29 @@ router.get('/logout', function(req, res, next) {
     return res.redirect('/login');
 });
 
+router.post('/uploadUser', function (req, res, next) {
+    users.insertFromJson(req, res, function (error, results) {
+        if (error || !results) {
+            console.log(error)
+            const err = new Error(error);
+            return next(err);
+        }
+        res.sendStatus(200);
+    });
+});
+
+router.post('/uploadStory', function (req, res, next) {
+    stories.insertFromJson(req, res, function (error, results) {
+        console.log("story added");
+        if (error || !results) {
+            console.log(error)
+            const err = new Error(error);
+            return next(err);
+        }
+        res.sendStatus(200);
+    });
+});
+
 router.post('/getStories', function(req, res) {
     const url = 'mongodb://localhost:27017/';
     mongodb.connect(url, function (error, client) {
@@ -97,22 +120,25 @@ router.post('/getStories', function(req, res) {
 
 router.post('/createStory', function (req, res) {
     //Get all possible content of the story
-    var storyText = req.body.storyContent;
-    var image0 = req.body.image0;
-    var image1 = req.body.image1;
-    var image2 = req.body.image2;
-    var images;
+    let storyText = req.body.storyContent,
+        image0 = req.body.image0,
+        image1 = req.body.image1,
+        image2 = req.body.image2,
+        images;
     console.log("Image? " + image0 + " 1 " + image1 + " 2 " + image2);
     //Check if images actually exist
-    if(image0 === undefined) {
+    if (image0 === undefined) {
         images = [];
-    }else if(image1 === undefined) {
+    } else if(image1 === undefined) {
         images = [image0];
-    }else if(image2 === undefined) {
+    } else if(image2 === undefined) {
         images = [image0, image1];
+    } else {
+        images = [image0, image1, image2]
     }
     console.log("Adding images: " + images.length);
     var theStory = new Story({
+        _id: Math.random().toString(36).substring(7),
         text: storyText,
         images: images,
         user_id: req.session.user._id
@@ -131,19 +157,18 @@ router.get('/timeline', function(req, res) {
     if (!req.session.loggedIn) {
         return res.redirect('/login');
     }
-    var currentUser = req.session.user.first_name + " " + req.session.user.family_name;
+    let currentUser = req.session.user.first_name + " " + req.session.user.family_name;
 
-    var url = 'mongodb://localhost:27017/';
+    const url = 'mongodb://localhost:27017/';
     mongodb.connect(url, function (error, client) {
         if (error) {
             console.log("Database error: ", error);
             res.send(error);
         } else {
-            var db = client.db('myStory');
-            var collection = db.collection('stories');
-
-            var userObject = new mongodb.ObjectID(req.session.user._id);
-            var findStories = collection.find({user_id: userObject});
+            var db = client.db('myStory'),
+                collection = db.collection('stories'),
+                userObject = req.session.user._id,
+                findStories = collection.find({user_id: userObject});
 
             findStories.toArray(function (error, results) {
                 if (error) {
@@ -164,19 +189,17 @@ router.get('/timeline', function(req, res) {
 });
 
 router.post('/editPost', function(req, res) {
-    var storyID = req.body.storyID;
-    var mongoID = new mongodb.ObjectID(storyID);
+    let storyID = req.body.storyID,
+        newText = req.body.storyText;
 
-    var newText = req.body.storyText;
-
-    var url = 'mongodb://localhost:27017/';
+    const url = 'mongodb://localhost:27017/';
     mongodb.connect(url, function(err, client) {
         if (err) throw err;
 
-        var db = client.db('myStory');
-        var collection = db.collection('stories');
-        var selectStory = { _id: mongoID };
-        var update = { $set: {text: newText } };
+        let db = client.db('myStory'),
+            collection = db.collection('stories'),
+            selectStory = { _id: storyID },
+            update = { $set: {text: newText } };
 
         //collection.count({_id: mongoID}, function (err, count) {
         //    console.log("Stoies with ID: " + count);
@@ -195,29 +218,27 @@ router.post('/editPost', function(req, res) {
 });
 
 router.post('/sharePost', function (req, res) {
-    var storyID = req.body.storyID;
-    var shareURL = 'share?direct=true%26viewPostID=' + storyID;
+    let storyID = req.body.storyID,
+        shareURL = 'share?direct=true%26viewPostID=' + storyID;
     res.redirect('/timeline?share=True&sharePostID=' + storyID + '&url=' + shareURL);
     //TODO: Implement the share button feature
 });
 
 router.post('/deletePost', function (req, res) {
-    var postToDelete = req.body.storyID;
-    var url = 'mongodb://localhost:27017/';
+    let postToDelete = req.body.storyID,
+        url = 'mongodb://localhost:27017/';
     mongodb.connect(url, function(err, client) {
         if (err) throw err;
 
-        var db = client.db('myStory');
-        var collection = db.collection('stories');
+        let db = client.db('myStory'),
+            collection = db.collection('stories'),
+            queryPost = { _id: postToDelete };
 
-        var mongoID = new mongodb.ObjectID(postToDelete);
-        var queryPost = { _id: mongoID };
         collection.deleteOne(queryPost, function(error, result) {
-            if (error) {
-                console.log("Error removing story...", error);
-                throw error;
-            }else {
+            try {
                 res.redirect('/timeline?deleteID=' + postToDelete + '&removed=true');
+            } catch (error) {
+                console.log("Error removing story...", error);
             }
             client.close();
         });
@@ -225,27 +246,27 @@ router.post('/deletePost', function (req, res) {
 });
 
 router.get('/share', function (req, res) {
-    var url = 'mongodb://localhost:27017/';
+    const url = 'mongodb://localhost:27017/';
     console.log("Shared story: " + req.query.viewPostID);
-    var mongoID = new mongodb.ObjectID(req.query.viewPostID);
+    let mongoID = req.query.viewPostID;
     mongodb.connect(url, function (error, client) {
         if (error) {
             console.log("Database error: ", error);
             res.send(error);
         } else {
 
-            var db = client.db('myStory');
-            var collection = db.collection('stories');
+            let db = client.db('myStory');
+            let collection = db.collection('stories');
 
             collection.find({_id : mongoID}).toArray(function (error, results) {
                 if (error) {
                     console.log("Error retrieving data: ", error);
                     res.send(error);
                 } else {
-                    var userDB = db.collection('users');
-                    var newQuery = userDB.find({_id: results[0].user_id});
+                    let userDB = db.collection('users');
+                    let newQuery = userDB.find({_id: results[0].user_id});
                     newQuery.toArray(function(err, result) {
-                        var author = result[0].first_name + " " + result[0].family_name;
+                        let author = result[0].first_name + " " + result[0].family_name;
                         res.render('share', {
                             title: 'View Shared Post',
                             profileSource: 'https://images.unsplash.com/reserve/bOvf94dPRxWu0u3QsPjF_tree.jpg?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60',

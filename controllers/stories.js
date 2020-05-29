@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Story = require('../models/stories');
 const Users = require('../models/users');
 const replaceIDs = require('./getUserNames');
@@ -45,12 +46,68 @@ exports.getAll = async function (req, res, callback) {
                 err.status = 401;
                 return callback(err);
             }
-            replaceIDs.replaceUserIDs(stories).then(stories => {
-                return callback(null, stories);
-            });
-
+            return callback(null, stories);
         });
     } catch (e) {
         res.status(500).send('error ' + e);
+    }
+};
+
+exports.insertFromJson = function (req, res, callback) {
+    const storyData = req.body;
+    console.log(storyData);
+    if (storyData == null) {
+        res.status(403).send('No data sent!')
+    }
+    try {
+        const story = new Story({
+            text: storyData.text,
+            image: storyData.image,
+            date: new Date(),
+            user_id: storyData.userId,
+            votes: storyData.votes,
+            _id: storyData.storyId
+        });
+        console.log('received: ' + story);
+
+        story.save(function (err, results) {
+            if (err) {
+                console.log(err);
+                return callback(err);
+            }
+            return callback(null, results);
+            // res.setHeader('Content-Type', 'application/json');
+            // res.send(JSON.stringify(user));
+        });
+    } catch (e) {
+        console.log(e);
+        return callback(e);
+    }
+};
+
+/**
+ * Clear stories collections completely
+ * @param req
+ * @param res
+ * @param callback
+ * @returns {*}
+ */
+exports.clearAll = function (req, res, callback) {
+    const userData = req.body;
+    // console.log(userData);
+    if (userData == null) {
+        res.status(403).send('No data sent!')
+    }
+    try {
+        Story.remove({}, function (err, results) {
+            if (err) {
+                console.log(err);
+                return callback(err);
+            }
+            return callback(null, results);
+        });
+    } catch (e) {
+        console.log(e);
+        return callback(e);
     }
 };
