@@ -104,11 +104,17 @@ function removePicture() {
  * @returns {[]} An array of images uploaded by the user (maximum 4)
  */
 function getImages() {
-    var images = [];
-    let i = 0;
+    let images = [],
+        i = 0,
+        currentImage,
+        imageText;
     //Iterate over first 4 images, break when the element id does not exist (i.e. no image to get)
     $('#previewArea').children('img').each(function (){
-        images[i] = $(this).attr('src');
+        currentImage = $(this).attr('src')
+        currentImage = currentImage.replace(/data:.+?,/, "");
+        images[i] = currentImage
+        imageText = document.getElementById('imageText' + i)
+        imageText.value = currentImage
         i++;
     });
     return images;
@@ -118,7 +124,7 @@ function getImages() {
  * Function for submitting the post
  */
 $('#submitPost').click(function() {
-    var text = $('#storyContent').val();
+    const text = $('#storyContent').val();
     const images = getImages();
     //If no text and images, throw error, if no text but images then confirm submission with user
     if(text === '' && images.length === 0) {

@@ -151,17 +151,17 @@ router.post('/getStories', function(req, res) {
 router.post('/createStory', function (req, res) {
     //Get all possible content of the story
     let storyText = req.body.storyContent,
-        image0 = req.body.image0,
-        image1 = req.body.image1,
-        image2 = req.body.image2,
+        image0 = req.body.imageText0,
+        image1 = req.body.imageText1,
+        image2 = req.body.imageText2,
         images;
     console.log("Image? " + image0 + " 1 " + image1 + " 2 " + image2);
     //Check if images actually exist
-    if (image0 === undefined) {
+    if (image0 === "") {
         images = [];
-    } else if(image1 === undefined) {
+    } else if(image1 === "") {
         images = [image0];
-    } else if(image2 === undefined) {
+    } else if(image2 === "") {
         images = [image0, image1];
     } else {
         images = [image0, image1, image2]
@@ -170,13 +170,12 @@ router.post('/createStory', function (req, res) {
     var theStory = new Story({
         _id: Math.random().toString(36).substring(7),
         text: storyText,
-        images: images,
+        image: images,
         user_id: req.session.user._id
     });
-    theStory.save(function (error, response) {
+    theStory.save(function (error) {
         if (error) {
-            console.log("Error ", error);
-            //res.status(500).send('Internal Server Error: ', + error);
+            console.log("Error ", error.message);
         } else {
             res.redirect('createPost/?disp=true');
         }
@@ -220,7 +219,7 @@ router.get('/timeline', function(req, res) {
 router.post('/editPost', function(req, res) {
     let storyID = req.body.storyID,
         newText = req.body.storyText;
-    console.log("Here with: ", storyID, " AND ", newText);
+
     const url = 'mongodb://localhost:27017/';
     mongodb.connect(url, function(err, client) {
         if (err) throw err;
