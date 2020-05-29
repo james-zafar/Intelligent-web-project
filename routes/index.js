@@ -7,6 +7,7 @@ const users = require('../controllers/users');
 const stories = require('../controllers/stories');
 const initDB = require('../controllers/init');
 
+
 const rankedStories = require('../recommendation/recommendStories');
 initDB.init();
 
@@ -31,6 +32,21 @@ router.get('/', function(req, res, next) {
         }
         res.io.on('connection', function() {
             res.io.sockets.emit('broadcast', stories.reverse());
+        });
+
+        res.io.on('connection', function(socket) {
+            // listen for request to change order of stories
+            socket.on('reformatStories', function (data) {
+                if(data === 'date') {
+                    res.io.sockets.emit('broadcast', stories.reverse());
+                } else {
+                    // Get sorted stories and wait for a response
+                    (async () => {
+                        const allStories = await rankedStories.getSortedStories(req.session.user._id);
+                        res.io.sockets.emit('broadcast', allStories);
+                    })();
+                }
+            });
         });
     });
 });
@@ -177,7 +193,6 @@ router.get('/timeline', function(req, res) {
                 } else {
                     res.render('timeline', {
                         title: 'View your timeline',
-                        profileSource: 'https://images.unsplash.com/reserve/bOvf94dPRxWu0u3QsPjF_tree.jpg?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60',
                         allStories: results,
                         author: currentUser,
                         req: req
@@ -191,7 +206,7 @@ router.get('/timeline', function(req, res) {
 router.post('/editPost', function(req, res) {
     let storyID = req.body.storyID,
         newText = req.body.storyText;
-
+    console.log("Here with: ", storyID, " AND ", newText);
     const url = 'mongodb://localhost:27017/';
     mongodb.connect(url, function(err, client) {
         if (err) throw err;
@@ -269,7 +284,6 @@ router.get('/share', function (req, res) {
                         let author = result[0].first_name + " " + result[0].family_name;
                         res.render('share', {
                             title: 'View Shared Post',
-                            profileSource: 'https://images.unsplash.com/reserve/bOvf94dPRxWu0u3QsPjF_tree.jpg?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60',
                             theStory: results[0],
                             author: author,
                             req: req
