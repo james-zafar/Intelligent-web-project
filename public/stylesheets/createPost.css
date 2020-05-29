@@ -23,6 +23,10 @@ body {
     margin: 10px;
 }
 
+.imageText {
+    display: none;
+}
+
 #canvas {
     display: none;
 }
