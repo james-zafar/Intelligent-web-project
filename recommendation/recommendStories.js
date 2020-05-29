@@ -1,7 +1,5 @@
 const RankingAlgorithm = require('./Ranking');
-// const Users = require('../controllers/users');
-// const Stories = require('../controllers/Stories');
-const Story = require('../models/stories');
+
 const Users = require('../models/users');
 
 /**
@@ -30,8 +28,31 @@ async function getAllPostPreferences() {
             if(error) {
                 throw error;
             }
-            resolve(result);
+            //Process results to get in the correct form for recommendation algorithm
+            let allStories = [];
+            for(let i = 0; i < result.length; i++ ) {
+                let temp = [];
+                for (let j = 0; j < result[i].voted_stories.length; j++) {
+                    //Attach story and rating
+                    temp.push(
+                        {
+                            storyID: result[i].voted_stories[j].storyId,
+                            rating: result[i].voted_stories[j].rating
+                        }
+                    );
+                }
+                var theUser = result[i]._id;
+                var finalStructure = {};
+
+                //Attach all ratings to the user associated with them
+                finalStructure[theUser] = temp;
+
+                //Add to the list of all user ratings
+                allStories.push(finalStructure);
+            }
+            resolve(allStories);
         });
+
     });
 }
 
@@ -39,20 +60,20 @@ async function getAllPostPreferences() {
  *
  * @param posts A list of posts returned by the recommendation algorithm
  */
-function sortPosts(posts) {
-
+async function sortPosts(posts) {
+    return new Promise(resolve => {
+        resolve(posts);
+    });
 }
 
 exports.getSortedStories = async function(currentUser) {
     const rankingAlgo = new RankingAlgorithm();
-
+    //Get the user preferences and all other prefs
     let preferences = await getUserPreferences(currentUser);
     let postPreferences = await getAllPostPreferences();
-    //console.log("Here: " + postPreferences);
 
     //Add a third parameter of "similarity = 'sim_euclidean' to run with euclidean algorithm
     let actualScores = await rankingAlgo.getRecommendations(postPreferences, preferences);
-    //console.log(actualScores);
-
+    console.log(actualScores);
     return await sortPosts(actualScores);
 };

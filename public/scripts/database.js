@@ -36,7 +36,7 @@ function storeCachedData(storyObject) {
             console.log(e);
             localStorage.setItem(storyObject._id, JSON.stringify(storyObject));
         });
-    } else  {
+    } else {
         localStorage.setItem(storyObject._id, JSON.stringify(storyObject));
     }
 }

@@ -20,7 +20,7 @@ function showModal(modalID) {
 function addTextToEdit(source) {
     //Remove any residual content from the display area
     $('#editTextArea').empty();
-    var source =  $('#' + source).text();
+    var source = $('#' + source).text();
     //Create editable text area for the user to edit
     $('<textarea />', {
         text: source,
@@ -46,10 +46,10 @@ function saveChanges() {
 /**
  * Function to handle click when the users selects a post to edit
  */
-$('.editPost').click(function() {
+$('.editPost').click(function () {
     showModal('editPostModal');
     //Extract ID of the text of the clicked story
-    window.storyID =  (this.id).replace('edit', '');
+    window.storyID = (this.id).replace('edit', '');
     var textID = "text" + window.storyID;
     addTextToEdit(textID);
 });
@@ -88,7 +88,7 @@ $('#confirmDelete').click(function () {
 
 function sendAjaxQuery(url, data) {
     $.ajax({
-        url: url ,
+        url: url,
         data: data,
         contentType: 'application/json',
         type: 'POST',
@@ -96,13 +96,13 @@ function sendAjaxQuery(url, data) {
 }
 
 function submitForm() {
-    $("form").submit(function() {
+    $("form").submit(function () {
         var button = $("input[type=submit][clicked=true]").val();
         alert(button);
         var data = {};
-        var formArray= $("form").serializeArray();
+        var formArray = $("form").serializeArray();
         data['storyID'] = formArray[0].value;
-        if(button.contains('submitEdit')) {
+        if (button.contains('submitEdit')) {
             data['storyText'] = formArray[1].value;
             sendAjaxQuery('/editPost', data);
         } else {
@@ -110,7 +110,7 @@ function submitForm() {
         }
     });
 
-    $("form input[type=submit]").click(function() {
+    $("form input[type=submit]").click(function () {
         $("input[type=submit]", $(this).parents("form")).removeAttr("clicked");
         $(this).attr("clicked", "true");
     });

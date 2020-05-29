@@ -6,20 +6,19 @@ function initMyStory() {
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker
             .register('../service-worker.js')
-            .then(function(registration) {
-            //success
-            console.log('Service Worker Registered with scope: ' + registration.scope);
-            }, function(err) {
-            // registration failed :(
-            console.log('ServiceWorker registration failed: ', err);
+            .then(function (registration) {
+                //success
+                console.log('Service Worker Registered with scope: ' + registration.scope);
+            }, function (err) {
+                // registration failed :(
+                console.log('ServiceWorker registration failed: ', err);
             });
     }
     //check for support
     if ('indexedDB' in window) {
         initDatabase();
         console.log("index db installed");
-    }
-    else {
+    } else {
         console.log('This browser doesn\'t support IndexedDB');
     }
 }
@@ -42,7 +41,7 @@ function loadData() {
  */
 function refreshStories() {
     if (document.getElementById('results') != null) {
-        document.getElementById('results').innerHTML='';
+        document.getElementById('results').innerHTML = '';
     }
 }
 
@@ -198,7 +197,7 @@ function loadStoriesSocketIO() {
  * When the client gets off-line, it shows an off line warning to the user
  * so that it is clear that the data is stale
  */
-window.addEventListener('offline', function(e) {
+window.addEventListener('offline', function (e) {
     console.log("You are offline");
     showOfflineWarning();
 }, false);
@@ -206,7 +205,7 @@ window.addEventListener('offline', function(e) {
 /**
  * When the client gets online, it hides the off line warning
  */
-window.addEventListener('online', function(e) {
+window.addEventListener('online', function (e) {
     console.log("You are online");
     hideOfflineWarning();
     loadData();
@@ -215,7 +214,7 @@ window.addEventListener('online', function(e) {
 /**
  * Shows any hidden offline warnings and hides any non-hidden online warnings
  */
-function showOfflineWarning(){
+function showOfflineWarning() {
     const offlineWarning = document.getElementById('offline-warning');
     if (offlineWarning != null) {
         offlineWarning.style.display = 'inline-block';
@@ -229,7 +228,7 @@ function showOfflineWarning(){
 /**
  * Hides any non-hidden offline warnings and shows any hidden online warnings
  */
-function hideOfflineWarning(){
+function hideOfflineWarning() {
     const offlineWarning = document.getElementById('offline-warning');
     if (offlineWarning != null) {
         offlineWarning.style.display = 'none';
@@ -249,7 +248,7 @@ function hideOfflineWarning(){
  */
 function sendAjaxQuery(url, data) {
     $.ajax({
-        url: url ,
+        url: url,
         data: data,
         contentType: 'application/json',
         type: 'POST',

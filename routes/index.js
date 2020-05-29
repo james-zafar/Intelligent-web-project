@@ -21,7 +21,6 @@ router.get('/', function(req, res, next) {
     if (!req.session.loggedIn) {
         return res.redirect('/login');
     }
-    const allStories = rankedStories.getSortedStories(req.session.user._id);
     res.render('index');
     stories.getAll(req, res, function (error, stories) {
         if (error || !stories) {
@@ -31,6 +30,7 @@ router.get('/', function(req, res, next) {
                 return next(err);
         }
         res.io.on('connection', function() {
+            //Reverse stories to enssure they are in date order
             res.io.sockets.emit('broadcast', stories.reverse());
         });
 
@@ -43,7 +43,7 @@ router.get('/', function(req, res, next) {
                     // Get sorted stories and wait for a response
                     (async () => {
                         const allStories = await rankedStories.getSortedStories(req.session.user._id);
-                        res.io.sockets.emit('broadcast', allStories);
+                        res.io.sockets.emit('broadcast', stories);
                     })();
                 }
             });
@@ -73,7 +73,6 @@ router.post('/login', function(req, res, next) {
             const err = new Error(message);
             return next(err);
         }
-        console.log("Login successful");
         console.log(user);
         req.session.loggedIn = true;
         req.session.user = user;
@@ -102,7 +101,6 @@ router.post('/uploadUser', function (req, res, next) {
 
 router.post('/uploadStory', function (req, res, next) {
     stories.insertFromJson(req, res, function (error, results) {
-        console.log("story added");
         if (error || !results) {
             console.log(error)
             const err = new Error(error);
@@ -173,7 +171,6 @@ router.post('/createStory', function (req, res) {
         image1 = req.body.imageText1,
         image2 = req.body.imageText2,
         images;
-    console.log("Image? " + image0 + " 1 " + image1 + " 2 " + image2);
     //Check if images actually exist
     if (image0 === "") {
         images = [];
@@ -184,7 +181,6 @@ router.post('/createStory', function (req, res) {
     } else {
         images = [image0, image1, image2]
     }
-    console.log("Adding images: " + images.length);
     var theStory = new Story({
         _id: Math.random().toString(36).substring(7),
         text: storyText,
@@ -247,9 +243,6 @@ router.post('/editPost', function(req, res) {
             selectStory = { _id: storyID },
             update = { $set: {text: newText } };
 
-        //collection.count({_id: mongoID}, function (err, count) {
-        //    console.log("Stoies with ID: " + count);
-        //});
         collection.updateOne(selectStory, update, function(error, result) {
             if (error) {
                 console.log("Error updating story...", error);
@@ -261,13 +254,6 @@ router.post('/editPost', function(req, res) {
         });
         client.close();
     });
-});
-
-router.post('/sharePost', function (req, res) {
-    let storyID = req.body.storyID,
-        shareURL = 'share?direct=true%26viewPostID=' + storyID;
-    res.redirect('/timeline?share=True&sharePostID=' + storyID + '&url=' + shareURL);
-    //TODO: Implement the share button feature
 });
 
 router.post('/deletePost', function (req, res) {
@@ -291,9 +277,12 @@ router.post('/deletePost', function (req, res) {
     });
 });
 
+/**
+ * Used to locate and display the shared story
+ */
 router.get('/share', function (req, res) {
     const url = 'mongodb://localhost:27017/';
-    console.log("Shared story: " + req.query.viewPostID);
+    //Get the post info from the URL
     let mongoID = req.query.viewPostID;
     mongodb.connect(url, function (error, client) {
         if (error) {
