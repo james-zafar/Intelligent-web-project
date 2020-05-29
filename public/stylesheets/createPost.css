@@ -19,7 +19,11 @@ body {
     height: 225px;
 }
 
-.cameraCaptureButton .uploadPhotoButton {
+.cameraCaptureButton {
+    margin: 10px;
+}
+
+.uploadPhotoButton {
     margin: 10px;
 }
 

@@ -61,8 +61,12 @@ $('.sharePost').click(function () {
     // TODO: Implement the share post feature
     console.log("Not yet implemented");
     window.storyID = (this.id).replace('share', '');
-    var submitID = 'submitShare' + window.storyID;
-    $('#' + submitID).trigger('click');
+    var newText = 'Use the following link to share this post:' +
+        ' https://localhost:3000/share?direct=true&viewPostID=' +
+        window.storyID;
+    var displayID = 'sharePost' + window.storyID;
+    $('#shareTextArea' + window.storyID).text(newText);
+    $('#' + displayID).show();
 });
 
 /**
@@ -81,3 +85,33 @@ $('#confirmDelete').click(function () {
     var deleteID = 'rm' + window.storyID;
     $('#' + deleteID).trigger('click');
 });
+
+function sendAjaxQuery(url, data) {
+    $.ajax({
+        url: url ,
+        data: data,
+        contentType: 'application/json',
+        type: 'POST',
+    });
+}
+
+function submitForm() {
+    $("form").submit(function() {
+        var button = $("input[type=submit][clicked=true]").val();
+        alert(button);
+        var data = {};
+        var formArray= $("form").serializeArray();
+        data['storyID'] = formArray[0].value;
+        if(button.contains('submitEdit')) {
+            data['storyText'] = formArray[1].value;
+            sendAjaxQuery('/editPost', data);
+        } else {
+            sendAjaxQuery('/deletePost', data);
+        }
+    });
+
+    $("form input[type=submit]").click(function() {
+        $("input[type=submit]", $(this).parents("form")).removeAttr("clicked");
+        $(this).attr("clicked", "true");
+    });
+}

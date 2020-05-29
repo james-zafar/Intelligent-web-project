@@ -10,7 +10,7 @@ const story = new Schema(
         date: {type: Date, default: Date.now},
         keywords: [{type: String}],
         user_id: {type: String},
-        votes: [{vote: Number, user_id: mongoose.Schema.Types.ObjectId}]
+        votes: [{vote: Number, user_id: String}]
     }
 );
 

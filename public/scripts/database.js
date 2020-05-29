@@ -2,7 +2,6 @@ let dbPromise;
 
 const DB_NAME = 'db_my_story_1';
 const STORIES_STORE_NAME = 'store_stories';
-const LOGGED_IN_STORE_NAME = 'store_logged_in'
 
 /**
  * Initialises the database
@@ -25,7 +24,6 @@ function initDatabase() {
  * @param storyObject
  */
 function storeCachedData(storyObject) {
-    console.log('inserting: '+ JSON.stringify(storyObject));
     if (dbPromise) {
         dbPromise.then(async db => {
             let tx = db.transaction(STORIES_STORE_NAME, 'readwrite');
@@ -34,7 +32,6 @@ function storeCachedData(storyObject) {
             // await store.add(storyObject);
             return tx.complete;
         }).then(function () {
-            console.log('added item to the store! '+ JSON.stringify(storyObject));
         }).catch(function (e) {
             console.log(e);
             localStorage.setItem(storyObject._id, JSON.stringify(storyObject));
@@ -72,27 +69,6 @@ function getCachedData() {
                 }
             }
         });
-        // }).then(function (readingsList) {
-        //     if (readingsList && readingsList.length > 0){
-        //         let max;
-        //         for (let elem of readingsList) {
-        //             if (!max || elem.date > max.date) {
-        //                 max = elem;
-        //             }
-        //         }
-        //         if (max) {
-        //             addToResults(max);
-        //         }
-        //     } else {
-        //         const value = localStorage.getItem(storyID);
-        //         if (value == null) {
-        //             addToResults({city: city, date: date});
-        //         }
-        //         else {
-        //             addToResults(value);
-        //         }
-        //     }
-        // });
     } else {
         for (let story of localStorage) {
             if (story != null) {

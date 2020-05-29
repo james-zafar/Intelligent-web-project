@@ -6,6 +6,9 @@ var mongodb = require('mongodb');
 const users = require('../controllers/users');
 const stories = require('../controllers/stories');
 const initDB = require('../controllers/init');
+
+
+const rankedStories = require('../recommendation/recommendStories');
 initDB.init();
 
 var Story = require('../models/stories');
@@ -18,6 +21,7 @@ router.get('/', function(req, res, next) {
     if (!req.session.loggedIn) {
         return res.redirect('/login');
     }
+    const allStories = rankedStories.getSortedStories(req.session.user._id);
     res.render('index');
     stories.getAll(req, res, function (error, stories) {
         if (error || !stories) {
@@ -27,7 +31,22 @@ router.get('/', function(req, res, next) {
                 return next(err);
         }
         res.io.on('connection', function() {
-            res.io.sockets.emit('broadcast', stories);
+            res.io.sockets.emit('broadcast', stories.reverse());
+        });
+
+        res.io.on('connection', function(socket) {
+            // listen for request to change order of stories
+            socket.on('reformatStories', function (data) {
+                if(data === 'date') {
+                    res.io.sockets.emit('broadcast', stories.reverse());
+                } else {
+                    // Get sorted stories and wait for a response
+                    (async () => {
+                        const allStories = await rankedStories.getSortedStories(req.session.user._id);
+                        res.io.sockets.emit('broadcast', allStories);
+                    })();
+                }
+            });
         });
     });
 });
@@ -93,6 +112,20 @@ router.post('/uploadStory', function (req, res, next) {
     });
 });
 
+router.post('/rateStory', function (req, res, next) {
+    stories.rateStory(req, res, function (error, results) {
+        if (error || !results) {
+            console.log(error)
+            const err = new Error(error);
+            return next(err);
+        }
+        const response = {rating: {userId: req.session.user._id, storyId: req.body.storyId, rating: req.body.rating}}
+        console.log(response)
+        res.setHeader("Content-Type", "application/json");
+        res.send(JSON.stringify(response));
+    });
+});
+
 router.post('/getStories', function(req, res) {
     const url = 'mongodb://localhost:27017/';
     mongodb.connect(url, function (error, client) {
@@ -134,25 +167,14 @@ router.post('/createStory', function (req, res) {
         images = [image0, image1, image2]
     }
     console.log("Adding images: " + images.length);
-    //Generate a random ID for each story
-    const uniqueStoryId = Math.floor(100000000 + Math.random() * 900000000);
-    let theStory = new Story({
-        _id: uniqueStoryId,
+    var theStory = new Story({
+        _id: Math.random().toString(36).substring(7),
         text: storyText,
         image: images,
         user_id: req.session.user._id
     });
-    /*try {
-        theStory.save(() => {
-            res.redirect('createPost/?disp=true');
-        });
-    } catch (error) {
-        window.alert("An error occurred whilst saving the story. Please try again later.")
-        console.log("Error ", error.message);
-    }*/
     theStory.save(function (error) {
         if (error) {
-            //window.alert("An error occurred whilst saving the story. Please try again later.")
             console.log("Error ", error.message);
         } else {
             res.redirect('createPost/?disp=true');
@@ -184,7 +206,6 @@ router.get('/timeline', function(req, res) {
                 } else {
                     res.render('timeline', {
                         title: 'View your timeline',
-                        profileSource: 'https://images.unsplash.com/reserve/bOvf94dPRxWu0u3QsPjF_tree.jpg?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60',
                         allStories: results,
                         author: currentUser,
                         req: req
@@ -205,7 +226,7 @@ router.post('/editPost', function(req, res) {
 
         let db = client.db('myStory'),
             collection = db.collection('stories'),
-            selectStory = { _id: story },
+            selectStory = { _id: storyID },
             update = { $set: {text: newText } };
 
         //collection.count({_id: mongoID}, function (err, count) {
@@ -276,7 +297,6 @@ router.get('/share', function (req, res) {
                         let author = result[0].first_name + " " + result[0].family_name;
                         res.render('share', {
                             title: 'View Shared Post',
-                            profileSource: 'https://images.unsplash.com/reserve/bOvf94dPRxWu0u3QsPjF_tree.jpg?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60',
                             theStory: results[0],
                             author: author,
                             req: req
