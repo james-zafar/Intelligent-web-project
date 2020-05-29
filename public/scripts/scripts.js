@@ -94,15 +94,13 @@ function addToResults(dataR) {
         storyRatings.setAttribute('id', 'story-ratings-' + dataR._id);
         storyDiv.appendChild(storyRatings);
         storyRatings.classList.add('card-footer');
-        if (dataR.votes !== undefined) {
-            storyRatings.innerHTML = "Ratings: ";
-            for (let vote of dataR.votes) {
-                storyRatings.innerHTML += `${vote.user_id}: ${vote.vote}, `;
-            }
-            storyRatings.innerHTML = storyRatings.innerHTML.slice(0, -2);
-        } else {
-            storyRatings.innerHTML = "No ratings.";
+        storyRatings.innerHTML = "Ratings: ";
+        let ratings = "";
+        for (let vote of dataR.votes) {
+            ratings += `${vote.user_id}: ${vote.vote}, `;
         }
+        ratings = ratings.slice(0, -2);
+        storyRatings.innerHTML += ratings;
 
         let ratingDropDown = document.createElement('button');
         ratingDropDown.setAttribute('id', "select" + dataR._id);
@@ -284,12 +282,12 @@ function sendAjaxQuery(url, data) {
 function updateRating(ratingObject) {
     const ratingDiv = document.getElementById('story-ratings-' + ratingObject.storyId);
     console.log(ratingDiv);
-    const ratingText = `, ${ratingObject.userId}: ${ratingObject.rating}`;
+    const ratingText = `${ratingObject.userId}: ${ratingObject.rating}`;
     console.log(ratingText);
-    if (ratingDiv.innerHTML === "No ratings.") {
-        ratingDiv.innerHTML = ratingText;
-    } else {
+    if (ratingDiv.innerHTML === "Ratings: ") {
         ratingDiv.innerHTML += ratingText;
+    } else {
+        ratingDiv.innerHTML += `, ${ratingText}`;
     }
 }
 
