@@ -134,30 +134,30 @@ router.post('/createStory', function (req, res) {
         images = [image0, image1, image2]
     }
     console.log("Adding images: " + images.length);
+    //Generate a random ID for each story
+    const uniqueStoryId = Math.floor(100000000 + Math.random() * 900000000);
     let theStory = new Story({
+        _id: uniqueStoryId,
         text: storyText,
         images: images,
         user_id: req.session.user._id
     });
-    try {
+    /*try {
         theStory.save(() => {
             res.redirect('createPost/?disp=true');
         });
     } catch (error) {
         window.alert("An error occurred whilst saving the story. Please try again later.")
         console.log("Error ", error.message);
-    }
-    // theStory.save(function (error, response) {
-    //     try{
-    //
-    //     }
-    //     if (error) {
-    //         console.log("Error ", error);
-    //         //res.status(500).send('Internal Server Error: ', + error);
-    //     } else {
-    //         res.redirect('createPost/?disp=true');
-    //     }
-    // });
+    }*/
+    theStory.save(function (error) {
+        if (error) {
+            //window.alert("An error occurred whilst saving the story. Please try again later.")
+            console.log("Error ", error.message);
+        } else {
+            res.redirect('createPost/?disp=true');
+        }
+    });
 });
 
 router.get('/timeline', function(req, res) {
