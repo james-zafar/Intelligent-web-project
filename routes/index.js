@@ -139,14 +139,25 @@ router.post('/createStory', function (req, res) {
         images: images,
         user_id: req.session.user._id
     });
-    theStory.save(function (error, response) {
-        if (error) {
-            console.log("Error ", error);
-            //res.status(500).send('Internal Server Error: ', + error);
-        } else {
+    try {
+        theStory.save(() => {
             res.redirect('createPost/?disp=true');
-        }
-    });
+        });
+    } catch (error) {
+        window.alert("An error occurred whilst saving the story. Please try again later.")
+        console.log("Error ", error.message);
+    }
+    // theStory.save(function (error, response) {
+    //     try{
+    //
+    //     }
+    //     if (error) {
+    //         console.log("Error ", error);
+    //         //res.status(500).send('Internal Server Error: ', + error);
+    //     } else {
+    //         res.redirect('createPost/?disp=true');
+    //     }
+    // });
 });
 
 router.get('/timeline', function(req, res) {
