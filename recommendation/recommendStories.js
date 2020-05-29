@@ -15,7 +15,7 @@ async function getUserPreferences(user) {
             if(error) {
                 throw error;
             }
-            resolve(result.voted_stories);
+            resolve(result[0].voted_stories);
         });
     });
 }
@@ -45,12 +45,14 @@ function sortPosts(posts) {
 
 exports.getSortedStories = async function(currentUser) {
     const rankingAlgo = new RankingAlgorithm();
-    let preferences = await getUserPreferences(currentUser);
 
+    let preferences = await getUserPreferences(currentUser);
     let postPreferences = await getAllPostPreferences();
+    //console.log("Here: " + postPreferences);
 
     //Add a third parameter of "similarity = 'sim_euclidean' to run with euclidean algorithm
     let actualScores = await rankingAlgo.getRecommendations(postPreferences, preferences);
-    console.log(actualScores);
+    //console.log(actualScores);
+
     return await sortPosts(actualScores);
 };

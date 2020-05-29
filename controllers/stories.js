@@ -1,5 +1,6 @@
 const Story = require('../models/stories');
 const Users = require('../models/users');
+const replaceIDs = require('./getUserNames');
 
 exports.insert = function (req, res) {
     const storyData = req.body;
@@ -29,13 +30,13 @@ exports.insert = function (req, res) {
     }
 };
 
-exports.getAll = function (req, res, callback) {
+exports.getAll = async function (req, res, callback) {
     const storyData = req.body;
     if (storyData == null) {
         res.status(403).send('No data sent!')
     }
     try {
-        Story.find({}, function (err, stories) {
+        Story.find({}, async function (err, stories) {
             if (err) {
                 // res.status(500).send('Invalid data!');
                 return callback(err)
@@ -44,17 +45,10 @@ exports.getAll = function (req, res, callback) {
                 err.status = 401;
                 return callback(err);
             }
-            for(let i = 0; i < stories.length; i++) {
-                var user = stories[i].user_id;
-                const query = Users.find({_id: user});
-                //console.log(query);
-                // Users.find({_id: user}), function(err, result) {
-                //     stories[i].user_id = result[0].first_name + " " + result[0].family_name;
-                //     console.log(stories[i].user_id);
-                // });
-            }
+            replaceIDs.replaceUserIDs(stories).then(stories => {
+                return callback(null, stories);
+            });
 
-            return callback(null, stories);
         });
     } catch (e) {
         res.status(500).send('error ' + e);
