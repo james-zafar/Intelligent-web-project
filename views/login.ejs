@@ -33,9 +33,16 @@
                                 </div>
                                 <button type="submit" name="submit2" class="btn submit-btn btn-secondary mb-2">Log in</button>
                             </form>
-                            <div>
-                                <input type="file" id="json_upload" accept="application/json" multiple>
+                            <div class="input-group mb-3 jsonUploader">
+                                <div class="input-group-prepend">
+                                    <button class="btn btn-outline-secondary" id="uploadButton" type="button">Upload</button>
+                                </div>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="json_upload" multiple>
+                                    <label class="custom-file-label" for="inputGroupFile03">Select JSON file</label>
+                                </div>
                             </div>
+                            <p class="selectedFile" id="selectedFile"></p>
                         </div>
                     </div>
                 </div>

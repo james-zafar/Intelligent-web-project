@@ -27,7 +27,7 @@ router.get('/', function(req, res, next) {
                 return next(err);
         }
         res.io.on('connection', function() {
-            res.io.sockets.emit('broadcast', stories);
+            res.io.sockets.emit('broadcast', stories.reverse());
         });
     });
 });
@@ -134,7 +134,8 @@ router.post('/createStory', function (req, res) {
         images = [image0, image1, image2]
     }
     console.log("Adding images: " + images.length);
-    let theStory = new Story({
+    var theStory = new Story({
+        _id: Math.random().toString(36).substring(7),
         text: storyText,
         images: images,
         user_id: req.session.user._id
