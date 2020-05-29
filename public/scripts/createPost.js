@@ -166,12 +166,12 @@ function toggleCamera() {
     }, function (error) {
         console.log(error.code);
         window.alert("Error getting video stream")
-    })
+    });
 
     document.getElementById('capture').addEventListener('click', function () {
         context.drawImage(video, 0, 0, 300, 255);
         photo.setAttribute('src', canvas.toDataURL('image/png'))
-    })
+    });
 
     document.getElementById('uploadCapturedPhoto').addEventListener('click', function () {
         const child = $('#previewArea').children('img').length;
@@ -196,4 +196,4 @@ function toggleCamera() {
             }).appendTo('#previewArea');
         }
     })
-} ())
+} ());

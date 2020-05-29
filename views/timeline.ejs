@@ -13,176 +13,167 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 </head>
 <body>
-    <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">myStory</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
-                aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarCollapse">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="/#">View Posts<span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/timeline">View Your Posts</a>
-                </li>
-            </ul>
-            <span>
+<nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">myStory</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+            aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="/#">View Posts<span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/timeline">View Your Posts</a>
+            </li>
+        </ul>
+        <span>
                 <button class="btn btn-outline-success" id="online-warning" disabled>Online</button>
                 <button class="btn btn-outline-danger" id="offline-warning" disabled>Offline</button>
                 <button class="btn btn-outline-secondary" type="button" onclick="window.location.href='createPost'">Submit Post</button>
                 <button class="btn btn-outline-secondary" type="button"
-                  onclick="window.location.href='logout'">Logout
+                        onclick="window.location.href='logout'">Logout
                 </button>
             </span>
-        </div>
-    </nav>
-    <div class="container">
-        <% allStories %>
-        <% for(let i = (allStories.length - 1); i > 0; i--) { %>
-            <div class="card body-card" id="<%= allStories[i]._id %>">
-                <div class="card-header">
-                    <div class="" id="profileImage">
-                        <img src="<%= profileSource %>" alt="Profile Image" width="10%" height="100%"
-                             class="img-fluid rounded float-left" id="profileImage">
-                        <div id="userName">
-                            <% if((allStories[i].user_id) === undefined) { %>
-                                Unknown User
-                            <% } else { %>
-                                <%= author %>
-                            <% } %>
-
-                        </div>
-                        <div id="timePosted" style="padding-top: 10px;">
-                            <%= allStories[i].date %>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <p class="storyText" id="text<%= allStories[i]._id %>"><%= allStories[i].text %></p>
-                    <div id="results"></div>
-                    <div class="row">
-                        <!----------------
-                           TODO: The src of these img tags needs to be fixed to display images properly
-                            The arg parsed from JS is the buffer from the DB,
-                            I am unsure how this is encoded/how to use it to create an image
-                        ------------------>
-                        <% if(allStories[i].image.length !== 0) { %>
-
-                            <% if(allStories[i].image.length === 1) { %>
-                                <div class="col-md-4">
-                                    <img src="data:image/jpeg;base64,  <%= allStories[i].image; %>"
-                                         alt="inn_logo" class="img-fluid">
-                                </div>
-                            <% } else { %>
-                                <div class="col-md-<%= (12 / allStories[i].image.length) %>">
-                                    <img src="data:image/jpeg;base64,  <%= allStories[i].image; %>"
-                                         alt="inn_logo" class="img-fluid">
-                                </div>
-                                <div class="col-md-<%= (12 / allStories[i].image.length) %>">
-                                    <img src="data:image/jpeg;base64,  <%= allStories[i].image; %>"
-                                         alt="inn_logo" class="img-fluid">
-                                </div>
-                            <% } %>
-                            <% if(allStories[i].image.length == 3){ %>
-                                <div class="col-md-<%= (12 / allStories[i].image.length) %>">
-                                    <img src="data:image/jpeg;base64,  <%= allStories[i].image.toString('base64'); %>"
-                                         alt="inn_logo" class="img-fluid">
-                                </div>
-                            <% } %>
+    </div>
+</nav>
+<div class="container">
+    <% allStories %>
+    <% for(let i = (allStories.length - 1); i > 0; i--) { %>
+        <div class="card body-card" id="<%= allStories[i]._id %>">
+            <div class="card-header">
+                <div class="" id="userInfo">
+                    <div id="userName">
+                        <% if((allStories[i].user_id) === undefined) { %>
+                            Unknown User
+                        <% } else { %>
+                            <%= author %>
                         <% } %>
                     </div>
-
-                </div>
-                <div class="card-footer">
-                        <button class="btn btn-primary editPost" id="edit<%= allStories[i]._id %>">
-                            Edit Post
-                        </button>
-                        <button class="btn btn-primary sharePost" id="share<%= allStories[i]._id %>">
-                            Share
-                        </button>
-                        <button class="btn btn-danger deletePost" id="del<%= allStories[i]._id %>">
-                            Delete Post
-                        </button>
-                    <form action="/editPost" method="post">
-                        <textarea name="storyID" style="display: none;"><%= allStories[i]._id %></textarea>
-                        <textarea name="storyText" id="storyText" style="display: none;"></textarea>
-                        <input type="submit" id="submitEdit<%= allStories[i]._id %>" style="display: none;" />
-                    </form>
-                    <form action="/sharePost" method="post">
-                        <textarea name="storyID" style="display: none;"><%= allStories[i]._id %></textarea>
-                        <input type="submit" id="submitShare<%= allStories[i]._id %>" style="display: none;" />
-                    </form>
-                    <form action="/deletePost" method="post">
-                        <textarea name="storyID" style="display: none;"><%= allStories[i]._id %></textarea>
-                        <input type="submit" id="rm<%= allStories[i]._id %>" style="display: none;" />
-                    </form>
-                </div>
-                <% if(req.query.edit == 'True' && req.query.postID == allStories[i]._id) { %>
-                    <div class="alert alert-success alert-dismissible hide" role="alert" id="change<%= allStories[i]._id %>"
-                         style=" padding-top: 10px;">
-                        Changes saved successfully.
-                        <button type="button" class="close" onclick="$('#change<%= allStories[i]._id %>').hide();">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                    <div id="timePosted" style="padding-top: 10px;">
+                        <%= allStories[i].date %>
                     </div>
-                <% } %>
-                <% if(req.query.share == 'True' && req.query.sharePostID == allStories[i]._id) { %>
-                    <div class="alert alert-success alert-dismissible hide" role="alert" id="share<%= allStories[i]._id %>"
-                         style=" padding-top: 10px;">
-                        <div id="shareTextArea" >Use the following link to share this post: https://localhost:3000/<%= req.query.url %></div>
-                        <button type="button" class="close" onclick="$('#share<%= allStories[i]._id %>').hide();">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                <% } %>
+                </div>
             </div>
-        <% } %>
+            <div class="card-body">
+                <p class="storyText" id="text<%= allStories[i]._id %>"><%= allStories[i].text %></p>
+                <div id="results"></div>
+                <div class="row">
+                    <!----------------
+                       TODO: The src of these img tags needs to be fixed to display images properly
+                        The arg parsed from JS is the buffer from the DB,
+                        I am unsure how this is encoded/how to use it to create an image
+                    ------------------>
+                    <% if(allStories[i].image.length !== 0) { %>
 
-        <div class="modal fade" id="editPostModal" role="dialog" aria-labelledby="previewTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title" id="previewTitle">Edit Post</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body" id="editTextArea">
-
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary"
-                                onclick="saveChanges();$('#editPostModal').modal('hide');" id="changes">Save Changes
-                        </button>
-                        <button type="button" class="btn btn-danger" onclick="$('#editPostModal').modal('hide');">Close
-                        </button>
-                    </div>
+                        <% if(allStories[i].image.length === 1) { %>
+                            <div class="col-md-4">
+                                <img src="data:image/jpeg;base64,  <%= allStories[i].image; %>"
+                                     alt="inn_logo" class="img-fluid">
+                            </div>
+                        <% } else { %>
+                            <div class="col-md-<%= (12 / allStories[i].image.length) %>">
+                                <img src="data:image/jpeg;base64,  <%= allStories[i].image; %>"
+                                     alt="inn_logo" class="img-fluid">
+                            </div>
+                            <div class="col-md-<%= (12 / allStories[i].image.length) %>">
+                                <img src="data:image/jpeg;base64,  <%= allStories[i].image; %>"
+                                     alt="inn_logo" class="img-fluid">
+                            </div>
+                        <% } %>
+                        <% if(allStories[i].image.length == 3){ %>
+                            <div class="col-md-<%= (12 / allStories[i].image.length) %>">
+                                <img src="data:image/jpeg;base64,  <%= allStories[i].image.toString('base64'); %>"
+                                     alt="inn_logo" class="img-fluid">
+                            </div>
+                        <% } %>
+                    <% } %>
                 </div>
+
+            </div>
+            <div class="card-footer">
+                <button class="btn btn-primary editPost" id="edit<%= allStories[i]._id %>">
+                    Edit Post
+                </button>
+                <button class="btn btn-primary sharePost" id="share<%= allStories[i]._id %>">
+                    Share
+                </button>
+                <button class="btn btn-danger deletePost" id="del<%= allStories[i]._id %>">
+                    Delete Post
+                </button>
+                <form action="/editPost" method="post">
+                    <textarea name="storyID" style="display: none;"><%= allStories[i]._id %></textarea>
+                    <textarea name="storyText" id="storyText" style="display: none;"></textarea>
+                    <input type="submit" id="submitEdit<%= allStories[i]._id %>" style="display: none;" />
+                </form>
+                <form action="/deletePost" method="post">
+                    <textarea name="storyID" style="display: none;"><%= allStories[i]._id %></textarea>
+                    <input type="submit" id="rm<%= allStories[i]._id %>" style="display: none;" />
+                </form>
+            </div>
+            <% if(req.query.edit == 'True' && req.query.postID == allStories[i]._id) { %>
+                <div class="alert alert-success alert-dismissible hide" role="alert" id="change<%= allStories[i]._id %>"
+                     style=" padding-top: 10px;">
+                    Changes saved successfully.
+                    <button type="button" class="close" onclick="$('#change<%= allStories[i]._id %>').hide();">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            <% } %>
+            <div class="alert alert-success alert-dismissible hide" role="alert" id="sharePost<%= allStories[i]._id %>"
+                 style=" padding-top: 10px; display:none;">
+                <div id="shareTextArea<%= allStories[i]._id %>" >Use the following link to share this post: https://localhost:3000/<%= req.query.url %></div>
+                <button type="button" class="close" onclick="$('#sharePost<%= allStories[i]._id %>').hide();">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
         </div>
+    <% } %>
 
-        <div class="modal" tabindex="-1" role="dialog" id="deleteModal">
-            <div class="modal-dialog modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Are you sure?</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <p>Warning, once the post has been deleted this action can not be reversed.</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" id="confirmDelete" data-dismiss="modal">Continue
-                        </button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    </div>
+    <div class="modal fade" id="editPostModal" role="dialog" aria-labelledby="previewTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="previewTitle">Edit Post</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="editTextArea">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary"
+                            onclick="saveChanges();$('#editPostModal').modal('hide');" id="changes">Save Changes
+                    </button>
+                    <button type="button" class="btn btn-danger" onclick="$('#editPostModal').modal('hide');">Close
+                    </button>
                 </div>
             </div>
         </div>
     </div>
+
+    <div class="modal" tabindex="-1" role="dialog" id="deleteModal">
+        <div class="modal-dialog modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Are you sure?</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Warning, once the post has been deleted this action can not be reversed.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" id="confirmDelete" data-dismiss="modal">Continue
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>
