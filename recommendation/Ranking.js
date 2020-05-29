@@ -40,8 +40,6 @@ module.exports = class Rank {
 // of every other user's rankings
 
     getRecommendations(prefs, person, similarity = 'sim_pearson') {
-        //console.log("PERSON: " + person);
-        //console.log("PREFS ", prefs);
         let totals = {};
         let simSums = {};
 
