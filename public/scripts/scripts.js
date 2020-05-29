@@ -94,29 +94,36 @@ function addToResults(dataR) {
         storyRatings.setAttribute('id', 'story-ratings-' + dataR._id);
         storyDiv.appendChild(storyRatings);
         storyRatings.classList.add('card-footer');
-        if (dataR.votes !== undefined) {
-            storyRatings.innerHTML = "Ratings: ";
-            for (let vote of dataR.votes) {
-                storyRatings.innerHTML += `${vote.user_id}: ${vote.vote}, `;
-            }
-            storyRatings.innerHTML = storyRatings.innerHTML.slice(0, -2);
-        } else {
-            storyRatings.innerHTML = "No ratings.";
+        storyRatings.innerHTML = "Ratings: ";
+        let ratings = "";
+        for (let vote of dataR.votes) {
+            ratings += `${vote.user_id}: ${vote.vote}, `;
         }
+        ratings = ratings.slice(0, -2);
+        storyRatings.innerHTML += ratings;
 
-        let ratingDropDown = document.createElement('select');
+        let ratingDropDown = document.createElement('button');
         ratingDropDown.setAttribute('id', "select" + dataR._id);
+        ratingDropDown.setAttribute('data-toggle', 'dropdown');
+        ratingDropDown.setAttribute('aria-haspopup', 'true');
+        ratingDropDown.setAttribute('aria-expanded', 'false');
+        ratingDropDown.classList.add('btn', 'btn-secondary', 'dropdown-toggle', 'dropdown')
+        ratingDropDown.innerHTML = "Rate story"
         $(storyDiv).append(ratingDropDown);
+
+        let dropDownMenu = document.createElement('div')
+        dropDownMenu.setAttribute('aria-labelledby', 'dropdownMenu2')
+        dropDownMenu.setAttribute('aria-labelledby', 'dropdownMenu2')
+        dropDownMenu.classList.add('dropdown-menu')
+        $(storyDiv).append(dropDownMenu);
+
         for (let i = 0; i < 5; i++) {
-            let ratingOption = document.createElement('option');
-            $(ratingDropDown).append(ratingOption);
-            ratingOption.value = i.toString();
+            let ratingOption = document.createElement('button');
+            ratingOption.classList.add('dropdown-item')
+            ratingOption.setAttribute('onclick', `sendRating("${dataR._id}", ` + i + `);`)
+            $(dropDownMenu).append(ratingOption);
             ratingOption.innerHTML = i.toString();
         }
-        let ratingButton = document.createElement('button');
-        $(storyDiv).append(ratingButton);
-        ratingButton.innerHTML = 'Rate';
-        ratingButton.setAttribute('onclick', `sendRating("${dataR._id}");`);
 
         resultsDiv.appendChild(document.createElement('br'));
     }
@@ -275,12 +282,12 @@ function sendAjaxQuery(url, data) {
 function updateRating(ratingObject) {
     const ratingDiv = document.getElementById('story-ratings-' + ratingObject.storyId);
     console.log(ratingDiv);
-    const ratingText = `, ${ratingObject.userId}: ${ratingObject.rating}`;
+    const ratingText = `${ratingObject.userId}: ${ratingObject.rating}`;
     console.log(ratingText);
-    if (ratingDiv.innerHTML === "No ratings.") {
-        ratingDiv.innerHTML = ratingText;
-    } else {
+    if (ratingDiv.innerHTML === "Ratings: ") {
         ratingDiv.innerHTML += ratingText;
+    } else {
+        ratingDiv.innerHTML += `, ${ratingText}`;
     }
 }
 
@@ -288,8 +295,8 @@ function updateRating(ratingObject) {
  * Sends a post request with the rating of a story
  * @param storyId
  */
-function sendRating(storyId) {
-    const rating = parseInt($("#select" + storyId).val());
+function sendRating(storyId, rating) {
+    // const rating = parseInt($("#select" + storyId).val());
     let data = {rating: rating, storyId: storyId};
     data = JSON.stringify(data);
     sendAjaxQuery('rateStory', data);
