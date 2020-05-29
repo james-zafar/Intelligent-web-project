@@ -126,10 +126,6 @@ function addToResults(dataR) {
             $(dropDownMenu).append(ratingOption);
             ratingOption.innerHTML = i.toString();
         }
-        // let ratingButton = document.createElement('button');
-        // $(storyDiv).append(ratingButton);
-        // ratingButton.innerHTML = 'Rate';
-        // ratingButton.setAttribute('onclick', `sendRating("${dataR._id}");`);
 
         resultsDiv.appendChild(document.createElement('br'));
     }
