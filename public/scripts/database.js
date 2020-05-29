@@ -24,7 +24,6 @@ function initDatabase() {
  * @param storyObject
  */
 function storeCachedData(storyObject) {
-    console.log('inserting: '+ JSON.stringify(storyObject));
     if (dbPromise) {
         dbPromise.then(async db => {
             let tx = db.transaction(STORIES_STORE_NAME, 'readwrite');
@@ -33,7 +32,6 @@ function storeCachedData(storyObject) {
             // await store.add(storyObject);
             return tx.complete;
         }).then(function () {
-            console.log('added item to the store! '+ JSON.stringify(storyObject));
         }).catch(function (e) {
             console.log(e);
             localStorage.setItem(storyObject._id, JSON.stringify(storyObject));

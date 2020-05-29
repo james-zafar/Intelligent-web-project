@@ -85,3 +85,33 @@ $('#confirmDelete').click(function () {
     var deleteID = 'rm' + window.storyID;
     $('#' + deleteID).trigger('click');
 });
+
+function sendAjaxQuery(url, data) {
+    $.ajax({
+        url: url ,
+        data: data,
+        contentType: 'application/json',
+        type: 'POST',
+    });
+}
+
+function submitForm() {
+    $("form").submit(function() {
+        var button = $("input[type=submit][clicked=true]").val();
+        alert(button);
+        var data = {};
+        var formArray= $("form").serializeArray();
+        data['storyID'] = formArray[0].value;
+        if(button.contains('submitEdit')) {
+            data['storyText'] = formArray[1].value;
+            sendAjaxQuery('/editPost', data);
+        } else {
+            sendAjaxQuery('/deletePost', data);
+        }
+    });
+
+    $("form input[type=submit]").click(function() {
+        $("input[type=submit]", $(this).parents("form")).removeAttr("clicked");
+        $(this).attr("clicked", "true");
+    });
+}

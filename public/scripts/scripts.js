@@ -307,7 +307,17 @@ function send(url) {
         data[formArray[index].name] = formArray[index].value;
     }
     data = JSON.stringify(data);
-    console.log(data);
     sendAjaxQuery(url, data);
     event.preventDefault();
+}
+
+/**
+ * Function to handle user request to change the sort method of stories
+ */
+function clickEvent(clickedID) {
+    const indexSocket = io.connect('https://localhost:3000');
+    $(".dropdown-item").click(function () {
+        $(".btn:first-child").text("Order by " + $(this).text());
+    });
+    indexSocket.emit('reformatStories', clickedID);
 }

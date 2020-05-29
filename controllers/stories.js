@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const Story = require('../models/stories');
+const Users = require('../models/users');
+const replaceIDs = require('./getUserNames');
 
 exports.insert = function (req, res) {
     const storyData = req.body;
@@ -23,6 +25,28 @@ exports.insert = function (req, res) {
 
             res.setHeader('Content-Type', 'application/json');
             res.send(JSON.stringify(story));
+        });
+    } catch (e) {
+        res.status(500).send('error ' + e);
+    }
+};
+
+exports.getAll = async function (req, res, callback) {
+    const storyData = req.body;
+    if (storyData == null) {
+        res.status(403).send('No data sent!')
+    }
+    try {
+        Story.find({}, async function (err, stories) {
+            if (err) {
+                // res.status(500).send('Invalid data!');
+                return callback(err)
+            } else if (!stories) {
+                let err = new Error('Stories not found.');
+                err.status = 401;
+                return callback(err);
+            }
+            return callback(null, stories);
         });
     } catch (e) {
         res.status(500).send('error ' + e);
@@ -80,29 +104,6 @@ exports.rateStory = function (req, res, callback) {
     } catch (e) {
         console.log(e);
         return callback(e);
-    }
-};
-
-
-exports.getAll = function (req, res, callback) {
-    const storyData = req.body;
-    if (storyData == null) {
-        res.status(403).send('No data sent!')
-    }
-    try {
-        Story.find({}, function (err, stories) {
-            if (err) {
-                // res.status(500).send('Invalid data!');
-                return callback(err)
-            } else if (!stories) {
-                let err = new Error('Stories not found.');
-                err.status = 401;
-                return callback(err);
-            }
-            return callback(null, stories);
-        });
-    } catch (e) {
-        res.status(500).send('error ' + e);
     }
 };
 
