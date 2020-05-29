@@ -50,3 +50,10 @@ function upload(data, modelType) {
         }
     });
 }
+
+function clearDB() {
+    $.ajax({
+        url: '/clearDB'
+      }
+    )
+}
