@@ -28,14 +28,26 @@ async function getAllPostPreferences() {
             if(error) {
                 throw error;
             }
-            let newStructure = {};
-            var user = result[0]._id;
-            delete newStructure._id;
-            newStructure[user] = result[0].voted_stories;
-            console.log(newStructure);
-            resolve(result);
-        });
+            let stories = result[0].voted_stories
+            let temp = []
+            for (let i = 0; i < stories.length; i++) {
+                temp.push(
+                  {
+                      storyID: stories[i].storyId,
+                      rating: stories[i].rating
+                  }
+                )
+            }
+            console.log(temp)
+            let temp2 = {
+                user_id: result[0].user_id,
+                voted_stories: temp
+            }
+        })
+
     });
+// stories[i]._id = undefined
+
 }
 
 /**
