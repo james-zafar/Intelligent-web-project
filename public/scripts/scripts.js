@@ -90,14 +90,33 @@ function addToResults(dataR) {
             storyImage.src = 'data:image/png;base64' + dataR.image.toString('base64');
         }
 
-        let storyLikes = document.createElement('div');
-        storyDiv.appendChild(storyLikes);
-        storyLikes.classList.add('card-footer');
-        if (dataR.votes != null) {
-            storyLikes.innerHTML = dataR.votes;
+        let storyRatings = document.createElement('div');
+        storyRatings.setAttribute('id', 'story-ratings-' + dataR._id);
+        storyDiv.appendChild(storyRatings);
+        storyRatings.classList.add('card-footer');
+        if (dataR.votes !== undefined) {
+            storyRatings.innerHTML = "Ratings: ";
+            for (let vote of dataR.votes) {
+                storyRatings.innerHTML += `${vote.user_id}: ${vote.vote}, `;
+            }
+            storyRatings.innerHTML = storyRatings.innerHTML.slice(0, -2);
         } else {
-            storyLikes.innerHTML = "No ratings";
+            storyRatings.innerHTML = "No ratings.";
         }
+
+        let ratingDropDown = document.createElement('select');
+        ratingDropDown.setAttribute('id', "select" + dataR._id);
+        $(storyDiv).append(ratingDropDown);
+        for (let i = 0; i < 5; i++) {
+            let ratingOption = document.createElement('option');
+            $(ratingDropDown).append(ratingOption);
+            ratingOption.value = i.toString();
+            ratingOption.innerHTML = i.toString();
+        }
+        let ratingButton = document.createElement('button');
+        $(storyDiv).append(ratingButton);
+        ratingButton.innerHTML = 'Rate';
+        ratingButton.setAttribute('onclick', `sendRating("${dataR._id}");`);
 
         resultsDiv.appendChild(document.createElement('br'));
     }
@@ -141,8 +160,7 @@ function loadStories() {
 function loadStoriesSocketIO() {
     const myStorySocket = io.connect('https://localhost:3000');
     let reconnectErrors = 0;
-    myStorySocket.on('broadcast', function(data) {
-        Function.name = 'display';
+    myStorySocket.on('broadcast', function (data) {
         $('#results').empty();
         for (let story of data) {
             addToResults(story);
@@ -237,12 +255,45 @@ function sendAjaxQuery(url, data) {
         contentType: 'application/json',
         type: 'POST',
         success: function (dataR) {
-            window.location.href = dataR.redirect;
+            if (dataR.redirect !== undefined){
+                window.location.href = dataR.redirect;
+            }
+            if (dataR.rating !== undefined) {
+                updateRating(dataR.rating);
+            }
         },
         error: function (xhr, status, error) {
             alert('Error: ' + error.message);
         }
     });
+}
+
+/**
+ * Updates the DOM with the rating given by the user for a story
+ * @param ratingObject
+ */
+function updateRating(ratingObject) {
+    const ratingDiv = document.getElementById('story-ratings-' + ratingObject.storyId);
+    console.log(ratingDiv);
+    const ratingText = `, ${ratingObject.userId}: ${ratingObject.rating}`;
+    console.log(ratingText);
+    if (ratingDiv.innerHTML === "No ratings.") {
+        ratingDiv.innerHTML = ratingText;
+    } else {
+        ratingDiv.innerHTML += ratingText;
+    }
+}
+
+/**
+ * Sends a post request with the rating of a story
+ * @param storyId
+ */
+function sendRating(storyId) {
+    const rating = parseInt($("#select" + storyId).val());
+    let data = {rating: rating, storyId: storyId};
+    data = JSON.stringify(data);
+    sendAjaxQuery('rateStory', data);
+    event.preventDefault();
 }
 
 /**
