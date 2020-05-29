@@ -5,3 +5,8 @@
 .body-card {
     padding-bottom: 20px;
 }
+
+.dropdown {
+    width: 100px;
+    margin: 10px 0 0 10px;
+}
