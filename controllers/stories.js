@@ -85,6 +85,28 @@ exports.insertFromJson = function (req, res, callback) {
     }
 };
 
+exports.rateStory = function (req, res, callback) {
+    const ratingData = req.body;
+    if (ratingData == null) {
+        res.status(403).send('No data sent!')
+    }
+    try {
+        const filter = {_id: {$eq: ratingData.storyId}};
+        console.log(req.session.user._id);
+        const update = {$push: {votes: {vote: parseInt(ratingData.rating), user_id: req.session.user._id}}};
+        Story.findOneAndUpdate(filter, update, function (err, result) {
+            if (err) {
+                console.log(err);
+                return callback(err);
+            }
+            return callback(null, result)
+        });
+    } catch (e) {
+        console.log(e);
+        return callback(e);
+    }
+};
+
 /**
  * Clear stories collections completely
  * @param req

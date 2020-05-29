@@ -2,7 +2,6 @@ let dbPromise;
 
 const DB_NAME = 'db_my_story_1';
 const STORIES_STORE_NAME = 'store_stories';
-const LOGGED_IN_STORE_NAME = 'store_logged_in'
 
 /**
  * Initialises the database
@@ -70,27 +69,6 @@ function getCachedData() {
                 }
             }
         });
-        // }).then(function (readingsList) {
-        //     if (readingsList && readingsList.length > 0){
-        //         let max;
-        //         for (let elem of readingsList) {
-        //             if (!max || elem.date > max.date) {
-        //                 max = elem;
-        //             }
-        //         }
-        //         if (max) {
-        //             addToResults(max);
-        //         }
-        //     } else {
-        //         const value = localStorage.getItem(storyID);
-        //         if (value == null) {
-        //             addToResults({city: city, date: date});
-        //         }
-        //         else {
-        //             addToResults(value);
-        //         }
-        //     }
-        // });
     } else {
         for (let story of localStorage) {
             if (story != null) {

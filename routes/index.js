@@ -112,6 +112,20 @@ router.post('/uploadStory', function (req, res, next) {
     });
 });
 
+router.post('/rateStory', function (req, res, next) {
+    stories.rateStory(req, res, function (error, results) {
+        if (error || !results) {
+            console.log(error)
+            const err = new Error(error);
+            return next(err);
+        }
+        const response = {rating: {userId: req.session.user._id, storyId: req.body.storyId, rating: req.body.rating}}
+        console.log(response)
+        res.setHeader("Content-Type", "application/json");
+        res.send(JSON.stringify(response));
+    });
+});
+
 router.post('/getStories', function(req, res) {
     const url = 'mongodb://localhost:27017/';
     mongodb.connect(url, function (error, client) {

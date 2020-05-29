@@ -67,7 +67,6 @@ exports.authenticate = function(req, res, callback) {
     if (userData == null) {
         res.status(403).send('No data sent!')
     }
-    console.log(userData);
     try {
         User.findOne({ email: userData.username }, function (err, user) {
             if (err) {
