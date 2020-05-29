@@ -21,7 +21,6 @@ router.get('/', function(req, res, next) {
     if (!req.session.loggedIn) {
         return res.redirect('/login');
     }
-    const allStories = rankedStories.getSortedStories(req.session.user._id);
     res.render('index');
     stories.getAll(req, res, function (error, stories) {
         if (error || !stories) {
@@ -31,6 +30,7 @@ router.get('/', function(req, res, next) {
                 return next(err);
         }
         res.io.on('connection', function() {
+            //Reverse stories to enssure they are in date order
             res.io.sockets.emit('broadcast', stories.reverse());
         });
 

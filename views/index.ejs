@@ -14,29 +14,30 @@
     <script src="/scripts/scripts.js"></script>
 </head>
 <body onload="initMyStory();">
-<nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="/#">myStory</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
-            aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarCollapse">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="/">View Posts<span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/timeline">View Your Posts</a>
-            </li>
-        </ul>
-        <span>
-            <button class="btn btn-outline-success" id="online-warning" disabled>Online</button>
-            <button class="btn btn-outline-danger" id="offline-warning" disabled>Offline</button>
-            <button class="btn btn-outline-secondary" type="button" onclick="window.location.href='createPost'">Submit Post</button>
-            <button class="btn btn-outline-secondary" type="button" onclick="window.location.href='logout'">Logout</button>
-        </span>
-    </div>
-</nav>
+    <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="/#">myStory</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+                aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/">View Posts<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/timeline">View Your Posts</a>
+                </li>
+            </ul>
+            <span>
+                <button class="btn btn-outline-success" id="online-warning" disabled>Online</button>
+                <button class="btn btn-outline-danger" id="offline-warning" disabled>Offline</button>
+                <button class="btn btn-outline-secondary" type="button" onclick="window.location.href='createPost'">Submit Post</button>
+                <button class="btn btn-outline-secondary" type="button"
+                        onclick="window.location.href='logout'">Logout</button>
+            </span>
+        </div>
+    </nav>
     <div class="container">
         <div class="dropdown">
             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
@@ -45,7 +46,8 @@
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                 <button class="dropdown-item" id="date" type="button" onclick="clickEvent(this.id)">Most Recent</button>
-                <button class="dropdown-item" id="recommended" type="button" onclick="clickEvent(this.id)">Recommended</button>
+                <button class="dropdown-item" id="recommended" type="button" onclick="clickEvent(this.id)">Recommended
+                </button>
             </div>
         </div>
         <br>

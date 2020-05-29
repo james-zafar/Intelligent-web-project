@@ -1,7 +1,5 @@
 const RankingAlgorithm = require('./Ranking');
-// const Users = require('../controllers/users');
-// const Stories = require('../controllers/Stories');
-const Story = require('../models/stories');
+
 const Users = require('../models/users');
 
 /**
@@ -30,6 +28,11 @@ async function getAllPostPreferences() {
             if(error) {
                 throw error;
             }
+            let newStructure = {};
+            var user = result[0]._id;
+            delete newStructure._id;
+            newStructure[user] = result[0].voted_stories;
+            console.log(newStructure);
             resolve(result);
         });
     });
@@ -39,20 +42,20 @@ async function getAllPostPreferences() {
  *
  * @param posts A list of posts returned by the recommendation algorithm
  */
-function sortPosts(posts) {
-
+async function sortPosts(posts) {
+    return new Promise(resolve => {
+        resolve(posts);
+    });
 }
 
 exports.getSortedStories = async function(currentUser) {
     const rankingAlgo = new RankingAlgorithm();
-
+    //Get the user preferences and all other prefs
     let preferences = await getUserPreferences(currentUser);
     let postPreferences = await getAllPostPreferences();
-    //console.log("Here: " + postPreferences);
 
     //Add a third parameter of "similarity = 'sim_euclidean' to run with euclidean algorithm
     let actualScores = await rankingAlgo.getRecommendations(postPreferences, preferences);
-    //console.log(actualScores);
 
     return await sortPosts(actualScores);
 };
