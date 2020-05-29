@@ -120,9 +120,27 @@ router.post('/rateStory', function (req, res, next) {
             return next(err);
         }
         const response = {rating: {userId: req.session.user._id, storyId: req.body.storyId, rating: req.body.rating}}
-        console.log(response)
         res.setHeader("Content-Type", "application/json");
         res.send(JSON.stringify(response));
+    });
+});
+
+router.post('/transferVotes', function (req, res, next) {
+    users.getRatings(req, res, function (error, results) {
+        if (error || !results) {
+            console.log(error)
+            const err = new Error(error);
+            return next(err);
+        }
+        req.body = results;
+        stories.rateStories(req, res, function (error, results) {
+            if (error || !results) {
+                console.log(error)
+                const err = new Error(error);
+                return next(err);
+            }
+            res.send(200);
+        });
     });
 });
 

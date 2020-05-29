@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const User = require('../models/users');
+const Stories = require('../models/users');
 
 /**
  * Inserts user into db from json file format
@@ -84,6 +85,39 @@ exports.authenticate = function(req, res, callback) {
         });
     } catch (e) {
         res.status(500).send('error ' + e);
+    }
+};
+
+/**
+ * Gets all ratings from the database
+ * @param req
+ * @param res
+ * @param callback
+ * @returns {*}
+ */
+exports.getRatings = function (req, res, callback) {
+    const userData = req.body;
+    // console.log(userData);
+    if (userData == null) {
+        res.status(403).send('No data sent!')
+    }
+    try {
+        User.find({}, function (err, users) {
+            if (err) {
+                console.log(err);
+                return callback(err);
+            }
+            let ratingsData = [];
+            for (let user of users) {
+                for (let vote of user.voted_stories) {
+                    ratingsData.push({rating: vote.rating, storyId: vote.storyId, userId: user._id});
+                }
+            }
+            return callback(null, ratingsData);
+        });
+    } catch (e) {
+        console.log(e);
+        return callback(e);
     }
 };
 

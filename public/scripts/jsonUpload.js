@@ -23,6 +23,7 @@ $(function() {
                 for (let story of data.stories) {
                     upload(story, 'story');
                 }
+                transferRatings();
                 alert('Successfully uploaded JSON');
             } catch (e) {
                 alert(e);
@@ -47,6 +48,20 @@ function upload(data, modelType) {
         },
         error: function (xhr, status, error) {
             console.log('Error uploading file. Error Message: ' + error);
+        }
+    });
+}
+
+/**
+ * Sends request to transfer ratings from user model to story model
+ */
+function transferRatings() {
+    $.ajax({
+        url: '/transferVotes',
+        contentType: 'application/json',
+        type: 'POST',
+        error: function (xhr, status, error) {
+            alert('Error: ' + error);
         }
     });
 }
