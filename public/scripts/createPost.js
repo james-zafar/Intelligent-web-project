@@ -142,26 +142,27 @@ $('#submitPost').click(function() {
 function toggleCamera() {
     let cameraContainer = document.getElementById('submitCameraContainer'),
         toggleButton = document.getElementById('toggleCameraButton')
-    if (cameraContainer.style.display === "none") {
-        cameraContainer.style.display = "block"
-        toggleButton.innerHTML = "Close camera"
-    } else {
+
+    if (cameraContainer.style.display === "block") {
         cameraContainer.style.display = "none"
         toggleButton.innerHTML = "Use camera"
+    } else {
+        cameraContainer.style.display = "block"
+        toggleButton.innerHTML = "Close camera"
     }
 }
 
 (function () {
     let video = document.getElementById('video'),
-      canvas = document.getElementById('canvas'),
-      context = canvas.getContext('2d'),
-      photo = document.getElementById('photo'),
-      vendorUrl = window.URL || window.webkitURL;
+        canvas = document.getElementById('canvas'),
+        context = canvas.getContext('2d'),
+        photo = document.getElementById('photo'),
+        vendorUrl = window.URL || window.webkitURL;
 
     navigator.getMedia =    navigator.getUserMedia ||
-      navigator.webkitGetUserMedia ||
-      navigator.mozGetUserMedia ||
-      navigator.msGetUserMedia;
+        navigator.webkitGetUserMedia ||
+        navigator.mozGetUserMedia ||
+        navigator.msGetUserMedia;
 
     navigator.getMedia({
         video: true,
