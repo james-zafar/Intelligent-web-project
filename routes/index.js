@@ -195,7 +195,7 @@ router.post('/editPost', function(req, res) {
 
         let db = client.db('myStory'),
             collection = db.collection('stories'),
-            selectStory = { _id: story },
+            selectStory = { _id: storyID },
             update = { $set: {text: newText } };
 
         //collection.count({_id: mongoID}, function (err, count) {
