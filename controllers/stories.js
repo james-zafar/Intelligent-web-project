@@ -108,6 +108,30 @@ exports.rateStory = function (req, res, callback) {
 };
 
 /**
+ * Rates all stories given correct data from
+ * @param req
+ * @param res
+ * @param callback
+ */
+exports.rateStories = function (req, res, callback) {
+    function runUpdate(rating) {
+        return new Promise((resolve, reject) => {
+            const filter = {_id: {$eq: rating.storyId}};
+            const update = {$push: {votes: {vote: rating.rating, user_id: rating.userId}}};
+            Story.findOneAndUpdate(filter, update).then(result => resolve(result)).catch(err => reject(err));
+        });
+    }
+    const ratingsData = req.body;
+    let promises = []
+    ratingsData.forEach(rating => promises.push(runUpdate(rating)));
+    Promise.all(promises).then(result => {
+        callback(null, result);
+    }).catch(err => {
+        callback(err);
+    });
+};
+
+/**
  * Clear stories collections completely
  * @param req
  * @param res

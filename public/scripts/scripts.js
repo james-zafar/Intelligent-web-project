@@ -235,14 +235,6 @@ function hideOfflineWarning(){
 
 
 /**
- * it shows the city list in the browser
- */
-function showCityList() {
-  if (document.getElementById('city_list')!=null)
-    document.getElementById('city_list').style.display = 'block';
-}
-
-/**
  * Send ajax query then if response contains redirect,
  * redirect to that page
  * @param url
@@ -263,7 +255,7 @@ function sendAjaxQuery(url, data) {
             }
         },
         error: function (xhr, status, error) {
-            alert('Error: ' + error.message);
+            alert('Error: ' + error);
         }
     });
 }
